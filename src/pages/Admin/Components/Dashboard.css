@@ -1,0 +1,147 @@
+/* Headings */
+h1 {
+    font-size: 2.5rem;
+    color: #ffffff;
+    margin-bottom: 16px;
+}
+
+h2 {
+    font-size: 2rem;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+h3 {
+    font-size: 1.25rem;
+    color: #ffffff;
+}
+
+/* Paragraphs */
+p {
+    line-height: 1.6;
+    margin-bottom: 16px;
+    color: #ffffff;
+}
+
+/* General Dashboard Styles */
+.dashboard {
+    padding: 30px;
+    background-color: #eef1f7;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+.dashboard h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Grid Layout */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+    justify-content: center;
+}
+
+/* Card Styles */
+.card {
+    padding: 25px;
+    border-radius: 12px;
+    color: #fff;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Individual Card Colors */
+.card-income {
+    background-color: #27ae60; /* Vibrant Green */
+}
+
+.card-users {
+    background-color: #2980b9; /* Bright Blue */
+}
+
+.card-active {
+    background-color: #f1c40f; /* Golden Yellow */
+    color: #333; /* Better contrast for light yellow */
+}
+
+.card-adjoints {
+    background-color: #8e44ad; /* Deep Purple */
+}
+
+.card-animateurs {
+    background-color: #34495e; /* Steel Blue */
+}
+
+.card-managers-adjoints {
+    background-color: #e67e22; /* Orange */
+}
+
+.card-managers {
+    background-color: #e74c3c; /* Red */
+}
+
+.card-distributeurs {
+    background-color: #7f8c8d; /* Gray */
+}
+
+/* Hover Effects */
+.card:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Card Title */
+.card h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+/* Card Value */
+.card p {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .dashboard {
+        padding: 20px;
+    }
+
+    .dashboard h2 {
+        font-size: 1.5rem;
+    }
+
+    .dashboard-grid {
+        gap: 20px;
+    }
+
+    .card {
+        padding: 20px;
+        font-size: 1rem;
+    }
+}
+
+.chart-container {
+    width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

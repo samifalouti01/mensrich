@@ -1,0 +1,70 @@
+/* Container */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+/* Headings */
+h1 {
+    font-size: 2.5rem;
+    color: #1a202c;
+    margin-bottom: 16px;
+}
+
+h2 {
+    font-size: 2rem;
+    color: #2d3748;
+    margin-bottom: 12px;
+}
+
+h3 {
+    font-size: 1.25rem;
+    color: #4a5568;
+}
+
+/* Paragraphs */
+p {
+    line-height: 1.6;
+    margin-bottom: 16px;
+    color: #4a5568;
+}
+
+/* FAQ Section */
+.faq-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.faq-section li {
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+
+.faq-section li h3 {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.faq-section li p {
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+form textarea {
+    width: 96%;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    background-color: transparent;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    font-size: 1rem;
+}
+
+form textarea:focus {
+    border-color: #3182ce;
+    outline: none;
+    box-shadow: 0 0 3px rgba(49, 130, 206, 0.4);
+}
+

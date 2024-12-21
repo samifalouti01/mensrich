@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+
+.left-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200px;
+    background-color: #00000070; 
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+    transform: translateX(0);
+    opacity: 1; /* Fully visible */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 1002;
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+    font-family: 'Quicksand';
+}
+
+.left-navbar.hidden {
+    opacity: 0; 
+    transform: translateX(-100%); /* Slide out of view */
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    padding-top: 60px;
+    gap: 20px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    background: #303030;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.3s;
+    padding: 10px;
+}
+
+.nav-item:hover {
+    background-color: #1b0036;
+    font-weight: bold;
+}
+
+.nav-icon {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.logout2-button {
+    position: fixed;
+    left: 20px;
+    bottom: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+    border-radius: 50px;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 10px;
+    transition: opacity 0.3s;
+}
