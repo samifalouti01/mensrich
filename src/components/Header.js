@@ -1,26 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaAlignLeft } from "react-icons/fa";
-import { FiLogOut } from "react-icons/fi";
+import { FaAlignLeft, FaCoins } from "react-icons/fa";
 import LeftNavBar from "./LeftNavBar";
+import Pay from "./Pay";
 import "./Header.css";
 
 const Header = () => {
     const [isNavOpen, setIsNavOpen] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
     const navRef = useRef(null); 
 
     const toggleNav = () => {
         setIsNavOpen((prev) => !prev);
-    };
-
-    const handleLogout = () => {
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-            navigate("/");
-        }, 2000);
     };
 
     useEffect(() => {
@@ -41,19 +30,12 @@ const Header = () => {
             <header className="header">
                 <FaAlignLeft className="menu-icon" onClick={toggleNav} />
                 <img src="Mencedes.svg" alt="logo" />
-                <button
-                    className="logout-button"
-                    onClick={handleLogout}
-                    disabled={loading}
-                >
-                    {loading ? (
-                        <div className="spinner"></div>
-                    ) : (
-                        <>
-                            <FiLogOut style={{ marginRight: '-2px' }} className="logout-icon" />
-                        </>
-                    )}
-                </button>
+                <div>
+                <div className="pay-container">
+                  <FaCoins className="pay-icon" />
+                  <Pay />
+                </div>
+                </div>
             </header>
             <div
                 className={`left-navbar ${isNavOpen ? "" : "hidden"}`}

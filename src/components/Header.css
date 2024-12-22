@@ -69,3 +69,20 @@
         height: 30px;
     }
 }
+
+.pay-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    background-color: #5700B450;
+    color: #fff;
+    border-radius: 15px;
+    padding: 10px;
+}
+
+.pay-icon {
+    font-size: 20px;
+    color: goldenrod;
+    margin-right: 5px;
+}

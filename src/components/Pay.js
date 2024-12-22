@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { supabase } from "../supabaseClient";
-import Header from "../components/Header";
-import "./Payments.css";
 
-const Payments = () => {
+const Pay = () => {
   const [userId, setUserId] = useState(null);
   const [userData, setUserData] = useState({});
   const [referrals, setReferrals] = useState([]);
@@ -15,28 +13,28 @@ const Payments = () => {
       alert("Please log in.");
       return;
     }
-  
+
     const currentUserId = String(currentUser.id);
     setUserId(currentUserId);
-  
+
     const { data: userPpcgData, error: userPpcgError } = await supabase
       .from("history_data")
       .select("ppcg")
       .eq("id", currentUserId);
-  
+
     if (userPpcgError) {
       console.error("Error fetching PPCG from history_data:", userPpcgError);
       return;
     }
-  
+
     const totalPpcg = userPpcgData.reduce((acc, record) => acc + (parseFloat(record.ppcg) || 0), 0);
-  
+
     const { data: userData, error: userError } = await supabase
       .from("user_data")
       .select("id, parrain_id, parainage_users")
       .eq("id", currentUserId)
       .single();
-  
+
     if (!userError) {
       setUserData({ ...userData, ppcg: totalPpcg });
     } else {
@@ -136,28 +134,13 @@ const Payments = () => {
 
   return (
     <div>
-      <Header />
-      <div className="payments-container">
-        <div className="user-info">
-          <h1>Level: {userData.ppcg ? determineLevel(parseFloat(userData.ppcg)) : "N/A"}</h1>
-          <h2>Total Income: {income * 100} DA</h2>
-          <h2>Team Size: {referrals.length}</h2>
+      <div>
+        <div>
+          <p style={{ padding: "0px", color:"#fff", margin: "0"}}>{income * 100} DA</p>
         </div>
-        <h3 style={{ color: "black"}}>Referral Details:</h3>
-        <ul className="referral-list">
-          {referrals.map((referral) => (
-            <li key={referral.id} className="referral-item">
-              <span>{referral.name}</span>
-              <span>PCG: {referral.ppcg || "N/A"}</span>
-              <span>
-                Income: {referral.referralIncome ? (referral.referralIncome * 100).toFixed(2) : "0.00" * 100} DA
-              </span>
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   );
 };
 
-export default Payments;
+export default Pay;

@@ -166,7 +166,7 @@ const Dashboard = () => {
             const difference = endDate - now;
   
             if (difference <= 0) {
-              return '00j 00h 00m 00s'; // Countdown is over
+              return '00 jours 00h 00m 00s'; // Countdown is over
             }
   
             const days = Math.floor(difference / (1000 * 60 * 60 * 24));
@@ -174,7 +174,7 @@ const Dashboard = () => {
             const minutes = Math.floor((difference / 1000 / 60) % 60);
             const seconds = Math.floor((difference / 1000) % 60);
   
-            return `${days}j ${hours}h ${minutes}m ${seconds}s`;
+            return `${days} jours ${hours}h ${minutes}m ${seconds}s`;
           };
   
           const updateCountdown = () => {
@@ -197,14 +197,22 @@ const Dashboard = () => {
   const toggleButtons = () => {
     setShowButtons((prev) => !prev);
   };
+
+  const progressOptions = {
+    strokeWidth: 4,
+    color: "#5700B4",
+    trailColor: "#d3d3d3",
+    text: {
+      value: `${levelProgress.toFixed(1)}%`,
+      color: "#5700B4",
+      fontSize: "20px",
+    },
+  };
   
   return (
     <div className="dashboard-container">
       <div className="dashboard-content">
         <Header />
-        <div className="banner">
-          <span className="countdown"><p className="countdown">Challenge se termine dans</p>{timeLeft}</span>
-        </div>
         <div className="float-container">
           <button className="plus-button" onClick={toggleButtons}>
             {showButtons ? <FaTimes /> : <FaPlus />}
@@ -223,32 +231,35 @@ const Dashboard = () => {
         </div>
         <div className="dashboard-main">
           <div className="column">
-            <div className="dashboard-card">
-              <div onClick={() => document.getElementById('file-input').click()}>
-                <div className="card-image">
-                  <img src={userImage || "Loading..."} alt="ْ" className="hidden-alt" />
-                </div>
-                <input
-                  id="file-input"
-                  type="file"
-                  accept="image/*"
-                  onChange={async (event) => {
-                    const file = event.target.files[0];
-                    if (file) {
-                      await handleImageUpload(file);
-                    }
-                  }}
-                  style={{ display: "none" }}
-                />
+              <div className="row-dash">
+                <div onClick={() => document.getElementById('file-input').click()}>
+                  <div className="card-image">
+                    <img src={userImage || "Loading..."} alt="ْ" className="hidden-alt" />
+                  </div>
+                  <input
+                    id="file-input"
+                    type="file"
+                    accept="image/*"
+                    onChange={async (event) => {
+                      const file = event.target.files[0];
+                      if (file) {
+                        await handleImageUpload(file);
+                      }
+                    }}
+                    style={{ display: "none" }}
+                  />
 
-                {isUploading && <progress value={uploadProgress} max="100"></progress>}
+                  {isUploading && <progress value={uploadProgress} max="100"></progress>}
+                </div>
+                <div className="column-dash">
+                  <h1>{name || "Loading..."}</h1>
+                  <h2 style={{ color: "#9A9A9A", fontWeight: "medium" }}>{level || "Loading..."}</h2>
+                </div>
               </div>
-              <h1>{name || "Loading..."}</h1>
-              <h2 style={{ color: "#9A9A9A", fontWeight: "medium" }}>{level || "Loading..."}</h2>
               <div className="copy-container">
                 <div className="copy-text">
-                <p>{identifier || "Loading..."}</p>
-                <FaCopy style={{ color: '#000', padding: '0' }} onClick={() => handleCopy(identifier)} />
+                  <p>{identifier || "Loading..."}</p>
+                  <FaCopy style={{ color: '#5700B4', padding: '0' }} onClick={() => handleCopy(identifier)} />
                 </div>
               </div>
               {message && (
@@ -257,25 +268,34 @@ const Dashboard = () => {
                 </p>
               )}
             </div>
+          <div>
           </div>
           <div className="wrap">
-            <div className="dashboard-card">
+            <div className="wrap1">
+            <div className="first-card">
               <div className="flex-container">
                 <h3>Sales points:</h3>
                 <p>{perso || "Loading..."}</p>
               </div>
+            </div>
+            <div className="first-card">
               <div className="flex-container">
                 <h3>Referral points:</h3>
                 <p>{parainagePoints || "Loading..."}</p>
               </div>
+            </div>
+            <div className="first-card">
               <div className="flex-container">
                 <h3>Referred Users:</h3>
                 <p>{parainageUsers || "Loading..."}</p>
               </div>
+            </div>
+            <div className="first-card">
               <div className="flex-container">
                 <h3>Group points:</h3>
                 <p>{ppcg || "Loading..."}</p>
               </div>
+            </div>
             </div>
             <div className="dashboard-card">
               <h2>
@@ -293,13 +313,15 @@ const Dashboard = () => {
                 />
               </div>
               <h3>{level}</h3>
-              <p>Total Points: {totalPoints}</p>
               <p>
-                Points needed to reach <span style={{ color: "#5700B4" }}>{nextLevel}</span>:{" "}
-                {pointsToNextLevel}
+                Points needed to reach <span style={{ color: "#5700B4", fontWeight: "bold" }}>{nextLevel}</span>:{" "}
+                <span style={{ color: "#000", fontWeight: "bold" }}>{pointsToNextLevel}</span>
               </p>
             </div>
             <div className="dashboard-card">
+            <div className="timer">
+              <span className="countdown"><p className="countdown">Challenge se termine dans</p>{timeLeft}</span>
+            </div>
             <img src="https://wekxcgoqkxqisrdmgvkp.supabase.co/storage/v1/object/public/user_pic/Hotel%205%20etoiles.gif?t=2024-11-28T01%3A36%3A20.432Z" alt="challenge" className="challenge" />
           </div>
           </div>
