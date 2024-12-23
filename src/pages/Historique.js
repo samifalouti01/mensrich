@@ -64,9 +64,9 @@ const Historique = () => {
               return (
                 <div key={order.id} className="history-card">
                   <div className="history-details">
-                    <p className="history-title">Commande ID: {order.id}</p>
-                    <p className="history-product">Réf: {order.product_ref}</p>
-                    <p className="history-price">Prix total: {order.total_price} FC</p>
+                    <p style={{ color: "#000" }}>Commande ID: {order.id}</p>
+                    <p style={{ color: "#000" }}>Réf: {order.product_ref}</p>
+                    <p style={{ color: "#000" }}>Prix total: {order.total_price} FC</p>
                     <p className="history-status" style={{ color }}>
                       {emoji} {order.order_status}
                     </p>

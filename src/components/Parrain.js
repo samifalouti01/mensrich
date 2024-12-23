@@ -15,11 +15,7 @@ const Parrain = React.forwardRef((props, ref) => {
     phone: "",
     email: "",
     birthdate: "",
-    card_recto: "",
-    card_verso: "",
   });
-  const [cardRectoFile, setCardRectoFile] = useState(null);
-  const [cardVersoFile, setCardVersoFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -45,12 +41,6 @@ const Parrain = React.forwardRef((props, ref) => {
     alert("Credentials copied to clipboard!");
   };
 
-  const handleFileChange = (e, type) => {
-    const file = e.target.files[0];
-    if (type === "recto") setCardRectoFile(file);
-    if (type === "verso") setCardVersoFile(file);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -74,32 +64,8 @@ const Parrain = React.forwardRef((props, ref) => {
         return;
       }
 
-      let cardRectoUrl = "";
-      let cardVersoUrl = "";
-  
-      if (cardRectoFile) {
-        const { data: rectoData, error: rectoError } = await supabase.storage
-          .from("cards")
-          .upload(`recto/${Date.now()}_${cardRectoFile.name}`, cardRectoFile);
-        if (rectoError) {
-          console.error(rectoError);
-          throw new Error("Failed to upload recto image.");
-        }
-        cardRectoUrl = supabase.storage.from("cards").getPublicUrl(rectoData.path).data.publicUrl;
-      }
-  
-      if (cardVersoFile) {
-        const { data: versoData, error: versoError } = await supabase.storage
-          .from("cards")
-          .upload(`verso/${Date.now()}_${cardVersoFile.name}`, cardVersoFile);
-        if (versoError) throw new Error("Failed to upload verso image.");
-        cardVersoUrl = supabase.storage.from("cards").getPublicUrl(versoData.path).data.publicUrl;
-      }
-  
-      // Get the current user from localStorage
       const currentUser = JSON.parse(localStorage.getItem("user"));
   
-      // Retrieve the current user's parrain_id
       const { data: currentUserData, error: userDataError } = await supabase
         .from("user_data")
         .select("parrain_id")
@@ -115,26 +81,21 @@ const Parrain = React.forwardRef((props, ref) => {
 
       if (updateValidateError) throw new Error("Failed to update validation status.");
   
-      // Get the current user's parrain_id and combine it with the current user's ID
       const parrainId = currentUserData.parrain_id;
       const combinedParrainId = `${currentUser.id},${parrainId || ""}`; // Combine current user ID with parrain_id
   
       const updatedFormData = {
         ...formData,
-        card_recto: cardRectoUrl,
-        card_verso: cardVersoUrl,
         perso: 0,
         parainage_points: 0,
-        parainage_users: 0, // Initialize with 0
+        parainage_users: 0, 
         ppcg: 0,
-        parrain_id: combinedParrainId, // Set the combined parrain_id
+        parrain_id: combinedParrainId, 
       };
   
-      // Insert the new user with the combined parrain_id
       const { error } = await supabase.from("user_data").insert([updatedFormData]);
       if (error) throw error;
   
-      // Update the current user's parainage_users field
       const { data: userData, error: userError } = await supabase
         .from("user_data")
         .select("parainage_users")
@@ -146,7 +107,6 @@ const Parrain = React.forwardRef((props, ref) => {
       const currentParainageUsers = parseInt(userData.parainage_users || "0", 10);
       const updatedParainageUsers = currentParainageUsers + 1;
   
-      // Update the current user's parainage_users value
       const { error: updateError } = await supabase
         .from("user_data")
         .update({ parainage_users: updatedParainageUsers })
@@ -155,7 +115,7 @@ const Parrain = React.forwardRef((props, ref) => {
       if (updateError) throw new Error("Failed to update parainage_users.");
   
       setSuccess("Parrainage réussi !");
-      setShowPopup(true); // Show popup on success
+      setShowPopup(true); 
     } catch (err) {
       setError(`Erreur : ${err.message || "Une erreur inconnue s'est produite."}`);
     } finally {
@@ -238,24 +198,6 @@ const Parrain = React.forwardRef((props, ref) => {
             className="parrain-input"
             value={formData.birthdate}
             onChange={handleChange}
-            required
-          />
-          Carte Recto:
-          <input
-            type="file"
-            name="Carte Recto"
-            className="parrain-input"
-            accept="image/*"
-            onChange={(e) => handleFileChange(e, "recto")}
-            required
-          />
-          Carte Verso:
-          <input
-            type="file"
-            name="Carte Verso"
-            className="parrain-input"
-            accept="image/*"
-            onChange={(e) => handleFileChange(e, "verso")}
             required
           />
         <button className="parrain-button" type="submit" disabled={loading}>
