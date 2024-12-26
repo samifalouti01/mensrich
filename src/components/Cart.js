@@ -9,7 +9,6 @@ const Cart = ({ cartItems, onRemoveItem, onClose }) => {
   const [receiptFile, setReceiptFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  // Define discount percentages for each level
   const discountPercentages = {
     "Distributeur": 0.20,
     "Animateur Adjoint": 0.35, // 35%
@@ -18,19 +17,15 @@ const Cart = ({ cartItems, onRemoveItem, onClose }) => {
     "Manager": 0.48,           // 48%
   };
 
-  // Get the discount multiplier based on the level
-  const discountMultiplier = discountPercentages[level] || 0; // Default to 0 (no discount) if level is not found
+  const discountMultiplier = discountPercentages[level] || 0; 
 
-  // Calculate discounted prices for each item
   const discountedItems = cartItems.map((item) => ({
     ...item,
     discountedPrice: item.price * (1 - discountMultiplier),
   }));
 
-  // Calculate total FC (with discounts applied)
   const totalFC = discountedItems.reduce((total, item) => total + item.discountedPrice, 0);
 
-  // Calculate total DZD (using the discounted total in FC)
   const totalDZD = totalFC * 100;
 
   const handleFileChange = (event) => {

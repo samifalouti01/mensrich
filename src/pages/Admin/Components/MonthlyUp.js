@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../../../supabaseClient";
 
 const MonthlyUp = () => {
-  // Define state variables
   const [userData, setUserData] = useState([]);
   const [historyData, setHistoryData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -45,7 +44,6 @@ const MonthlyUp = () => {
     }
   };
 
-  // New function to update all rows
   const handleUpdateAll = async () => {
     let success = true;
     for (let i = 0; i < userData.length; i++) {
@@ -58,7 +56,6 @@ const MonthlyUp = () => {
         const updatedParainageUsers = (+user.parainage_users || 0) + (+history.parainage_users || 0);
         const updatedPpcg = (+user.ppcg || 0) + (+history.ppcg || 0);
         
-        // Update all columns (perso, parainage_points, parainage_users, ppcg)
         const { error } = await supabase
           .from('history_data')
           .upsert([
@@ -78,22 +75,18 @@ const MonthlyUp = () => {
       }
     }
   
-    // After updating all rows, show success or failure message
     if (success) {
       setSuccessMessage("All data updated successfully!");
     } else {
       setSuccessMessage("Some rows failed to update.");
     }
   
-    // Clear the success message after 3 seconds
     setTimeout(() => setSuccessMessage(""), 3000);
   
-    // Re-fetch the data to reflect changes
     fetchHistoryData();
   };
   
 
-  // New function to delete (reset to 0) all user data
   const handleDeleteAll = async () => {
     let success = true;
     for (let i = 0; i < userData.length; i++) {
@@ -117,16 +110,13 @@ const MonthlyUp = () => {
       }
     }
 
-    // After resetting all rows, show success or failure message
     if (success) {
       setSuccessMessage("All user data reset to 0!");
     } else {
       setSuccessMessage("Some rows failed to reset.");
     }
 
-    // Clear the success message after 3 seconds
     setTimeout(() => setSuccessMessage(""), 3000);
-    // Re-fetch the data to reflect changes
     fetchUserData();
   };
 
@@ -152,10 +142,8 @@ const MonthlyUp = () => {
       ) : (
         <>
           <h1 style={{ color: "black" }}>Monthly Up</h1>
-          {/* Button to update all rows */}
           <button onClick={handleUpdateAll}>Update All</button>
 
-          {/* Button to delete all user data (set to 0) */}
           <button style={{ backgroundColor: "red", color: "white", marginLeft: "10px" }} onClick={handleDeleteAll}>Delete All</button>
 
           {loading ? (

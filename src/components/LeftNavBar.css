@@ -23,7 +23,7 @@
 
 .left-navbar.hidden {
     opacity: 0; 
-    transform: translateX(-100%); /* Slide out of view */
+    transform: translateX(-100%); 
 }
 
 .nav-menu {

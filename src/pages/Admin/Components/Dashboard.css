@@ -1,4 +1,3 @@
-/* Headings */
 h1 {
     font-size: 2.5rem;
     color: #ffffff;
@@ -16,14 +15,12 @@ h3 {
     color: #ffffff;
 }
 
-/* Paragraphs */
 p {
     line-height: 1.6;
     margin-bottom: 16px;
     color: #ffffff;
 }
 
-/* General Dashboard Styles */
 .dashboard {
     padding: 30px;
     background-color: #eef1f7;
@@ -41,7 +38,6 @@ p {
     font-weight: bold;
 }
 
-/* Grid Layout */
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -50,7 +46,6 @@ p {
     justify-content: center;
 }
 
-/* Card Styles */
 .card {
     padding: 25px;
     border-radius: 12px;
@@ -62,47 +57,44 @@ p {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Individual Card Colors */
 .card-income {
-    background-color: #27ae60; /* Vibrant Green */
+    background-color: #27ae60; 
 }
 
 .card-users {
-    background-color: #2980b9; /* Bright Blue */
+    background-color: #2980b9;
 }
 
 .card-active {
-    background-color: #f1c40f; /* Golden Yellow */
-    color: #333; /* Better contrast for light yellow */
+    background-color: #f1c40f; 
+    color: #333; 
 }
 
 .card-adjoints {
-    background-color: #8e44ad; /* Deep Purple */
+    background-color: #8e44ad; 
 }
 
 .card-animateurs {
-    background-color: #34495e; /* Steel Blue */
+    background-color: #34495e; 
 }
 
 .card-managers-adjoints {
-    background-color: #e67e22; /* Orange */
+    background-color: #e67e22; 
 }
 
 .card-managers {
-    background-color: #e74c3c; /* Red */
+    background-color: #e74c3c; 
 }
 
 .card-distributeurs {
-    background-color: #7f8c8d; /* Gray */
+    background-color: #7f8c8d; 
 }
 
-/* Hover Effects */
 .card:hover {
     transform: scale(1.08);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
 }
 
-/* Card Title */
 .card h3 {
     margin: 0;
     font-size: 1.5rem;
@@ -110,14 +102,12 @@ p {
     margin-bottom: 10px;
 }
 
-/* Card Value */
 .card p {
     font-size: 1.6rem;
     font-weight: bold;
     margin: 0;
 }
 
-/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .dashboard {
         padding: 20px;

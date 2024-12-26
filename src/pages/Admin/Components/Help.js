@@ -6,14 +6,13 @@ const Help = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Fetch help requests from Supabase
     const fetchHelpRequests = async () => {
         setLoading(true);
         try {
             const { data, error } = await supabase
                 .from('help')
                 .select('*')
-                .order('created_at', { ascending: false });  // Sort by latest requests
+                .order('created_at', { ascending: false });  
             
             if (error) throw error;
 
@@ -26,7 +25,6 @@ const Help = () => {
         }
     };
 
-    // Delete a help request
     const handleDelete = async (id) => {
         try {
             const { error } = await supabase
@@ -36,7 +34,6 @@ const Help = () => {
 
             if (error) throw error;
 
-            // Remove the deleted request from state
             setHelpRequests(helpRequests.filter(request => request.id !== id));
             alert("Help request deleted successfully.");
         } catch (error) {
@@ -45,17 +42,15 @@ const Help = () => {
         }
     };
 
-    // Mark request as resolved (optional feature)
     const handleMarkResolved = async (id) => {
         try {
             const { error } = await supabase
                 .from('help')
-                .update({ resolved: true })  // Add a 'resolved' column in your table
+                .update({ resolved: true })  
                 .eq('id', id);
 
             if (error) throw error;
 
-            // Update state to reflect the resolved status
             setHelpRequests(helpRequests.map(request =>
                 request.id === id ? { ...request, resolved: true } : request
             ));
@@ -66,7 +61,6 @@ const Help = () => {
         }
     };
 
-    // Fetch data on component mount
     useEffect(() => {
         fetchHelpRequests();
     }, []);
@@ -100,7 +94,6 @@ const Help = () => {
                                 <td className="px-6 py-4 border-b">{request.message}</td>
                                 <td className="px-6 py-4 border-b">{new Date(request.created_at).toLocaleString()}</td>
                                 <td className="px-6 py-4 border-b flex space-x-2">
-                                    {/* Only show "Mark Resolved" button if resolved is false */}
                                     {!request.resolved && (
                                         <button
                                             className="px-3 py-1 bg-green-600 text-white rounded"

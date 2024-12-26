@@ -1,39 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { supabase } from "../../../supabaseClient"; // Adjust path as necessary
+import { supabase } from "../../../supabaseClient"; 
 
 const PaListPay = () => {
   const [paList, setPaList] = useState([]);
-  const [message, setMessage] = useState(""); // For displaying any message
+  const [message, setMessage] = useState(""); 
 
-  // Fetch data from pa_list table and get user details
   useEffect(() => {
     const fetchPaList = async () => {
       try {
-        // Fetch the pa_list data
         const { data, error } = await supabase
           .from("pa_list")
-          .select("id, user_id, parrain_id, created_at") // Add 'id' to identify records
-          .order("created_at", { ascending: false }); // Sort by date if needed
+          .select("id, user_id, parrain_id, created_at") 
+          .order("created_at", { ascending: false }); 
 
         if (error) throw error;
 
-        // For each entry in pa_list, fetch corresponding user data (name, rip)
         const updatedPaList = await Promise.all(
           data.map(async (item) => {
             const { parrain_id } = item;
 
-            // Fetch user_data for the given parrain_id
             const { data: userData, error: userError } = await supabase
               .from("user_data")
               .select("name, rip")
-              .eq("id", parrain_id?.split(",")[0]) // Ensure we check for the correct ID (split in case it's a list)
-              .single(); // Get a single record (if it exists)
+              .eq("id", parrain_id?.split(",")[0]) 
+              .single();
 
             if (userError) {
               console.error("Error fetching user data:", userError);
             }
 
-            // Return the original item along with the user's name and rip
             return {
               ...item,
               name: userData?.name || "Unknown",
@@ -42,7 +37,6 @@ const PaListPay = () => {
           })
         );
 
-        // Update state with the fetched data (including user name and rip)
         setPaList(updatedPaList);
       } catch (error) {
         console.error("Error fetching pa_list:", error);
@@ -53,10 +47,8 @@ const PaListPay = () => {
     fetchPaList();
   }, []);
 
-  // Handle deletion of a pa_list item
   const handleDelete = async (id) => {
     try {
-      // Delete the record from the pa_list table
       const { error } = await supabase
         .from("pa_list")
         .delete()
@@ -64,7 +56,6 @@ const PaListPay = () => {
 
       if (error) throw error;
 
-      // Remove the deleted item from the state to update the UI
       setPaList(paList.filter((item) => item.id !== id));
       setMessage("Record deleted successfully.");
     } catch (error) {
@@ -75,7 +66,6 @@ const PaListPay = () => {
 
   return (
     <div>
-      {/* Display any messages */}
       {message && <div className="message">{message}</div>}
 
       <h2>Pa List</h2>
@@ -87,20 +77,19 @@ const PaListPay = () => {
             <th>RIP</th>
             <th>Get</th>
             <th>Created At</th>
-            <th>Actions</th> {/* Column for the delete button */}
+            <th>Actions</th> 
           </tr>
         </thead>
         <tbody>
           {paList.length > 0 ? (
             paList.map((item) => (
-              <tr key={item.id}> {/* Use unique id for key */}
+              <tr key={item.id}> 
                 <td>{item.parrain_id?.split(",")[0]}</td>
                 <td>{item.name}</td>
                 <td>{item.rip}</td>
                 <td>1500 DA</td>
-                <td>{new Date(item.created_at).toLocaleString()}</td> {/* Format created_at */}
+                <td>{new Date(item.created_at).toLocaleString()}</td> 
                 <td>
-                  {/* Delete button */}
                   <button
                     onClick={() => handleDelete(item.id)}
                     style={{ color: "red" }}
@@ -112,7 +101,7 @@ const PaListPay = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="5">No data available</td> {/* Adjusted colspan to 5 */}
+              <td colSpan="5">No data available</td> 
             </tr>
           )}
         </tbody>

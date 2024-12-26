@@ -98,10 +98,8 @@ const Dashboard = () => {
         return;
       }
 
-      // Step 1: Clear current image
       await supabase.from("user_data").update({ user_image: null }).eq("id", user.id);
 
-      // Step 2: Upload the new image
       const fileName = `${user.id}-${Date.now()}-${file.name}`;
       const { data: storageData, error: storageError } = await supabase.storage
         .from("user_pic")
@@ -112,7 +110,6 @@ const Dashboard = () => {
         return;
       }
 
-      // Step 3: Get public URL and update user image
       const { data: publicURLData, error: publicURLError } = supabase.storage
         .from("user_pic")
         .getPublicUrl(fileName);
@@ -130,7 +127,6 @@ const Dashboard = () => {
       setMessage("Something went wrong.");
     }
 
-    // Simulate upload progress
     const uploadInterval = setInterval(() => {
       setUploadProgress((prev) => {
         if (prev < 100) return prev + 10;
@@ -147,11 +143,10 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchChallengeData = async () => {
       try {
-        // Fetch start and end times from the challenge table
         const { data, error } = await supabase
           .from('challenge')
           .select('start, end')
-          .single(); // Assuming there's only one challenge
+          .single();
   
         if (error) {
           console.error("Error fetching challenge data:", error);
@@ -166,7 +161,7 @@ const Dashboard = () => {
             const difference = endDate - now;
   
             if (difference <= 0) {
-              return '00 jours 00h 00m 00s'; // Countdown is over
+              return '00 jours 00h 00m 00s'; 
             }
   
             const days = Math.floor(difference / (1000 * 60 * 60 * 24));
@@ -181,10 +176,10 @@ const Dashboard = () => {
             setTimeLeft(calculateTimeLeft());
           };
   
-          updateCountdown(); // Initial calculation
-          const timer = setInterval(updateCountdown, 1000); // Update every second
+          updateCountdown(); 
+          const timer = setInterval(updateCountdown, 1000); 
   
-          return () => clearInterval(timer); // Clean up the interval
+          return () => clearInterval(timer); 
         }
       } catch (error) {
         console.error("Unexpected error fetching challenge data:", error);

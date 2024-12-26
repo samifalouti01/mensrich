@@ -59,33 +59,29 @@ const UserPayment = () => {
     setLoading(true);
   
     try {
-      // Fetch user data from `user_data` table
       const { data: userData, error: userError } = await supabase
         .from("user_data")
         .select("*");
   
       if (userError) throw userError;
   
-      // Fetch `ppcg` from `history_data`
       const { data: historyData, error: historyError } = await supabase
         .from("history_data")
         .select("id, ppcg");
   
       if (historyError) throw historyError;
   
-      // Create a lookup for ppcg by id
       const ppcgLookup = historyData.reduce((acc, record) => {
         acc[record.id] = record.ppcg;
         return acc;
       }, {});
   
-      // Process users
       const processedUsers = userData.map((user) => {
         const userStatus = user.perso && parseFloat(user.perso) >= 100 ? "actif" : "inactif";
         const teamMembers = userData.filter(
           (u) => u.parrain_id && u.parrain_id.split(",").includes(String(user.id))
         );
-        const userLevel = determineLevel(ppcgLookup[user.id] || 0); // Use `ppcg` from history_data
+        const userLevel = determineLevel(ppcgLookup[user.id] || 0);
         const totalIncome = calculateIncome(userLevel, teamMembers);
   
         return {

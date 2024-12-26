@@ -21,7 +21,6 @@ const Post = () => {
     setIsLoading(true);
 
     try {
-      // Upload image to Supabase Storage
       const fileName = `${Date.now()}_${file.name}`;
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from("store_rec")
@@ -38,7 +37,6 @@ const Post = () => {
         return;
       }
 
-      // Get public URL
       const { data: publicUrlData } = supabase.storage
         .from("store_rec")
         .getPublicUrl(fileName);
@@ -51,7 +49,6 @@ const Post = () => {
 
       const publicUrl = publicUrlData.publicUrl;
 
-      // Insert data into the database
       const payload = {
         title,
         ref,

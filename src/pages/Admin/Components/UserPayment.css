@@ -25,7 +25,6 @@
     font-weight: bold;
   }
   
-  /* For inactive users (red) */
   .inactive-status {
     color: red;
     font-weight: bold;

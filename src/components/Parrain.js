@@ -33,7 +33,7 @@ const Parrain = React.forwardRef((props, ref) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "identifier") { setFormData({ ...formData, [name]: value.startsWith("DZ") ? value : `DZ${value}`, }); } else { setFormData({ ...formData, [name]: value, }); } };
+    if (name === "identifier") { setFormData({ ...formData, [name]: value.startsWith("MR") ? value : `MR${value}`, }); } else { setFormData({ ...formData, [name]: value, }); } };
 
   const handleCopy = () => {
     const textToCopy = `ID: ${formData.identifier}\nPassword: ${formData.password}`;
@@ -209,9 +209,9 @@ const Parrain = React.forwardRef((props, ref) => {
       {showPopup && (
         <div className="popup">
           <div className="popup-content">
-            <h3>Credentials</h3>
-            <p>ID: {formData.identifier}</p>
-            <p>Password: {formData.password}</p>
+            <h3 style={{ color: "#000" }}>Credentials</h3>
+            <p style={{ color: "#000" }}>ID: {formData.identifier}</p>
+            <p style={{ color: "#000" }}>Password: {formData.password}</p>
             <button onClick={handleCopy}>Copy</button>
             <button onClick={() => setShowPopup(false)}>Close</button>
           </div>

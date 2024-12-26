@@ -8,7 +8,7 @@ const Order = () => {
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalImage, setModalImage] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');  // State for search query
+  const [searchQuery, setSearchQuery] = useState('');  
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -53,12 +53,10 @@ const Order = () => {
     fetchOrders();
   }, []);
 
-  // Handle search query change
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
-  // Filter orders based on search query
   const filteredOrders = orders.filter((order) => {
     return (
       order.id.toString().includes(searchQuery) ||
@@ -69,7 +67,6 @@ const Order = () => {
 
   const handleValidate = async (orderId, userId, currentTotalPrice) => {
     try {
-      // Fetch user data for the order
       const { data: userData, error: userError } = await supabase
         .from('user_data')
         .select('perso, ppcg, parrain_id')
@@ -92,12 +89,10 @@ const Order = () => {
       const currentPpcgValue = parseFloat(userData.ppcg) || 0;
       const newPpcgValue = currentPpcgValue + currentPrice;
   
-      // Log values to check if the calculations are correct
       console.log(`User Data for ID ${userId}:`, userData);
       console.log(`Updating perso: ${currentPersoValue} + ${currentPrice} = ${newPersoValue}`);
       console.log(`Updating ppcg: ${currentPpcgValue} + ${currentPrice} = ${newPpcgValue}`);
   
-      // Update the order status to 'validé'
       const { error: updateOrderError } = await supabase
         .from('order')
         .update({ order_status: 'validé' })
@@ -107,7 +102,6 @@ const Order = () => {
         throw updateOrderError;
       }
     
-      // Update the user's perso and ppcg values
       const { error: updateUserError } = await supabase
         .from('user_data')
         .update({
@@ -120,23 +114,19 @@ const Order = () => {
         throw updateUserError;
       }
     
-      // Check if the user has parrain_ids
       if (userData.parrain_id) {
-        // Split the parrain_id and filter out any invalid or empty entries
         const parrainIds = userData.parrain_id
           .split(',')
           .map(id => id.trim())
-          .filter(id => id && !isNaN(id)); // Remove empty and non-numeric values
+          .filter(id => id && !isNaN(id)); 
   
         console.log(`User has valid parrain_ids: ${parrainIds}`);
     
-        // If there are no valid parrain_ids, skip the update process
         if (parrainIds.length === 0) {
           console.log('No valid parrain_ids to update.');
           return;
         }
   
-        // Fetch all parrains' data
         const { data: parrainsData, error: parrainsError } = await supabase
           .from('user_data')
           .select('id, parainage_points, ppcg')
@@ -146,10 +136,8 @@ const Order = () => {
           throw parrainsError;
         }
   
-        // Log parrains data
         console.log("Parrains Data:", parrainsData);
     
-        // Loop through each parrain and update their data
         for (const parrain of parrainsData) {
           const currentParainagePoints = parseFloat(parrain.parainage_points) || 0;
           const currentPpcgValue = parseFloat(parrain.ppcg) || 0;
@@ -157,12 +145,10 @@ const Order = () => {
           const newParainagePoints = currentParainagePoints + currentPrice;
           const newPpcgValue = currentPpcgValue + currentPrice;
     
-          // Log update data for each parrain
           console.log(`Updating parrain ID ${parrain.id}:`);
           console.log(`Parainage Points: ${currentParainagePoints} + ${currentPrice} = ${newParainagePoints}`);
           console.log(`PPCG: ${currentPpcgValue} + ${currentPrice} = ${newPpcgValue}`);
     
-          // Update the parrain's parainage_points and ppcg
           const { error: updateParrainError } = await supabase
             .from('user_data')
             .update({
@@ -177,7 +163,6 @@ const Order = () => {
         }
       }
     
-      // Update the order status in the frontend
       setOrders(prevOrders => prevOrders.map(order => {
         if (order.id === orderId) {
           return { ...order, order_status: 'validé' };
@@ -209,12 +194,11 @@ const Order = () => {
   }
 
   const isValidImageUrl = (url) => {
-    return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(url);  // Check for common image extensions
+    return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(url);  
   };
 
   return (
     <div>
-      {/* Search Bar */}
       <input
         type="text"
         placeholder="Search by ID, Name, or Email"

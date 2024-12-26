@@ -9,14 +9,22 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isRegistering, setIsRegistering] = useState(false);
+    const [registerData, setRegisterData] = useState({
+        name: "",
+        identifier: "",
+        password: "",
+        referralId: "",
+        validate: "unvalidate",
+    });
+    const [showPopup, setShowPopup] = useState(false);
+
+    const navigate = useNavigate();
 
     const togglePasswordVisibility = () => {
-        console.log("Toggle password visibility clicked!");
         setIsPasswordVisible(!isPasswordVisible);
     };
-    
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -35,56 +43,187 @@ const Login = () => {
             setError("Invalid username or password");
         } else {
             const user = data[0];
-
-            // Check if the account is blocked
             if (user.blocked === "blocked") {
                 setError("Your account has been blocked");
             } else {
-                localStorage.setItem("user", JSON.stringify(user)); 
-
-                // Navigate based on identifier
-                if (identifier.includes("company.khademni")) {
-                    navigate("/admin-panel"); // Adjust path to AdminPanel.js route
-                } else {
-                    navigate("/dashboard");
-                }
+                localStorage.setItem("user", JSON.stringify(user));
+                identifier.includes("company.mensrich") ? navigate("/admin-panel") : navigate("/dashboard");
             }
         }
     };
 
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError("");
+    
+        try {
+            const { data: existingUser, error: checkError } = await supabase
+                .from("user_data")
+                .select("id")
+                .eq("identifier", registerData.identifier)
+                .single();
+    
+            if (checkError && checkError.code !== "PGRST116") {
+                throw new Error("Error checking identifier.");
+            }
+    
+            if (existingUser) {
+                setError("Identifier already exists.");
+                setLoading(false);
+                return;
+            }
+    
+            let combinedParrainId = registerData.referralId || null; 
+    
+            if (registerData.referralId) {
+                const { data: referringUser, error: referringUserError } = await supabase
+                    .from("user_data")
+                    .select("parrain_id, parainage_users")
+                    .eq("id", registerData.referralId)
+                    .single();
+    
+                if (referringUserError) {
+                    throw new Error("Invalid referral ID.");
+                }
+    
+                if (referringUser.parrain_id) {
+                    combinedParrainId = `${registerData.referralId},${referringUser.parrain_id}`;
+                }
+    
+                const updatedParainageUsers = (parseInt(referringUser.parainage_users || "0", 10) + 1);
+    
+                const { error: updateReferralError } = await supabase
+                    .from("user_data")
+                    .update({ parainage_users: updatedParainageUsers })
+                    .eq("id", registerData.referralId);
+    
+                if (updateReferralError) {
+                    throw new Error("Failed to update referring user's referral count.");
+                }
+            }
+    
+            const newUser = {
+                name: registerData.name,
+                identifier: registerData.identifier,
+                password: registerData.password,
+                parrain_id: combinedParrainId,
+                perso: 0,
+                parainage_points: 0,
+                parainage_users: 0, 
+                ppcg: 0,
+                validate: registerData.validate,
+            };
+    
+            const { error } = await supabase.from("user_data").insert([newUser]);
+            if (error) throw error;
+    
+            setShowPopup(true);
+        } catch (err) {
+            setError(`Failed to register: ${err.message}`);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
     return (
         <div className="login-container">
             <img src="Mencedes.svg" alt="Logo" className="login-logo" />
-            <form onSubmit={handleLogin} className="login-form">
-                <h1 className="login-title">Login</h1>
-                <input
-                    type="text"
-                    value={identifier}
-                    onChange={(e) => setIdentifier(e.target.value)}
-                    placeholder="ID Numérique"
-                    className="login-input"
-                    required
-                />
-                <div className="password-input-containers">
+            {!isRegistering ? (
+                <form onSubmit={handleLogin} className="login-form">
+                    <h1 className="login-title">Login</h1>
                     <input
-                        type={isPasswordVisible ? "text" : "password"}
-                        placeholder="Mot de Passe"
-                        className="password-input"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        type="text"
+                        value={identifier}
+                        onChange={(e) => setIdentifier(e.target.value)}
+                        placeholder="ID Numérique"
+                        className="login-input"
                         required
+                    />
+                    <div className="password-input-containers">
+                        <input
+                            type={isPasswordVisible ? "text" : "password"}
+                            placeholder="Password"
+                            name="password"
+                            className="password-input"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
                         />
-                    <span className="toggle-password" onClick={togglePasswordVisibility}>
-                        {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
-                    </span>
+                        <span className="toggle-password" onClick={togglePasswordVisibility}>
+                            {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                        </span>
+                    </div>
+                    <button type="submit" className="login-button" disabled={loading}>
+                        {loading ? <div className="spinner"></div> : "Login"}
+                    </button>
+                    {error && <p className="error-message">{error}</p>}
+                    <p className="switch-mode" onClick={() => setIsRegistering(true)}>Don't have an account? Register</p>
+                </form>
+            ) : (
+                <form onSubmit={handleRegister} className="register-form">
+                    <h1 className="register-title">Register</h1>
+                    <input
+                        type="text"
+                        placeholder="Name"
+                        className="register-input"
+                        value={registerData.name}
+                        onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
+                        required
+                    />
+                    <input
+                        type="text"
+                        placeholder="Identifier"
+                        className="register-input"
+                        value={registerData.identifier}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (!value.startsWith("MR")) {
+                                setRegisterData({ ...registerData, identifier: "MR" + value });
+                            } else {
+                                setRegisterData({ ...registerData, identifier: value });
+                            }
+                        }}
+                        required
+                    />
+                    <div className="password-input-containers">
+                        <input
+                            type={isPasswordVisible ? "text" : "password"}
+                            placeholder="Password"
+                            name="password"
+                            className="password-input"
+                            value={registerData.password}
+                            onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
+                            required
+                        />
+                        <span className="toggle-password" onClick={togglePasswordVisibility}>
+                            {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                        </span>
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Referral ID"
+                        className="register-input"
+                        value={registerData.referralId}
+                        onChange={(e) => setRegisterData({ ...registerData, referralId: e.target.value })}
+                    />
+                    <button type="submit" className="register-button" disabled={loading}>
+                        {loading ? <div className="spinner"></div> : "Register"}
+                    </button>
+                    {error && <p className="error-message">{error}</p>}
+                    <p className="switch-mode" onClick={() => setIsRegistering(false)}>Already have an account? Login</p>
+                </form>
+            )}
+            {showPopup && (
+                <div className="popup">
+                    <h3>Registration Successful!</h3>
+                    <p>ID: {registerData.identifier}</p>
+                    <p>Password: {registerData.password}</p>
+                    <button onClick={() => setShowPopup(false)}>Close</button>
                 </div>
-                <button type="submit" className="login-button" disabled={loading}>
-                    {loading ? <div className="spinner"></div> : "Login"}
-                </button>
-                {error && <p className="error-message">{error}</p>}
-            </form>
+            )}
         </div>
-    );
+    );    
 };
 
 export default Login;

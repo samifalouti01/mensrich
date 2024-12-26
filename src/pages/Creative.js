@@ -38,19 +38,17 @@ const Creative = () => {
     const { data, error } = await supabase
       .storage
       .from("creative")
-      .createSignedUrl(path, 60); // Valid for 60 seconds
+      .createSignedUrl(path, 60); 
     if (error) throw error;
     return data.signedUrl;
   };
 
   const handleDownload = async (link) => {
     try {
-      // Remove query parameters from the link for file name extraction
       const baseLink = link.split("?")[0];
-      const fileType = baseLink.split(".").pop(); // Get file extension
-      const filename = baseLink.split("/").pop(); // Extract file name
+      const fileType = baseLink.split(".").pop(); 
+      const filename = baseLink.split("/").pop(); 
 
-      // For private files, get a signed URL
       const { data: signedUrl, error } = await supabase.storage
         .from("creative")
         .createSignedUrl(link.replace(/^.*\/storage\/v1\/object\/public\/creative\//, ""), 60);
@@ -60,12 +58,11 @@ const Creative = () => {
         return;
       }
 
-      const downloadUrl = signedUrl?.signedUrl || link; // Use signed URL if private, else use public link
+      const downloadUrl = signedUrl?.signedUrl || link;
 
-      // Create an anchor element for downloading
       const anchor = document.createElement("a");
       anchor.href = downloadUrl;
-      anchor.download = filename || `file.${fileType}`; // Fallback file name
+      anchor.download = filename || `file.${fileType}`; 
       document.body.appendChild(anchor);
       anchor.click();
       document.body.removeChild(anchor);
@@ -98,7 +95,7 @@ const Creative = () => {
           {creatives.map((creative) => (
             <Grid item xs={12} sm={6} md={4} key={creative.id}>
               <Card>
-                {creative.link.split("?")[0].endsWith(".mp4") ? ( // Check for video type
+                {creative.link.split("?")[0].endsWith(".mp4") ? ( 
                   <>
                     <CardMedia
                       component="video"

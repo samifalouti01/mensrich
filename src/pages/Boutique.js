@@ -141,15 +141,13 @@ const Boutique = () => {
     "Manager": 0.48,           // 48%
   };
 
-  const discountMultiplier = discountPercentages[level] || 0; // Default to 0 (no discount) if level is not found
+  const discountMultiplier = discountPercentages[level] || 0; 
 
-    // Calculate discounted prices for each item
   const discountedItems = cartItems.map((item) => ({
     ...item,
-    discountedPrice: item.price * (1 - discountMultiplier), // Discounted price for FC
+    discountedPrice: item.price * (1 - discountMultiplier), 
   }));
 
-  // Calculate total FC (with discounts applied)
   const pointsFC = discountedItems.reduce((total, item) => total + item.discountedPrice, 0);
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {

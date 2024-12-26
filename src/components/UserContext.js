@@ -79,7 +79,7 @@ export const UserProvider = ({ children }) => {
         nextLevel,
         levelProgress,
         pointsToNextLevel,
-        calculateLevel,  // Include calculateLevel here
+        calculateLevel,  
       }}
     >
       {children}

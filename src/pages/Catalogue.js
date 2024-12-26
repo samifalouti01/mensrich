@@ -9,7 +9,7 @@ import "./Catalogue.css";
 const Catalogue = () => {
   const [catalogItems, setCatalogItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [loadingPDF, setLoadingPDF] = useState(false); // State for PDF loading
+  const [loadingPDF, setLoadingPDF] = useState(false); 
   const [error, setError] = useState(null);
   const [viewMode, setViewMode] = useState("grid");
   const navigate = useNavigate();
@@ -89,7 +89,7 @@ const Catalogue = () => {
     } catch (error) {
       console.error("Error generating PDF:", error);
     } finally {
-      setLoadingPDF(false); // Stop spinner
+      setLoadingPDF(false); 
     }
   };
 
@@ -122,7 +122,7 @@ const Catalogue = () => {
       <button
         className="download-pdf-button"
         onClick={handleDownloadPDF}
-        disabled={loadingPDF} // Disable button when loading
+        disabled={loadingPDF} 
       >
         <FaDownload style={{ marginRight: "10px" }} />
         {loadingPDF ? <span className="spinner"></span> : "Download PDF"}

@@ -4,14 +4,12 @@ import { supabase } from "../supabaseClient";
 import './Helpdesk.css';
 
 const Helpdesk = () => {
-    // State for form inputs
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         message: '',
     });
 
-    // Handle form input changes
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -20,15 +18,12 @@ const Helpdesk = () => {
         });
     };
 
-    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Destructure form data
         const { name, email, message } = formData;
 
         try {
-            // Insert data into the 'help' table
             const { data, error } = await supabase
                 .from('help')
                 .insert([{ name, email, message }]);
@@ -41,7 +36,6 @@ const Helpdesk = () => {
                 alert("Your request has been submitted successfully.");
             }
 
-            // Optionally, reset form after successful submission
             setFormData({ name: '', email: '', message: '' });
 
         } catch (error) {

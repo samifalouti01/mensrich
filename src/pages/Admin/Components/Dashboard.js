@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { supabase } from "../../../supabaseClient"; // Ensure your Supabase client is set up
-import "./Dashboard.css"; // Add CSS for styling
+import { supabase } from "../../../supabaseClient"; 
+import "./Dashboard.css"; 
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
@@ -24,12 +24,10 @@ const Dashboard = () => {
             try {
                 setLoading(true);
 
-                // Fetch total users
                 const { count: totalUsers } = await supabase
                     .from("user_data")
                     .select("*", { count: "exact", head: true });
 
-                // Fetch active users
                 const { count: activeUsers, error: activeUsersError } = await supabase
                     .from("user_data")
                     .select("*", { count: "exact", head: true })
@@ -41,7 +39,6 @@ const Dashboard = () => {
                     console.log("Active Users Count (perso > 100):", activeUsers);
                 }
 
-                // Fetch income from the "public.order" table
                 const { data: ordersData, error: ordersError } = await supabase
                 .from("order")
                 .select("total_price")
@@ -49,10 +46,8 @@ const Dashboard = () => {
 
             if (ordersError) throw ordersError;
 
-            // Calculate total income
             const income = ordersData.reduce((sum, order) => sum + parseFloat(order.total_price || 0) * 100, 0);
 
-                // Fetch role-based counts
                 const roles = ["Animateurs Adjoints", "Animateurs", "Managers Adjoints", "Managers"];
             const roleCounts = {};
             for (const role of roles) {
@@ -63,10 +58,9 @@ const Dashboard = () => {
                 roleCounts[role.toLowerCase().replace(" ", "")] = count || 0;
             }
 
-            // Calculate level counts based on points
             const { data: userPoints } = await supabase
                 .from("history_data")
-                .select("ppcg"); // Fetch ppcg instead of points
+                .select("ppcg"); 
 
             const levelCounts = {
                 Distributeur: 0,
@@ -77,7 +71,7 @@ const Dashboard = () => {
             };
 
             userPoints.forEach((user) => {
-                const ppcg = user.ppcg || 0; // Default to 0 if ppcg is undefined
+                const ppcg = user.ppcg || 0; 
                 if (ppcg >= 30000) {
                     levelCounts.Manager++;
                 } else if (ppcg >= 18700) {
@@ -92,7 +86,6 @@ const Dashboard = () => {
             });
 
 
-                // Set data state
                 setData((prevState) => ({
                     ...prevState,
                     income,
@@ -102,7 +95,7 @@ const Dashboard = () => {
                     animateurs: roleCounts["animateurs"],
                     managersAdjoints: roleCounts["managersadjoints"],
                     managers: roleCounts["managers"],
-                    ...levelCounts, // Spread level counts into the state
+                    ...levelCounts, 
                 }));
             } catch (error) {
                 console.error("Error fetching data:", error.message);

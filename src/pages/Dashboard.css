@@ -299,18 +299,17 @@
   }
   
   .bouncy-button:nth-child(1) {
-    animation-delay: 0.1s; /* Staggered animation for the first button */
+    animation-delay: 0.1s; 
   }
   
   .bouncy-button:nth-child(2) {
-    animation-delay: 0.2s; /* Staggered animation for the second button */
+    animation-delay: 0.2s;
   }
   
   .bouncy-button:hover {
     background-color: #000;
   }
   
-  /* Bouncy Animation Keyframes */
   @keyframes bounce-in {
     0% {
       opacity: 0;

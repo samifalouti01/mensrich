@@ -134,7 +134,6 @@ h3, p {
     color: #707988;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .boutique-container {
         padding: 0px;

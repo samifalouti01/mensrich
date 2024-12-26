@@ -24,7 +24,6 @@ const AdminPanel = () => {
     const handleLogout = async () => {
         setLoading(true);
         try {
-            // Simulate logout logic
             await new Promise((resolve) => setTimeout(resolve, 2000));
             navigate("/");
         } catch (error) {
@@ -67,7 +66,6 @@ const AdminPanel = () => {
 
     return (
         <div className="admin-panel">
-            {/* Sidebar */}
             <aside className="sidebar">
                 <h1 className="logo">AdminPanel</h1>
                 <nav>
@@ -146,7 +144,6 @@ const AdminPanel = () => {
                 </nav>
             </aside>
 
-            {/* Main Content */}
             <main>
                 <header className="admin-header">
                     <h2>{activeSection.charAt(0).toUpperCase() + activeSection.slice(1)}</h2>

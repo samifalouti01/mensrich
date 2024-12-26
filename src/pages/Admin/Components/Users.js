@@ -9,14 +9,13 @@ const Parrainage = () => {
   const [modalImage, setModalImage] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Fetch user data from Supabase, excluding "validated" users
   const fetchUserData = async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
         .from('user_data')
         .select('*')
-        .neq('validate', 'unvalidate'); // Exclude users with "validate" status
+        .neq('validate', 'unvalidate'); 
 
       if (error) {
         console.error(error);
@@ -34,7 +33,6 @@ const Parrainage = () => {
     fetchUserData();
   }, []);
 
-  // Function to handle Block/Unblock button click
   const handleBlockToggle = async (id, currentBlocked) => {
     try {
       const { error } = await supabase
@@ -45,7 +43,7 @@ const Parrainage = () => {
       if (error) {
         console.error(error);
       } else {
-        fetchUserData(); // Re-fetch the data after update
+        fetchUserData(); 
       }
     } catch (error) {
       console.error(error);
@@ -56,7 +54,6 @@ const Parrainage = () => {
     setSearchQuery(e.target.value);
   };
 
-  // Filter orders based on search query
   const filteredOrders = userData.filter((user) => {
     return (
       user.id.toString().includes(searchQuery) ||
@@ -65,7 +62,6 @@ const Parrainage = () => {
     );
   });
 
-  // Function to handle Validate/Unvalidate button click
   const handleValidateToggle = async (id, currentValidate) => {
     try {
       const { error } = await supabase
@@ -76,20 +72,18 @@ const Parrainage = () => {
       if (error) {
         console.error(error);
       } else {
-        fetchUserData(); // Re-fetch the data after update
+        fetchUserData();
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  // Function to open modal with the image
   const openModal = (imageUrl) => {
     setModalImage(imageUrl);
     setShowModal(true);
   };
 
-  // Function to close the modal
   const closeModal = () => {
     setShowModal(false);
     setModalImage(null);
@@ -101,7 +95,6 @@ const Parrainage = () => {
 
   return (
     <div>
-      {/* Search Bar */}
       <input
         type="text"
         placeholder="Search by ID, Name, or Email"
@@ -166,7 +159,6 @@ const Parrainage = () => {
         </tbody>
       </table>
 
-      {/* Modal for displaying image */}
       {showModal && (
         <div className="modal" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
