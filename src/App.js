@@ -13,6 +13,7 @@ import { UserProvider } from "./components/UserContext";
 import Settings from "./pages/Settings";
 import Presentation from "./pages/Presentation";
 import Creative from "./pages/Creative";
+import ProductPage from "./pages/ProductPage";
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/presentation" element={<Presentation />} />
           <Route path="/creative" element={<Creative />} />
+          <Route path="/productpage/:productId" element={<ProductPage />} />
         </Routes>
       </div>
     </Router>

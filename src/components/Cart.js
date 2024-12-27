@@ -5,16 +5,16 @@ import { useUser } from "./UserContext";
 import "./Cart.css";
 
 const Cart = ({ cartItems, onRemoveItem, onClose }) => {
-  const { level, calculateLevel } = useUser();
+  const { level } = useUser();
   const [receiptFile, setReceiptFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
 
   const discountPercentages = {
     "Distributeur": 0.20,
-    "Animateur Adjoint": 0.35, // 35%
-    "Animateur": 0.38,         // 38%
-    "Manager Adjoint": 0.43,   // 40%
-    "Manager": 0.48,           // 48%
+    "Animateur Adjoint": 0.35,
+    "Animateur": 0.38,
+    "Manager Adjoint": 0.43,
+    "Manager": 0.48,
   };
 
   const discountMultiplier = discountPercentages[level] || 0; 
@@ -25,7 +25,6 @@ const Cart = ({ cartItems, onRemoveItem, onClose }) => {
   }));
 
   const totalFC = discountedItems.reduce((total, item) => total + item.discountedPrice, 0);
-
   const totalDZD = totalFC * 100;
 
   const handleFileChange = (event) => {
@@ -35,7 +34,6 @@ const Cart = ({ cartItems, onRemoveItem, onClose }) => {
 
   const handleBuyNow = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
-
     if (!user) {
       alert("Please log in before making a purchase.");
       return;
@@ -98,7 +96,7 @@ const Cart = ({ cartItems, onRemoveItem, onClose }) => {
 
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text).catch((err) => {
-      console.error("Échec de la copie du texte :", err);
+      console.error("Failed to copy text:", err);
     });
   };
 
@@ -139,7 +137,7 @@ const Cart = ({ cartItems, onRemoveItem, onClose }) => {
       
       <ul>
         <div className="container">
-        <div className="image-container">
+          <div className="image-container">
             <img
               className="imageP"
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/AlgeriePoste.svg/1200px-AlgeriePoste.svg.png"

@@ -1,267 +1,126 @@
-import React, { useState, useEffect, useRef } from "react";
-import Header from "../components/Header";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { supabase } from "../supabaseClient";
-import { FaCopy, FaShoppingCart, FaArrowUp } from "react-icons/fa";  
+import Header from "../components/Header";
+import { FaShoppingCart } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import Cart from "../components/Cart";
-import { useUser } from "../components/UserContext";
 import "./Boutique.css";
 
 const Boutique = () => {
   const [products, setProducts] = useState([]);
-  const { level, calculateLevel } = useUser();
-  const [cartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem("cartItems");
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
-  const [searchQuery, setSearchQuery] = useState(() => {
-    return localStorage.getItem("searchQuery") || "";
-  });
-  const [selectedCategory, setSelectedCategory] = useState(() => {
-    return localStorage.getItem("selectedCategory") || "Tous";
-  });
-  const [isCartOpen, setIsCartOpen] = useState(false);
-
-  const [isScrollVisible, setIsScrollVisible] = useState(false); 
-
-  const searchRef = useRef(null);
-  const cartRef = useRef(null);
-  const [sortOrder, setSortOrder] = useState("asc");
-
-  const fetchStoreData = async () => {
-    const { data, error } = await supabase
-      .from("store")
-      .select("id, product_image, title, ref, price, sex");
-
-    if (error) {
-      console.error("Erreur lors de la récupération des données :", error);
-    } else {
-      setProducts(data);
-    }
-  };
+  const [searchQuery, setSearchQuery] = useState("");
+  const [cartItems, setCartItems] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false); // toggle cart visibility
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchStoreData();
-  }, []);
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from("store")
+        .select("id, product_image, title, description, price");
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 30) {
-        setIsScrollVisible(true);
+      if (error) {
+        console.error("Error fetching products:", error);
       } else {
-        setIsScrollVisible(false);
+        setProducts(data);
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    fetchProducts();
   }, []);
 
-  const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  useEffect(() => {
-    localStorage.setItem("searchQuery", searchQuery);
-  }, [searchQuery]);
-
-  useEffect(() => {
-    localStorage.setItem("selectedCategory", selectedCategory);
-  }, [selectedCategory]);
-
-  const handleCopy = (text) => {
-    navigator.clipboard.writeText(text).catch((err) => {
-      console.error("Échec de la copie du texte :", err);
-    });
-  };
-
   const handleAddToCart = (product) => {
-    setCartItems((prevCart) => [...prevCart, product]);
+    setCartItems((prevItems) => [...prevItems, product]);
   };
 
-  const handleSearch = () => {
-    setSearchQuery(searchRef.current.value);
+  const handleSearch = (event) => {
+    setSearchQuery(event.target.value);
   };
 
-  const handleClickOutside = (event) => {
-    if (cartRef.current && !cartRef.current.contains(event.target)) {
-      setIsCartOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isCartOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isCartOpen]);
-
-  const filteredProducts = products.filter((product) => {
-    const matchesCategory =
-      selectedCategory === "Tous" || product.sex === selectedCategory.toLowerCase();
-      const matchesSearch = product.ref.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      product.title.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return matchesCategory && matchesSearch;
-  });
-
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
+  const handleClearSearch = () => {
     setSearchQuery("");
-    if (searchRef.current) {
-      searchRef.current.value = "";
-    }
   };
 
-  const handleCloseCart = () => {
-    setIsCartOpen(false);
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleProductClick = (productId) => {
+    navigate(`/productpage/${productId}`);
   };
 
-  const onRemoveItem = (index = null) => {
-    if (index === null) {
-      setCartItems([]); 
-    } else {
-      setCartItems(prevItems => prevItems.filter((_, i) => i !== index));
-    }
+  const handleRemoveItem = (index) => {
+    setCartItems((prevItems) => prevItems.filter((_, i) => i !== index));
   };
-
-  const discountPercentages = {
-    "Distributeur": 0.20,
-    "Animateur Adjoint": 0.35, // 35%
-    "Animateur": 0.38,         // 38%
-    "Manager Adjoint": 0.40,   // 40%
-    "Manager": 0.48,           // 48%
-  };
-
-  const discountMultiplier = discountPercentages[level] || 0; 
-
-  const discountedItems = cartItems.map((item) => ({
-    ...item,
-    discountedPrice: item.price * (1 - discountMultiplier), 
-  }));
-
-  const pointsFC = discountedItems.reduce((total, item) => total + item.discountedPrice, 0);
-
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sortOrder === "asc") {
-      return a.price - b.price;
-    } else {
-      return b.price - a.price;
-    }
-  });
 
   return (
-    <div className="boutique-container">
+    <div className="boutique">
       <Header />
-      <div className="toolbar">
-        <div className="category-buttons">
-          <button
-            className={selectedCategory === "Tous" ? "active" : ""}
-            onClick={() => handleCategoryChange("Tous")}
-          >
-            Tous
-          </button>
-          <button
-            className={selectedCategory === "Hommes" ? "active" : ""}
-            onClick={() => handleCategoryChange("Hommes")}
-          >
-            Hommes
-          </button>
-          <button
-            className={selectedCategory === "Femmes" ? "active" : ""}
-            onClick={() => handleCategoryChange("Femmes")}
-          >
-            Femmes
-          </button>
+      <header className="boutique-header">
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search for products..."
+            value={searchQuery}
+            onChange={handleSearch}
+            className="search-bar"
+          />
+          {searchQuery && (
+            <button className="clear-search" onClick={handleClearSearch}>
+              X
+            </button>
+          )}
         </div>
-        <input
-          ref={searchRef}
-          type="text"
-          placeholder={`Rechercher dans ${selectedCategory}...`}
-          className="search-bar"
-          onChange={handleSearch}
-          defaultValue={searchQuery}
-        />
         <div className="cart-icon" onClick={() => setIsCartOpen(!isCartOpen)}>
           <FaShoppingCart />
-          {cartItems.length > 0 && <span className="cart-count">{cartItems.length}</span>}
+          {cartItems.length > 0 && (
+            <span className="cart-count">{cartItems.length}</span>
+          )}
         </div>
-      </div>
+      </header>
+
+      {/* Cart embedded in the page */}
       {isCartOpen && (
-        <div ref={cartRef}>
+        <div className="cart-page">
           <Cart
             cartItems={cartItems}
-            onRemoveItem={onRemoveItem}
-            onClose={handleCloseCart}
+            onRemoveItem={handleRemoveItem}
+            onClose={() => setIsCartOpen(false)}
           />
         </div>
       )}
-      <div className="recommended">
-        <h2>{selectedCategory}</h2>
-        <div className="sort-buttons">
-          <button
-            className={sortOrder === "asc" ? "active" : ""}
-            onClick={() => setSortOrder("asc")}
-          >
-            Pas cher
-          </button>
-          <button
-            className={sortOrder === "desc" ? "active" : ""}
-            onClick={() => setSortOrder("desc")}
-          >
-            Cher
-          </button>
-        </div>
-        <br />
-        <br />
-        <div className="product-grid">
-          {sortedProducts.map((product) => (
-            <div
-              className="product-card"
-              key={product.id}
-              onClick={() => handleAddToCart(product)}
-            >
-              <div className="pr">
-                <img src={product.product_image} alt={product.title} />
-                <div className="title-container">
-                  <h3>{product.title}</h3>
-                  <div className="copy-container">
-                    <p>Réf : {product.ref}</p>
-                    <FaCopy
-                      style={{ color: '#000', marginTop: '-20px', padding: '0' }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCopy(product.ref);
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="price-container">
-                <div className="price">
-                  <img src="Coin.svg" alt="pièce" />
-                  <p>{(product.price * (1 - discountMultiplier)).toFixed(2)} FC</p>
-                </div>
-                <h3>{(product.price * 100).toLocaleString()} DZD</h3>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
 
-      {isScrollVisible && (
-        <button className="scroll-to-top" onClick={handleScrollToTop}>
-          <FaArrowUp />
-        </button>
-      )}
+      <div className="product-grid">
+        {filteredProducts.map((product) => (
+          <div
+            key={product.id}
+            className="product-card"
+            onClick={() => handleProductClick(product.id)}
+          >
+            <img
+              src={product.product_image}
+              alt={product.title}
+              className="product-image"
+            />
+            <h3 className="product-title">{product.title}</h3>
+            <p className="product-points">{product.price} points</p>
+            <p className="product-price">
+              {(product.price * 100).toLocaleString()} DA
+            </p>
+            <p className="product-description">{product.description}</p>
+            <button
+              className="add-to-cart-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart(product);
+              }}
+            >
+              Add to Cart
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
