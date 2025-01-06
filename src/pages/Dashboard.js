@@ -253,7 +253,7 @@ const Dashboard = () => {
               </div>
               <div className="copy-container">
                 <div className="copy-text">
-                  <p>{identifier || "Loading..."}</p>
+                  <p style={{ color: "#5700B4"}}>{identifier || "Loading..."}</p>
                   <FaCopy style={{ color: '#5700B4', padding: '0' }} onClick={() => handleCopy(identifier)} />
                 </div>
               </div>
@@ -317,7 +317,8 @@ const Dashboard = () => {
             <div className="timer">
               <span className="countdown"><p className="countdown">Challenge se termine dans</p>{timeLeft}</span>
             </div>
-            <img src="https://wekxcgoqkxqisrdmgvkp.supabase.co/storage/v1/object/public/user_pic/Hotel%205%20etoiles.gif?t=2024-11-28T01%3A36%3A20.432Z" alt="challenge" className="challenge" />
+            <img src="https://yyqugjxhmvdjsdlzuvlb.supabase.co/storage/v1/object/public/creative/Challenge.gif?t=2025-01-06T22%3A57%3A01.362Z" alt="challenge" className="challenge" />
+            <p style={{ fontSize: "20px"}}>Conditions: <span style={{ color: "#5700B4", fontWeight: "bold" }}>10 Parrainages <span style={{ color: "#1a202c", fontWeight: "normal" }}>and</span> 100 MC</span></p>
           </div>
           </div>
         </div>
