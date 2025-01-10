@@ -13,7 +13,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { level, calculateLevel, totalPoints, nextLevel, levelProgress, pointsToNextLevel } = useUser();
   const [message, setMessage] = useState("");
-  const [identifier, setIdentifier] = useState("");
+  const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [perso, setPerso] = useState("");
   const [parainagePoints, setParainagePoints] = useState("");
@@ -38,7 +38,7 @@ const Dashboard = () => {
     if (userError) {
       console.userError("Error fetching user data:", userError);
     } else {
-      setIdentifier(userData.identifier);
+      setId(userData.id);
       setName(userData.name);
       setPerso(userData.perso);
       setParainagePoints(userData.parainage_points);
@@ -253,8 +253,8 @@ const Dashboard = () => {
               </div>
               <div className="copy-container">
                 <div className="copy-text">
-                  <p style={{ color: "#5700B4"}}>{identifier || "Loading..."}</p>
-                  <FaCopy style={{ color: '#5700B4', padding: '0' }} onClick={() => handleCopy(identifier)} />
+                  <p style={{ color: "#5700B4"}}>ID: {id || "Loading..."}</p>
+                  <FaCopy style={{ color: '#5700B4', padding: '0' }} onClick={() => handleCopy(id)} />
                 </div>
               </div>
               {message && (

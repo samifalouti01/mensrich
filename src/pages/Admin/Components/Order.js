@@ -8,7 +8,7 @@ const Order = () => {
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalImage, setModalImage] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');  
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -53,6 +53,27 @@ const Order = () => {
     fetchOrders();
   }, []);
 
+  const handleActionChange = async (orderId, action) => {
+    try {
+      const { error } = await supabase
+        .from('order')
+        .update({ order_status: action })
+        .eq('id', orderId);
+
+      if (error) {
+        throw error;
+      }
+
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === orderId ? { ...order, order_status: action } : order
+        )
+      );
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -65,116 +86,6 @@ const Order = () => {
     );
   });
 
-  const handleValidate = async (orderId, userId, currentTotalPrice) => {
-    try {
-      const { data: userData, error: userError } = await supabase
-        .from('user_data')
-        .select('perso, ppcg, parrain_id')
-        .eq('id', userId)
-        .single();
-    
-      if (userError) {
-        if (userError.code === 'PGRST116') {
-          setError(`No user found for user_id: ${userId}`);
-        } else {
-          throw userError;
-        }
-        return;
-      }
-  
-      const currentPersoValue = parseFloat(userData.perso) || 0;
-      const currentPrice = parseFloat(currentTotalPrice) || 0;
-      const newPersoValue = currentPersoValue + currentPrice;
-  
-      const currentPpcgValue = parseFloat(userData.ppcg) || 0;
-      const newPpcgValue = currentPpcgValue + currentPrice;
-  
-      console.log(`User Data for ID ${userId}:`, userData);
-      console.log(`Updating perso: ${currentPersoValue} + ${currentPrice} = ${newPersoValue}`);
-      console.log(`Updating ppcg: ${currentPpcgValue} + ${currentPrice} = ${newPpcgValue}`);
-  
-      const { error: updateOrderError } = await supabase
-        .from('order')
-        .update({ order_status: 'validé' })
-        .eq('id', orderId);
-    
-      if (updateOrderError) {
-        throw updateOrderError;
-      }
-    
-      const { error: updateUserError } = await supabase
-        .from('user_data')
-        .update({
-          perso: newPersoValue.toString(),
-          ppcg: newPpcgValue.toString(),
-        })
-        .eq('id', userId);
-    
-      if (updateUserError) {
-        throw updateUserError;
-      }
-    
-      if (userData.parrain_id) {
-        const parrainIds = userData.parrain_id
-          .split(',')
-          .map(id => id.trim())
-          .filter(id => id && !isNaN(id)); 
-  
-        console.log(`User has valid parrain_ids: ${parrainIds}`);
-    
-        if (parrainIds.length === 0) {
-          console.log('No valid parrain_ids to update.');
-          return;
-        }
-  
-        const { data: parrainsData, error: parrainsError } = await supabase
-          .from('user_data')
-          .select('id, parainage_points, ppcg')
-          .in('id', parrainIds);
-    
-        if (parrainsError) {
-          throw parrainsError;
-        }
-  
-        console.log("Parrains Data:", parrainsData);
-    
-        for (const parrain of parrainsData) {
-          const currentParainagePoints = parseFloat(parrain.parainage_points) || 0;
-          const currentPpcgValue = parseFloat(parrain.ppcg) || 0;
-    
-          const newParainagePoints = currentParainagePoints + currentPrice;
-          const newPpcgValue = currentPpcgValue + currentPrice;
-    
-          console.log(`Updating parrain ID ${parrain.id}:`);
-          console.log(`Parainage Points: ${currentParainagePoints} + ${currentPrice} = ${newParainagePoints}`);
-          console.log(`PPCG: ${currentPpcgValue} + ${currentPrice} = ${newPpcgValue}`);
-    
-          const { error: updateParrainError } = await supabase
-            .from('user_data')
-            .update({
-              parainage_points: newParainagePoints.toString(),
-              ppcg: newPpcgValue.toString(),
-            })
-            .eq('id', parrain.id);
-    
-          if (updateParrainError) {
-            throw updateParrainError;
-          }
-        }
-      }
-    
-      setOrders(prevOrders => prevOrders.map(order => {
-        if (order.id === orderId) {
-          return { ...order, order_status: 'validé' };
-        }
-        return order;
-      }));
-    
-    } catch (error) {
-      setError(error.message);
-    }
-  };  
-
   const openModal = (imageUrl) => {
     setModalImage(imageUrl);
     setShowModal(true);
@@ -185,6 +96,10 @@ const Order = () => {
     setModalImage(null);
   };
 
+  const isValidImageUrl = (url) => {
+    return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(url);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -192,10 +107,6 @@ const Order = () => {
   if (error) {
     return <div>Error: {error}</div>;
   }
-
-  const isValidImageUrl = (url) => {
-    return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(url);  
-  };
 
   return (
     <div>
@@ -211,46 +122,58 @@ const Order = () => {
         <thead>
           <tr>
             <th>ID</th>
+            <th>Product Image</th>
             <th>Created At</th>
             <th>Name</th>
             <th>Phone</th>
-            <th>Product Ref</th>
-            <th>Reçu</th>
             <th>Total Price</th>
+            <th>Wilaya</th>
+            <th>Commune</th>
+            <th>Address</th>
             <th>Order Status</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {filteredOrders.map(order => (
+          {filteredOrders.map((order) => (
             <tr key={order.id}>
               <td>{order.id}</td>
+              <td>
+              {order.product_image ? (
+                <img
+                  src={order.product_image}
+                  alt={order.name || "Product Image"}
+                  onError={(e) => (e.target.style.display = "none")} // Handle broken images
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    borderRadius: "10px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => openModal(order.product_image)}
+                />
+              ) : (
+                <span>No Image</span>
+              )}
+            </td>
               <td>{new Date(order.created_at).toLocaleString()}</td>
               <td>{order.name}</td>
               <td>{order.phone}</td>
-              <td>{order.product_ref}</td>
-              <td>
-                {order.receipt && isValidImageUrl(order.receipt) ? (
-                  <img
-                    src={order.receipt}
-                    alt={`${order.name}`}
-                    style={{ width: '100px', height: 'auto', cursor: 'pointer' }}
-                    onClick={() => openModal(order.receipt)}
-                  />
-                ) : (
-                  <span>{order.receipt}</span> 
-                )}
-              </td>
               <td>{order.total_price * 100} DA</td>
+              <td>{order.wilaya}</td>
+              <td>{order.commune}</td>
+              <td>{order.address}</td>
               <td>{order.order_status}</td>
               <td>
-                {order.order_status !== 'validé' && order.userData ? (
-                  <button onClick={() => handleValidate(order.id, order.user_id, order.total_price)}>
-                    Validate
-                  </button>
-                ) : (
-                  <span style={{ color: '#007bff' }}>{order.userData ? 'Validated' : 'User not found'}</span>
-                )}
+                <select
+                  value={order.order_status}
+                  onChange={(e) => handleActionChange(order.id, e.target.value)}
+                  style={{ padding: '5px', borderRadius: '5px' }}
+                >
+                  <option value="validé">Valider</option>
+                  <option value="refusé">Refuser</option>
+                  <option value="annulé">Annuler</option>
+                </select>
               </td>
             </tr>
           ))}
@@ -260,8 +183,14 @@ const Order = () => {
       {showModal && (
         <div className="modal" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <span className="close" onClick={closeModal}>&times;</span>
-            <img src={modalImage} alt={`Full-size view of ${modalImage}`} className="modal-image" />
+            <span className="close" onClick={closeModal}>
+              &times;
+            </span>
+            <img
+              src={modalImage}
+              alt={`Full-size view of ${modalImage}`}
+              className="modal-image"
+            />
           </div>
         </div>
       )}

@@ -2,9 +2,7 @@
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
-    background: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
   
   .historique-header {
@@ -50,8 +48,9 @@
   
   .history-card {
     display: flex;
-    align-items: center;
-    background: #f9f9f9;
+    align-items: flex-start;
+    justify-content: center;
+    background: #fff;
     padding: 15px 20px;
     border-radius: 8px;
     margin-bottom: 10px;
@@ -106,4 +105,11 @@
     padding: 5px;
   }
   
+  .product-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 15px;
+  }
   

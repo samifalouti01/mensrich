@@ -73,14 +73,14 @@ const OrderForm = ({ product }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="order-form" onSubmit={handleSubmit}>
       <div>
         <label>Name:</label>
-        <input type="text" name="name" required />
+        <input className="input-form" type="text" name="name" required />
       </div>
       <div>
         <label>Phone Number:</label>
-        <input type="text" name="phone" required />
+        <input className="input-form" type="text" name="phone" required />
       </div>
       <div>
         <label>Wilaya:</label>
@@ -130,10 +130,10 @@ const OrderForm = ({ product }) => {
         </div>
       )}
       <div>
-        <p>Delivery Price: {(deliveryPrice * 100).toLocaleString()} DA</p>
-        <p>Total Price: {(totalPrice * 100).toLocaleString()} DA</p>
+        <p className="p-text">Delivery Price: {(deliveryPrice * 100).toLocaleString()} DA</p>
+        <p className="p-text">Total Price: {(totalPrice * 100).toLocaleString()} DA</p>
       </div>
-      <button type="submit">Buy</button>
+      <button className="btn-form" type="submit">Buy</button>
     </form>
   );
 };

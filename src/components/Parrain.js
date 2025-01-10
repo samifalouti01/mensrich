@@ -113,6 +113,37 @@ const Parrain = React.forwardRef((props, ref) => {
         .eq("id", currentUser.id);
   
       if (updateError) throw new Error("Failed to update parainage_users.");
+
+      // After successful user creation, get the new user's ID
+      const { data: newUser } = await supabase
+      .from("user_data")
+      .select("id")
+      .eq("identifier", formData.identifier)
+      .single();
+
+      // Create history_data record
+      const { error: historyError } = await supabase
+      .from("history_data")
+      .insert([{
+        id: newUser.id,
+        perso: 0,
+        parainage_points: 0,
+        parainage_users: 0,
+        ppcg: 0
+      }]);
+
+      if (historyError) throw new Error("Failed to create history record");
+
+      // Create first_month record
+      const { error: firstMonthError } = await supabase
+      .from("first_month")
+      .insert([{
+        id: newUser.id,
+        ppcg: 0,
+        perso: 0
+      }]);
+
+      if (firstMonthError) throw new Error("Failed to create first month record");
   
       setSuccess("Parrainage réussi !");
       setShowPopup(true); 

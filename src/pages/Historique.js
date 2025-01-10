@@ -18,7 +18,9 @@ const Historique = () => {
 
       const { data, error } = await supabase
         .from("order")
-        .select("id, product_ref, total_price, created_at, order_status")
+        .select(
+          "id, name, phone, total_price, created_at, order_status, product_image"
+        )
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
@@ -33,6 +35,30 @@ const Historique = () => {
     fetchOrders();
   }, []);
 
+  const handleCancelOrder = async (orderId) => {
+    const confirmCancel = window.confirm(
+      "Êtes-vous sûr de vouloir annuler cette commande ?"
+    );
+    if (!confirmCancel) return;
+
+    const { error } = await supabase
+      .from("order")
+      .update({ order_status: "annulé" })
+      .eq("id", orderId);
+
+    if (error) {
+      console.error("Error cancelling order:", error);
+      alert("Erreur lors de l'annulation de la commande.");
+    } else {
+      alert("Commande annulée avec succès.");
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === orderId ? { ...order, order_status: "annulé" } : order
+        )
+      );
+    }
+  };
+
   const getStatus = (status) => {
     switch (status) {
       case "validé":
@@ -40,6 +66,8 @@ const Historique = () => {
       case "en attente":
         return { emoji: "🟠", color: "#F98900" };
       case "refusé":
+        return { emoji: "🔴", color: "#E91E32" };
+      case "annulé":
         return { emoji: "🔴", color: "#E91E32" };
       default:
         return { emoji: "⚪", color: "gray" };
@@ -57,22 +85,40 @@ const Historique = () => {
           {loading ? (
             <p className="loading">Chargement...</p>
           ) : orders.length === 0 ? (
-            <p className="no-history">Aucune commande enregistrée pour le moment.</p>
+            <p className="no-history">
+              Aucune commande enregistrée pour le moment.
+            </p>
           ) : (
             orders.map((order) => {
               const { emoji, color } = getStatus(order.order_status);
               return (
                 <div key={order.id} className="history-card">
+                  {order.product_image && (
+                    <img
+                      src={order.product_image}
+                      alt={`Produit ${order.id}`}
+                      className="product-image"
+                    />
+                  )}
                   <div className="history-details">
                     <p style={{ color: "#000" }}>Commande ID: {order.id}</p>
-                    <p style={{ color: "#000" }}>Réf: {order.product_ref}</p>
-                    <p style={{ color: "#000" }}>Prix total: {order.total_price} FC</p>
+                    <p style={{ color: "#000" }}>
+                      Prix total: {order.total_price} FC
+                    </p>
                     <p className="history-status" style={{ color }}>
                       {emoji} {order.order_status}
                     </p>
                     <p className="history-time">
                       {new Date(order.created_at).toLocaleString()}
                     </p>
+                    {order.order_status !== "annulé" && order.order_status !== "validé" && order.order_status !== "refusé" && (
+                      <button
+                        className="cancel-button"
+                        onClick={() => handleCancelOrder(order.id)}
+                      >
+                        Annuler
+                      </button>
+                    )}
                   </div>
                 </div>
               );

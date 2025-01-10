@@ -1,38 +1,51 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../../supabaseClient";
 
+const determineLevel = (ppcg) => {
+  if (!ppcg || isNaN(ppcg)) return "Distributeur";
+  if (ppcg >= 30000) return "Manager";
+  if (ppcg >= 18700) return "Manager Adjoint";
+  if (ppcg >= 6250) return "Animateur";
+  if (ppcg >= 100) return "Animateur Adjoint";
+  return "Distributeur";
+};
+
 const MonthlyUp = () => {
   const [userData, setUserData] = useState([]);
+  const [firstMonthData, setFirstMonthData] = useState([]);
   const [historyData, setHistoryData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [passcode, setPasscode] = useState("");
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [filterLevel, setFilterLevel] = useState("");
+  const [filterId, setFilterId] = useState("");
 
-  const fetchUserData = async () => {
+  const fetchAllData = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('user_data')
-      .select('id, perso, parainage_points, parainage_users, ppcg');
-                
-    setLoading(false);
-    if (error) {
-      console.error("Error fetching user data:", error);
-    } else {
-      setUserData(data);
-    }
-  };
+    try {
+      const { data: userResult, error: userError } = await supabase
+        .from('user_data')
+        .select('*');
+      if (userError) throw userError;
 
-  const fetchHistoryData = async () => {
-    const { data, error } = await supabase
-      .from('history_data')
-      .select('id, perso, parainage_points, parainage_users, ppcg');
-    
-    if (error) {
-      console.error("Error fetching history data:", error);
-    } else {
-      setHistoryData(data);
+      const { data: firstMonthResult, error: firstMonthError } = await supabase
+        .from('first_month')
+        .select('*');
+      if (firstMonthError) throw firstMonthError;
+
+      const { data: historyResult, error: historyError } = await supabase
+        .from('history_data')
+        .select('*');
+      if (historyError) throw historyError;
+
+      setUserData(userResult);
+      setFirstMonthData(firstMonthResult);
+      setHistoryData(historyResult);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
+    setLoading(false);
   };
 
   const handlePasscodeSubmit = () => {
@@ -44,86 +57,116 @@ const MonthlyUp = () => {
     }
   };
 
-  const handleUpdateAll = async () => {
-    let success = true;
-    for (let i = 0; i < userData.length; i++) {
-      const user = userData[i];
-      const history = historyData.find((data) => data.id === user.id);
-  
-      if (user && history) {
-        const updatedPerso = (+user.perso || 0) + (+history.perso || 0);
-        const updatedParainagePoints = (+user.parainage_points || 0) + (+history.parainage_points || 0);
-        const updatedParainageUsers = (+user.parainage_users || 0) + (+history.parainage_users || 0);
-        const updatedPpcg = (+user.ppcg || 0) + (+history.ppcg || 0);
-        
-        const { error } = await supabase
-          .from('history_data')
-          .upsert([
-            {
-              id: user.id,
-              perso: updatedPerso,
-              parainage_points: updatedParainagePoints,
-              parainage_users: updatedParainageUsers,
-              ppcg: updatedPpcg,
-            },
-          ]);
-  
-        if (error) {
-          console.error(`Error updating row for id ${user.id}:`, error);
-          success = false;
-        }
-      }
-    }
-  
-    if (success) {
-      setSuccessMessage("All data updated successfully!");
-    } else {
-      setSuccessMessage("Some rows failed to update.");
-    }
-  
-    setTimeout(() => setSuccessMessage(""), 3000);
-  
-    fetchHistoryData();
-  };
-  
+  const handleUpgrade = async (id) => {
+    try {
+      const firstMonth = firstMonthData.find(item => item.id === id);
+      const user = userData.find(item => item.id === id);
+      const historyRecord = historyData.find(item => item.id === id);
 
-  const handleDeleteAll = async () => {
-    let success = true;
-    for (let i = 0; i < userData.length; i++) {
-      const user = userData[i];
-      
-      const { error } = await supabase
+      const M1 = Number(firstMonth?.ppcg || 0);
+      const M2 = Number(user?.ppcg || 0);
+      const totalPcg = M1 + M2;
+      const currentHistoryPpcg = Number(historyRecord?.ppcg || 0);
+      const finalPpcg = currentHistoryPpcg + totalPcg;
+
+      const { error: historyError } = await supabase
+        .from('history_data')
+        .upsert([{ 
+          id, 
+          ppcg: finalPpcg,
+          perso: user.perso,
+          parainage_points: user.parainage_points,
+          parainage_users: user.parainage_users
+        }]);
+      if (historyError) throw historyError;
+
+      const { error: firstMonthError } = await supabase
+        .from('first_month')
+        .upsert([{ id, ppcg: 0 }]);
+      if (firstMonthError) throw firstMonthError;
+
+      const { error: userError } = await supabase
         .from('user_data')
-        .upsert([
-          {
-            id: user.id,
-            perso: 0,
-            parainage_points: 0,
-            parainage_users: 0,
-            ppcg: 0,
-          },
-        ]);
+        .upsert([{ 
+          id, 
+          ppcg: 0,
+          perso: user.perso,
+          parainage_points: user.parainage_points,
+          parainage_users: user.parainage_users
+        }]);
+      if (userError) throw userError;
 
-      if (error) {
-        console.error(`Error resetting row for id ${user.id}:`, error);
-        success = false;
-      }
+      setSuccessMessage("Upgrade completed successfully!");
+      fetchAllData();
+    } catch (error) {
+      console.error("Error during upgrade:", error);
+      setSuccessMessage("Error during upgrade operation");
     }
-
-    if (success) {
-      setSuccessMessage("All user data reset to 0!");
-    } else {
-      setSuccessMessage("Some rows failed to reset.");
-    }
-
     setTimeout(() => setSuccessMessage(""), 3000);
-    fetchUserData();
+  };
+
+  const handleDowngrade = async (id) => {
+    try {
+      const firstMonth = firstMonthData.find(item => item.id === id);
+      const user = userData.find(item => item.id === id);
+
+      const M2 = user?.ppcg || 0;
+
+      const { error: firstMonthError } = await supabase
+        .from('first_month')
+        .upsert([{ id, ppcg: M2 }]);
+      if (firstMonthError) throw firstMonthError;
+
+      const { error: userError } = await supabase
+        .from('user_data')
+        .upsert([{ 
+          id, 
+          ppcg: 0,
+          perso: user.perso,
+          parainage_points: user.parainage_points,
+          parainage_users: user.parainage_users
+        }]);
+      if (userError) throw userError;
+
+      setSuccessMessage("Downgrade completed successfully!");
+      fetchAllData();
+    } catch (error) {
+      console.error("Error during downgrade:", error);
+      setSuccessMessage("Error during downgrade operation");
+    }
+    setTimeout(() => setSuccessMessage(""), 3000);
   };
 
   useEffect(() => {
-    fetchUserData();
-    fetchHistoryData();
+    fetchAllData();
   }, []);
+
+  const getFilteredUsers = () => {
+    return historyData
+      .filter((history) => {
+        const level = determineLevel(Number(history.ppcg || 0));
+        const matchesLevel = filterLevel
+          ? level.toLowerCase().includes(filterLevel.toLowerCase())
+          : true;
+        const matchesId = filterId
+          ? history.id.toString().includes(filterId)
+          : true;
+  
+        return matchesLevel && matchesId;
+      })
+      .map((history) => {
+        const firstMonth = firstMonthData.find((item) => item.id === history.id) || { ppcg: 0 };
+        const user = userData.find((item) => item.id === history.id) || { ppcg: 0 };
+        
+        return {
+          id: history.id,
+          level: determineLevel(Number(history.ppcg || 0)), // Using history.ppcg for level determination
+          firstMonthPpcg: Number(firstMonth.ppcg || 0),
+          userPpcg: Number(user.ppcg || 0),
+          totalPcg: Number(firstMonth.ppcg || 0) + Number(user.ppcg || 0)
+        };
+      });
+  };
 
   return (
     <div>
@@ -142,33 +185,34 @@ const MonthlyUp = () => {
       ) : (
         <>
           <h1 style={{ color: "black" }}>Monthly Up</h1>
-          <button onClick={handleUpdateAll}>Update All</button>
-
-          <button style={{ backgroundColor: "red", color: "white", marginLeft: "10px" }} onClick={handleDeleteAll}>Delete All</button>
-
           {loading ? (
             <p>Loading...</p>
           ) : (
             <>
-              {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}  {/* Display success message */}
+              {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
               <table>
                 <thead>
                   <tr>
-                    <th>id</th>
-                    <th>perso</th>
-                    <th>parainage_points</th>
-                    <th>parainage_users</th>
-                    <th>ppcg</th>
+                    <th>ID</th>
+                    <th>Level</th>
+                    <th>M1</th>
+                    <th>M2</th>
+                    <th>Total PCG</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {userData.map((product) => (
-                    <tr key={product.id}>
-                      <td>{product.id}</td>
-                      <td>{product.perso}</td>
-                      <td>{product.parainage_points}</td>
-                      <td>{product.parainage_users}</td>
-                      <td>{product.ppcg}</td>
+                  {getFilteredUsers().map((user) => (
+                    <tr key={user.id}>
+                      <td>{user.id}</td>
+                      <td>{user.level}</td>
+                      <td>{user.firstMonthPpcg}</td>
+                      <td>{user.userPpcg}</td>
+                      <td>{user.totalPcg}</td>
+                      <td>
+                        <button onClick={() => handleUpgrade(user.id)}>Upgrade</button>
+                        <button onClick={() => handleDowngrade(user.id)}>Downgrade</button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

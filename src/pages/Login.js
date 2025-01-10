@@ -115,8 +115,38 @@ const Login = () => {
                 validate: registerData.validate,
             };
     
-            const { error } = await supabase.from("user_data").insert([newUser]);
-            if (error) throw error;
+            // Insert the new user and get their ID
+            const { data: insertedUser, error: insertError } = await supabase
+                .from("user_data")
+                .insert([newUser])
+                .select('id')
+                .single();
+    
+            if (insertError) throw insertError;
+    
+            // Create history_data record
+            const { error: historyError } = await supabase
+                .from("history_data")
+                .insert([{
+                    id: insertedUser.id,
+                    perso: 0,
+                    parainage_points: 0,
+                    parainage_users: 0,
+                    ppcg: 0
+                }]);
+    
+            if (historyError) throw new Error("Failed to create history record");
+    
+            // Create first_month record
+            const { error: firstMonthError } = await supabase
+                .from("first_month")
+                .insert([{
+                    id: insertedUser.id,
+                    ppcg: 0,
+                    perso: 0
+                }]);
+    
+            if (firstMonthError) throw new Error("Failed to create first month record");
     
             setShowPopup(true);
         } catch (err) {
@@ -216,9 +246,9 @@ const Login = () => {
             )}
             {showPopup && (
                 <div className="popup">
-                    <h3>Registration Successful!</h3>
-                    <p>ID: {registerData.identifier}</p>
-                    <p>Password: {registerData.password}</p>
+                    <h3 style={{ color: "green" }}>Registration Successful!</h3>
+                    <p style={{ color: "black" }}>ID: {registerData.identifier}</p>
+                    <p style={{ color: "black" }}>Password: {registerData.password}</p>
                     <button onClick={() => setShowPopup(false)}>Close</button>
                 </div>
             )}
