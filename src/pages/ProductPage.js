@@ -76,9 +76,10 @@ const ProductPage = () => {
         <div className="product-info">
           <h1 className="product-title">{product.title}</h1>
           <div className="product-pricing">
-            <p className="product-price">
-              {(product.price * 100).toLocaleString()} DA
-            </p>
+          <p className="product-price">
+    {(product.price * 100 + 600).toLocaleString() + " DA"}
+</p>
+
             <p className="product-price-da">{product.price} points</p>
           </div>
           <p className="product-description">{product.description}</p>

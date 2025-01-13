@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { supabase } from "../supabaseClient";
 import Header from "../components/Header";
 import { jsPDF } from "jspdf";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "./Payments.css";
 
 const Payments = () => {
@@ -9,7 +10,7 @@ const Payments = () => {
   const [userData, setUserData] = useState({});
   const [referrals, setReferrals] = useState([]);
   const [income, setIncome] = useState(0);
-  const [currentTime, setCurrentTime] = useState(""); // Add state for current time
+  const [currentTime, setCurrentTime] = useState(""); 
 
   const fetchUserData = useCallback(async () => {
     const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -17,34 +18,37 @@ const Payments = () => {
       alert("Please log in.");
       return;
     }
-
+  
     const currentUserId = String(currentUser.id);
     setUserId(currentUserId);
-
+  
     const { data: userPpcgData, error: userPpcgError } = await supabase
       .from("history_data")
       .select("ppcg")
       .eq("id", currentUserId);
-
+  
     if (userPpcgError) {
       console.error("Error fetching PPCG from history_data:", userPpcgError);
       return;
     }
-
+  
     const totalPpcg = userPpcgData.reduce((acc, record) => acc + (parseFloat(record.ppcg) || 0), 0);
-
+  
     const { data: userData, error: userError } = await supabase
       .from("user_data")
-      .select("id, parrain_id, parainage_users")
+      .select("id, parrain_id, parainage_users, perso")
       .eq("id", currentUserId)
       .single();
-
+  
     if (!userError) {
-      setUserData({ ...userData, ppcg: totalPpcg });
+      const userLevel = determineLevel(totalPpcg);
+      const userStatus = calculateUserStatus(parseFloat(userData.perso) || 0, userLevel);
+  
+      setUserData({ ...userData, ppcg: totalPpcg, userLevel, userStatus });
     } else {
       console.error("Error fetching user data:", userError);
     }
-  }, []);
+  }, []);  
 
   const fetchReferrals = useCallback(async () => {
     if (!userId) return;
@@ -234,24 +238,66 @@ const Payments = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const calculateUserStatus = (perso, level) => {
+    const thresholds = {
+      "Manager Senior": 500,
+      "Manager Junior": 400,
+      Manager: 300,
+      "Animateur Senior": 200,
+      "Animateur Junior": 100,
+    };
+  
+    return perso >= thresholds[level] ? "Actif" : "Inactif";
+  };
+  
+
   return (
     <div>
       <Header />
-      <button onClick={downloadPDF} className="download-btn">Download PDF</button>
+      <button onClick={downloadPDF} className="download-btn">
+        <i class="bi bi-file-earmark-arrow-down" style={{ marginRight: "8px" }}></i>
+       Download PDF</button>
       <div className="payments-container">
-        <p style={{ color: "#333" }}>{currentTime}</p> {/* Display the current time */}
-        <div className="user-info">
-          <h1>Level: {userData.ppcg ? determineLevel(parseFloat(userData.ppcg)) : "N/A"}</h1>
-          <h2>Total Income: {(income * 100).toFixed(2)} DA</h2>
-          <h2>Team Size: {referrals.length}</h2>
+        <div className="row-p">
+          <p style={{ color: "#333" }}>{currentTime}</p> 
+          <p>
+          Status:{" "}
+            <span
+              style={{
+                color: userData.userStatus === "Actif" ? "green" : "red",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
+              }}
+            >
+              <span
+                style={{
+                  width: "8px",
+                  height: "8px",
+                  borderRadius: "50%",
+                  backgroundColor: userData.userStatus === "Actif" ? "green" : "red",
+                }}
+              ></span>
+              {userData.userStatus}
+            </span>
+          </p> 
         </div>
+        <div className="user-info">
+          <div className="row-p">
+            <h1>{userData.ppcg ? determineLevel(parseFloat(userData.ppcg)) : "N/A"}</h1>
+            <h2><i class="bi bi-cash-coin" style={{ color: "#5700B4", marginRight: "10px" }}></i> 
+             {(income * 100).toFixed(2)} DA</h2>
+          </div>
+          <p style={{ color: "#333" }}>Your Sales Points for this month: <span style={{ color: "#5700B4", fontWeight: "bold" }}>{userData.perso}</span></p>
+          <h3 style={{ color: "#333" }}>Team Size: {referrals.length}</h3>
+        </div>
+        <br />
         <h3 style={{ color: "#333" }}>Referral Details:</h3>
         <ul className="referral-list">
           {referrals.map((referral) => (
             <li key={referral.id} className="referral-item">
               <span>{referral.name}</span>
-              <span>Level: {determineLevel(referral.ppcg)}</span>
-              <span>perso: {((parseFloat(referral.perso) || 0) * 100).toFixed(2)}</span>
+              <span>{determineLevel(referral.ppcg)}</span>
               <span>Income: {((parseFloat(referral.referralIncome) || 0) * 100).toFixed(2)} DA</span>
             </li>          
           ))}

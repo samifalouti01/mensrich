@@ -7,6 +7,7 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import Parrain from "../components/Parrain";
 import "react-circular-progressbar/dist/styles.css";
 import { useUser } from "../components/UserContext";
+import Pay from "../components/Pay";
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -224,33 +225,36 @@ const Dashboard = () => {
             </div>
           )}
         </div>
-        <div className="dashboard-main">
-          <div className="column">
-              <div className="row-dash">
-                <div onClick={() => document.getElementById('file-input').click()}>
-                  <div className="card-image">
-                    <img src={userImage || "Loading..."} alt="ْ" className="hidden-alt" />
-                  </div>
-                  <input
-                    id="file-input"
-                    type="file"
-                    accept="image/*"
-                    onChange={async (event) => {
-                      const file = event.target.files[0];
-                      if (file) {
-                        await handleImageUpload(file);
-                      }
-                    }}
-                    style={{ display: "none" }}
-                  />
+        {/* Begin */}
+        <div className="documentation-wrapper-dash">
 
-                  {isUploading && <progress value={uploadProgress} max="100"></progress>}
-                </div>
-                <div className="column-dash">
-                  <h1>{name || "Loading..."}</h1>
-                  <h2 style={{ color: "#9A9A9A", fontWeight: "medium" }}>{level || "Loading..."}</h2>
-                </div>
+        {/* Quick Links */}
+        <div className="dash-links">
+            <div className="first-card">
+              <div onClick={() => document.getElementById('file-input').click()}>
+                    <div className="card-image">
+                      <img src={userImage || "Loading..."} alt="ْ" className="hidden-alt" />
+                    </div>
+                    <input
+                      id="file-input"
+                      type="file"
+                      accept="image/*"
+                      onChange={async (event) => {
+                        const file = event.target.files[0];
+                        if (file) {
+                          await handleImageUpload(file);
+                        }
+                      }}
+                      style={{ display: "none" }}
+                    />
+
+                    {isUploading && <progress value={uploadProgress} max="100"></progress>}
               </div>
+              <br />
+              <h4>{name || "Loading..."}</h4>
+              <br />
+              <h4>{level || "Loading..."}</h4>
+              <br />
               <div className="copy-container">
                 <div className="copy-text">
                   <p style={{ color: "#5700B4"}}>ID: {id || "Loading..."}</p>
@@ -263,67 +267,101 @@ const Dashboard = () => {
                 </p>
               )}
             </div>
-          <div>
-          </div>
-          <div className="wrap">
-            <div className="wrap1">
+
             <div className="first-card">
+              <p>For this month</p>
               <div className="flex-container">
                 <h3>Sales points:</h3>
                 <p>{perso || "Loading..."}</p>
               </div>
-            </div>
-            <div className="first-card">
               <div className="flex-container">
                 <h3>Referral points:</h3>
                 <p>{parainagePoints || "Loading..."}</p>
               </div>
-            </div>
-            <div className="first-card">
               <div className="flex-container">
                 <h3>Referred Users:</h3>
                 <p>{parainageUsers || "Loading..."}</p>
               </div>
-            </div>
-            <div className="first-card">
               <div className="flex-container">
                 <h3>Group points:</h3>
                 <p>{ppcg || "Loading..."}</p>
               </div>
             </div>
-            </div>
-            <div className="dashboard-card">
+            <div className="first-card">
               <h2>
-                Progress to Next Level: <span style={{ color: "#5700B4" }}>{nextLevel}</span>
-              </h2>
-              <div className="donut-container">
-                <CircularProgressbar
-                  value={levelProgress}
-                  text={`${levelProgress.toFixed(1)}%`}
-                  styles={buildStyles({
-                    textColor: "#5700B4",
-                    pathColor: "#5700B4",
-                    trailColor: "#d3d3d3",
-                  })}
-                />
-              </div>
-              <h3>{level}</h3>
-              <p>
-                Points needed to reach <span style={{ color: "#5700B4", fontWeight: "bold" }}>{nextLevel}</span>:{" "}
-                <span style={{ color: "#000", fontWeight: "bold" }}>{pointsToNextLevel}</span>
-              </p>
+                  Progress to Next Level: <span style={{ color: "#5700B4" }}>{nextLevel}</span>
+                </h2>
+                <div className="donut-container">
+                  <CircularProgressbar
+                    value={levelProgress}
+                    text={`${levelProgress.toFixed(1)}%`}
+                    styles={buildStyles({
+                      textColor: "#5700B4",
+                      pathColor: "#5700B4",
+                      trailColor: "#d3d3d3",
+                    })}
+                  />
+                </div>
+                <h3>{level}</h3>
+                <p>
+                  Points needed to reach <span style={{ color: "#5700B4", fontWeight: "bold" }}>{nextLevel}</span>:{" "}
+                  <span style={{ color: "#000", fontWeight: "bold" }}>{pointsToNextLevel}</span>
+                </p>
             </div>
-            <div className="dashboard-card">
-            <div className="timer">
-              <span className="countdown"><p className="countdown">Challenge se termine dans</p>{timeLeft}</span>
+        </div>
+
+        {/* User Guide Section */}
+        <section className="doc-section-dash">
+          <div className="section-header-dash">
+            <i class="bi bi-trophy"></i>
+            <h2>Challenge</h2>
+          </div>
+          <div className="section-content-dash">
+            <div className="column-dash">
+              <p>To win this challenge you need to follow steps:</p>
+              <div className="feature-list">
+                <div className="feature-item">
+                  <i className="bi bi-check2-circle"></i>
+                  <p>10 referred users actif</p>
+                </div>
+                <div className="feature-item">
+                  <i className="bi bi-check2-circle"></i>
+                  <p>100 MC / Sales points</p>
+                </div>
+                <div className="feature-item">
+                  <i class="bi bi-stopwatch" style={{ color: "red" }}></i>
+                  <p>Challenge ends in <br /> <span style={{ color: "#5700B4" }}>{timeLeft}</span></p>
+                </div>
+              </div>
             </div>
             <img src="https://yyqugjxhmvdjsdlzuvlb.supabase.co/storage/v1/object/public/creative/Challenge.gif?t=2025-01-06T22%3A57%3A01.362Z" alt="challenge" className="challenge" />
-            <p style={{ fontSize: "20px"}}>Conditions: <span style={{ color: "#5700B4", fontWeight: "bold" }}>10 Parrainages <span style={{ color: "#1a202c", fontWeight: "normal" }}>and</span> 100 MC</span></p>
           </div>
+        </section>
+
+        {/* Payment Section */}
+        <section className="doc-section">
+          <div className="section-header">
+            <i className="bi bi-credit-card"></i>
+            <h2>Payment</h2>
           </div>
+          <div className="section-content">
+            <p>You will get your Salary and your Comission monthly.</p>
+            <div className="payment-grid">
+              <div className="payment-card">
+                <h3>Salary</h3>
+                <p><Pay /></p>
+              </div>
+              <div className="payment-card">
+                <h3>Comission</h3>
+                <p>0 DA</p>
+              </div>
+            </div>
+          </div>
+        </section>
         </div>
       </div>
       {showParrain && <Parrain ref={parrainModalRef} onClose={closeParrainModal} />}
+      
     </div>
   );
 };

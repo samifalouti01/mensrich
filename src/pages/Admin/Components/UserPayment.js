@@ -9,37 +9,78 @@ const UserPayment = () => {
 
   const determineLevel = (ppcg) => {
     if (!ppcg || isNaN(ppcg)) return "Distributeur";
-    if (ppcg >= 30000) return "Manager";
-    if (ppcg >= 18700) return "Manager Adjoint";
-    if (ppcg >= 6250) return "Animateur";
-    if (ppcg >= 100) return "Animateur Adjoint";
+    if (ppcg >= 50000) return "Manager Senior";
+    if (ppcg >= 30000) return "Manager Junior";
+    if (ppcg >= 18700) return "Manager";
+    if (ppcg >= 12500) return "Animateur Senior";
+    if (ppcg >= 6250) return "Animateur Junior";
+    if (ppcg >= 100) return "Animateur";
     return "Distributeur";
   };
 
   const commissionMatrix = {
-    Manager: {
-      Manager: 0,
-      "Manager Adjoint": 5,
+    "Manager Senior": {
+      "Manager Senior": 0,
+      "Manager Junior": 2,
+      Manager: 4,
+      "Animateur Senior": 6,
+      "Animateur Junior": 8,
       Animateur: 10,
-      "Animateur Adjoint": 13,
+      Distributeur: 0,
     },
-    "Manager Adjoint": {
+    "Manager Junior": {
+      "Manager Senior": 0,
+      "Manager Junior": 0,
+      Manager: 2,
+      "Animateur Senior": 4,
+      "Animateur Junior": 6,
+      Animateur: 8,
+      Distributeur: 0,
+    },
+    Manager: {
+      "Manager Senior": 0,
+      "Manager Junior": 0,
       Manager: 0,
-      "Manager Adjoint": 0,
-      Animateur: 3,
-      "Animateur Adjoint": 8,
+      "Animateur Senior": 2,
+      "Animateur Junior": 4,
+      Animateur: 6,
+      Distributeur: 0,
+    },
+    "Animateur Senior": {
+      "Manager Senior": 0,
+      "Manager Junior": 0,
+      Manager: 0,
+      "Animateur Senior": 0,
+      "Animateur Junior": 2,
+      Animateur: 4,
+      Distributeur: 0,
+    },
+    "Animateur Junior": {
+      "Manager Senior": 0,
+      "Manager Junior": 0,
+      Manager: 0,
+      "Animateur Senior": 0,
+      "Animateur Junior": 0,
+      Animateur: 2,
+      Distributeur: 0,
     },
     Animateur: {
+      "Manager Senior": 0,
+      "Manager Junior": 0,
       Manager: 0,
-      "Manager Adjoint": 0,
+      "Animateur Senior": 0,
+      "Animateur Junior": 0,
       Animateur: 0,
-      "Animateur Adjoint": 5,
+      Distributeur: 0,
     },
-    "Animateur Adjoint": {
+    Distributeur: {
+      "Manager Senior": 0,
+      "Manager Junior": 0,
       Manager: 0,
-      "Manager Adjoint": 0,
+      "Animateur Senior": 0,
+      "Animateur Junior": 0,
       Animateur: 0,
-      "Animateur Adjoint": 0,
+      Distributeur: 0,
     },
   };
 

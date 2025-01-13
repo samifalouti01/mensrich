@@ -1,8 +1,5 @@
 import React, { useState, forwardRef } from "react";
-import { 
-  FaChartBar, FaQuestion, FaHistory, FaUsers, FaDollarSign, FaTags, 
-  FaCog, FaFileAlt, FaCreativeCommonsSampling 
-} from "react-icons/fa";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import "./LeftNavBar.css";
@@ -23,39 +20,31 @@ const LeftNavBar = forwardRef((props, ref) => {
     <div className="left-navbar" ref={ref}>
       <nav className="nav-menu">
         <button className="nav-item" onClick={() => navigate("/dashboard")}>
-          <FaChartBar className="nav-icon" />
+          <i class="bi bi-bar-chart-steps" style={{ marginRight: "8px" }}></i>
           Dashboard
         </button>
-        <button className="nav-item" onClick={() => navigate("/catalogue")}>
-          <FaTags className="nav-icon" />
-          Catalog
-        </button>
         <button className="nav-item" onClick={() => navigate("/mon-equipe")}>
-          <FaUsers className="nav-icon" />
+          <i class="bi bi-people" style={{ marginRight: "8px" }}></i>
           My Team
         </button>
         <button className="nav-item" onClick={() => navigate("/historique")}>
-          <FaHistory className="nav-icon" />
+          <i class="bi bi-clock-history" style={{ marginRight: "8px" }}></i>
           Order History
         </button>
         <button className="nav-item" onClick={() => navigate("/payments")}>
-          <FaDollarSign className="nav-icon" />
+          <i class="bi bi-wallet2" style={{ marginRight: "8px" }}></i>
           Paiment
         </button>
         <button className="nav-item" onClick={() => navigate("/presentation")}>
-          <FaFileAlt className="nav-icon" />
+          <i class="bi bi-map" style={{ marginRight: "8px" }}></i>
           User Guide
         </button>
-        <button className="nav-item" onClick={() => navigate("/creative")}>
-          <FaCreativeCommonsSampling className="nav-icon" />
-          Creatifs
-        </button>
         <button className="nav-item" onClick={() => navigate("/settings")}>
-          <FaCog className="nav-icon" />
+          <i class="bi bi-sliders" style={{ marginRight: "8px" }}></i>
           Settings
         </button>
         <button className="nav-item" onClick={() => navigate("/helpdesk")}>
-          <FaQuestion className="nav-icon" />
+          <i class="bi bi-patch-question" style={{ marginRight: "8px" }}></i>
           Helpdesk
         </button>
       </nav>

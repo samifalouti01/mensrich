@@ -7,9 +7,22 @@
     margin: 0 auto;
     font-family: Arial, sans-serif;
   }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+  }
   
-  .user-info h1, .user-info h2 {
-    color: #333;
+  .user-info h1 {
+    color: #5700B4;
+    text-align: center;
+  }
+
+  .user-info h2 {
+    color: #44008c;
     text-align: center;
   }
   
@@ -45,3 +58,16 @@
     color: #555;
   }
   
+  .row-p {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .pay-icon-p {
+    color: #5700B4;
+    width: 24px;
+    padding-top: 10px;
+  }

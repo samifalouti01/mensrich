@@ -8,11 +8,9 @@ import Historique from "./pages/Historique";
 import AdminPanel from "./pages/Admin/AdminPanel";
 import MonEquipe from "./pages/MonEquipe";
 import Payments from "./pages/Payments";
-import Catalogue from "./pages/Catalogue";
 import { UserProvider } from "./components/UserContext";
 import Settings from "./pages/Settings";
 import Presentation from "./pages/Presentation";
-import Creative from "./pages/Creative";
 import ProductPage from "./pages/ProductPage";
 
 
@@ -30,10 +28,8 @@ function App() {
           <Route path="/admin-panel" element={<AdminPanel />} />
           <Route path="/mon-equipe" element={<MonEquipe />} />
           <Route path="/payments" element={<Payments />} />
-          <Route path="/catalogue" element={<Catalogue />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/presentation" element={<Presentation />} />
-          <Route path="/creative" element={<Creative />} />
           <Route path="/productpage/:productId" element={<ProductPage />} />
         </Routes>
       </div>
