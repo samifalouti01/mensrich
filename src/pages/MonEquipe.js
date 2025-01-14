@@ -46,6 +46,8 @@ const MonEquipe = () => {
     fetchTeamMembers();
   }, []);
 
+  
+
   return (
     <div>
       <Header />

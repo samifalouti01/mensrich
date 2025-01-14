@@ -8,7 +8,7 @@ const Order = () => {
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalImage, setModalImage] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');  // State for search query
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -53,31 +53,12 @@ const Order = () => {
     fetchOrders();
   }, []);
 
-  const handleActionChange = async (orderId, action) => {
-    try {
-      const { error } = await supabase
-        .from('order')
-        .update({ order_status: action })
-        .eq('id', orderId);
-
-      if (error) {
-        throw error;
-      }
-
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.id === orderId ? { ...order, order_status: action } : order
-        )
-      );
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
+  // Handle search query change
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
+  // Filter orders based on search query
   const filteredOrders = orders.filter((order) => {
     return (
       order.id.toString().includes(searchQuery) ||
@@ -85,6 +66,119 @@ const Order = () => {
       (order.email && order.email.toLowerCase().includes(searchQuery.toLowerCase()))
     );
   });
+
+  const handleValidate = async (orderId, userId, currentTotalPrice) => {
+    try {
+      const { data: userData, error: userError } = await supabase
+        .from('user_data')
+        .select('perso, ppcg, parrain_id')
+        .eq('id', userId)
+        .single();
+    
+      if (userError) {
+        if (userError.code === 'PGRST116') {
+          setError(`No user found for user_id: ${userId}`);
+        } else {
+          throw userError;
+        }
+        return;
+      }
+  
+      const currentPersoValue = parseFloat(userData.perso) || 0;
+      const currentPrice = parseFloat(currentTotalPrice) || 0;
+      const newPersoValue = currentPersoValue + currentPrice;
+  
+      const currentPpcgValue = parseFloat(userData.ppcg) || 0;
+      const newPpcgValue = currentPpcgValue + currentPrice;
+  
+      // Log values to check if the calculations are correct
+      console.log(`User Data for ID ${userId}:`, userData);
+      console.log(`Updating perso: ${currentPersoValue} + ${currentPrice} = ${newPersoValue}`);
+      console.log(`Updating ppcg: ${currentPpcgValue} + ${currentPrice} = ${newPpcgValue}`);
+  
+      // Update the order status to 'validated'
+      const { error: updateOrderError } = await supabase
+        .from('order')
+        .update({ order_status: 'validated' })
+        .eq('id', orderId);
+    
+      if (updateOrderError) {
+        throw updateOrderError;
+      }
+    
+      // Update the user's perso and ppcg values
+      const { error: updateUserError } = await supabase
+        .from('user_data')
+        .update({
+          perso: newPersoValue.toString(),
+          ppcg: newPpcgValue.toString(),
+        })
+        .eq('id', userId);
+    
+      if (updateUserError) {
+        throw updateUserError;
+      }
+    
+      if (userData.parrain_id) {
+        const parrainIds = userData.parrain_id
+          .split(',')
+          .map(id => id.trim())
+          .filter(id => id && !isNaN(id));
+  
+        console.log(`User has valid parrain_ids: ${parrainIds}`);
+    
+        if (parrainIds.length === 0) {
+          console.log('No valid parrain_ids to update.');
+          return;
+        }
+  
+        const { data: parrainsData, error: parrainsError } = await supabase
+          .from('user_data')
+          .select('id, parainage_points, ppcg')
+          .in('id', parrainIds);
+    
+        if (parrainsError) {
+          throw parrainsError;
+        }
+  
+        console.log("Parrains Data:", parrainsData);
+    
+        for (const parrain of parrainsData) {
+          const currentParainagePoints = parseFloat(parrain.parainage_points) || 0;
+          const currentPpcgValue = parseFloat(parrain.ppcg) || 0;
+    
+          const newParainagePoints = currentParainagePoints + currentPrice;
+          const newPpcgValue = currentPpcgValue + currentPrice;
+    
+          console.log(`Updating parrain ID ${parrain.id}:`);
+          console.log(`Parainage Points: ${currentParainagePoints} + ${currentPrice} = ${newParainagePoints}`);
+          console.log(`PPCG: ${currentPpcgValue} + ${currentPrice} = ${newPpcgValue}`);
+    
+          const { error: updateParrainError } = await supabase
+            .from('user_data')
+            .update({
+              parainage_points: newParainagePoints.toString(),
+              ppcg: newPpcgValue.toString(),
+            })
+            .eq('id', parrain.id);
+    
+          if (updateParrainError) {
+            throw updateParrainError;
+          }
+        }
+      }
+    
+      setOrders(prevOrders => prevOrders.map(order => {
+        if (order.id === orderId) {
+          return { ...order, order_status: 'validated' };
+        }
+        return order;
+      }));
+    
+    } catch (error) {
+      setError(error.message);
+    }
+  };  
 
   const openModal = (imageUrl) => {
     setModalImage(imageUrl);
@@ -96,10 +190,6 @@ const Order = () => {
     setModalImage(null);
   };
 
-  const isValidImageUrl = (url) => {
-    return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(url);
-  };
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -107,6 +197,112 @@ const Order = () => {
   if (error) {
     return <div>Error: {error}</div>;
   }
+
+  const isValidImageUrl = (url) => {
+    return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(url);
+  };
+
+  const handleActionChange = async (orderId, newStatus) => {
+    try {
+      if (!newStatus) {
+        alert("Please select a valid status.");
+        return;
+      }
+  
+      const { error: updateOrderError } = await supabase
+        .from("order")
+        .update({ order_status: newStatus })
+        .eq("id", orderId);
+  
+      if (updateOrderError) {
+        throw updateOrderError;
+      }
+  
+      if (newStatus === "validated") {
+        const order = orders.find((order) => order.id === orderId);
+        if (!order || !order.user_id) {
+          throw new Error("Order or User not found.");
+        }
+  
+        const { data: userData, error: userError } = await supabase
+          .from("user_data")
+          .select("perso, ppcg, parrain_id")
+          .eq("id", order.user_id)
+          .single();
+  
+        if (userError) {
+          throw userError;
+        }
+  
+        const currentPersoValue = parseFloat(userData.perso) || 0;
+        const currentPpcgValue = parseFloat(userData.ppcg) || 0;
+        const currentPrice = parseFloat(order.total_price) || 0;
+  
+        const newPersoValue = currentPersoValue + currentPrice;
+        const newPpcgValue = currentPpcgValue + currentPrice;
+  
+        const { error: updateUserError } = await supabase
+          .from("user_data")
+          .update({
+            perso: newPersoValue.toString(),
+            ppcg: newPpcgValue.toString(),
+          })
+          .eq("id", order.user_id);
+  
+        if (updateUserError) {
+          throw updateUserError;
+        }
+  
+        if (userData.parrain_id) {
+          const parrainIds = userData.parrain_id
+            .split(",")
+            .map(id => id.trim())
+            .filter(id => id && !isNaN(id));
+  
+          if (parrainIds.length === 0) {
+            console.log("No valid parrain_ids to update.");
+          } else {
+            const { data: parrainsData, error: parrainsError } = await supabase
+              .from("user_data")
+              .select("id, ppcg")
+              .in("id", parrainIds);
+  
+            if (parrainsError) {
+              throw parrainsError;
+            }
+  
+            for (const parrain of parrainsData) {
+              const currentParrainPpcgValue = parseFloat(parrain.ppcg) || 0;
+              const newParrainPpcgValue = currentParrainPpcgValue + currentPrice;
+  
+              const { error: updateParrainError } = await supabase
+                .from("user_data")
+                .update({
+                  ppcg: newParrainPpcgValue.toString(),
+                })
+                .eq("id", parrain.id);
+  
+              if (updateParrainError) {
+                throw updateParrainError;
+              }
+  
+              console.log(`Updated parrain ID ${parrain.id}'s ppcg to ${newParrainPpcgValue}`);
+            }
+          }
+        }
+      }
+  
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === orderId ? { ...order, order_status: newStatus } : order
+        )
+      );
+  
+      alert(`Order status updated to "${newStatus}" successfully!`);
+    } catch (error) {
+      setError(`Failed to update order status: ${error.message}`);
+    }
+  };  
 
   return (
     <div>
@@ -139,27 +335,27 @@ const Order = () => {
             <tr key={order.id}>
               <td>{order.id}</td>
               <td>
-              {order.product_image ? (
-                <img
-                  src={order.product_image}
-                  alt={order.name || "Product Image"}
-                  onError={(e) => (e.target.style.display = "none")} // Handle broken images
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => openModal(order.product_image)}
-                />
-              ) : (
-                <span>No Image</span>
-              )}
-            </td>
+                {order.product_image ? (
+                  <img
+                    src={order.product_image}
+                    alt={order.name || "Product Image"}
+                    onError={(e) => (e.target.style.display = "none")}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      borderRadius: "10px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => openModal(order.product_image)}
+                  />
+                ) : (
+                  <span>No Image Available</span>
+                )}
+              </td>
               <td>{new Date(order.created_at).toLocaleString()}</td>
               <td>{order.name}</td>
               <td>{order.phone}</td>
-              <td>{order.total_price * 100} DA</td>
+              <td>{order.total_price * 100} Dinars</td>
               <td>{order.wilaya}</td>
               <td>{order.commune}</td>
               <td>{order.address}</td>
@@ -168,11 +364,12 @@ const Order = () => {
                 <select
                   value={order.order_status}
                   onChange={(e) => handleActionChange(order.id, e.target.value)}
-                  style={{ padding: '5px', borderRadius: '5px' }}
+                  style={{ padding: "5px", borderRadius: "5px" }}
                 >
-                  <option value="validé">Valider</option>
-                  <option value="refusé">Refuser</option>
-                  <option value="annulé">Annuler</option>
+                  <option value="">Select</option>
+                  <option value="validated">Validate</option>
+                  <option value="refused">Reject</option>
+                  <option value="cancelled">Cancel</option>
                 </select>
               </td>
             </tr>

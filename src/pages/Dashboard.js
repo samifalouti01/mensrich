@@ -8,11 +8,12 @@ import Parrain from "../components/Parrain";
 import "react-circular-progressbar/dist/styles.css";
 import { useUser } from "../components/UserContext";
 import Pay from "../components/Pay";
+import CommissionFetcher from '../components/CommissionFetcher';
 import "./Dashboard.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { level, calculateLevel, totalPoints, nextLevel, levelProgress, pointsToNextLevel } = useUser();
+  const { level, calculateLevel, nextLevel, levelProgress, pointsToNextLevel } = useUser();
   const [message, setMessage] = useState("");
   const [id, setId] = useState("");
   const [name, setName] = useState("");
@@ -217,10 +218,10 @@ const Dashboard = () => {
           {showButtons && (
             <div className="float">
               <button className="bouncy-button" onClick={openParrainModal}>
-                <FaUserPlus /> Parrainer
+                <i class="bi bi-person-add" style={{ marginRight: "10px" }}></i> Referral
               </button>
               <button className="bouncy-button" onClick={() => navigate("/boutique")}>
-                <FaCartPlus /> Nouvelle Commande
+                <i class="bi bi-shop" style={{ marginRight: "10px" }}></i> Store
               </button>
             </div>
           )}
@@ -353,7 +354,7 @@ const Dashboard = () => {
               </div>
               <div className="payment-card">
                 <h3>Comission</h3>
-                <p>0 DA</p>
+                {id && <CommissionFetcher userId={id} />}
               </div>
             </div>
           </div>

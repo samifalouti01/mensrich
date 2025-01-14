@@ -2,14 +2,26 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import { FaChevronLeft } from "react-icons/fa";
-import OrderForm from "../components/OrderForm"; 
+import OrderForm from "../components/OrderForm";
+import { useUser } from "../components/UserContext";
 import "./ProductPage.css";
+
+const commissionRates = {
+  Distributeur: 0.11,
+  Animateur: 0.13,
+  "Animateur Junior": 0.16,
+  "Animateur Senior": 0.18,
+  Manager: 0.20,
+  "Manager Junior": 0.23,
+  "Manager Senior": 0.25,
+};
 
 const ProductPage = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { level } = useUser(); // Get level from UserContext
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -61,6 +73,9 @@ const ProductPage = () => {
     );
   }
 
+  const commissionRate = commissionRates[level] || commissionRates.Distributeur;
+  const commission = product.price * commissionRate;
+
   return (
     <div>
       <FaChevronLeft className="back-icon" onClick={() => window.history.back()} />
@@ -74,15 +89,19 @@ const ProductPage = () => {
           />
         </div>
         <div className="product-info">
-          <h1 className="product-title">{product.title}</h1>
+          <h1 className="product-title">{product?.title}</h1>
           <div className="product-pricing">
-          <p className="product-price">
-    {(product.price * 100 + 600).toLocaleString() + " DA"}
-</p>
-
-            <p className="product-price-da">{product.price} points</p>
+            <p className="product-price">
+              {(product?.price * 100).toLocaleString()} DA
+            </p>
+            <p className="product-commission">
+              Commission: {(commission ? (commission * 100).toFixed(2) : "0.00")} DA              DA
+            </p>
+            <p className="product-price-da">
+              {(product?.price - 6).toLocaleString()} points
+            </p>
           </div>
-          <p className="product-description">{product.description}</p>
+          <p className="product-description">{product?.description}</p>
         </div>
       </div>
       <div className="product-form">
