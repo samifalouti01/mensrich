@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
 
 .dashboard-container {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    font-family: 'Quicksand';
   }
 
   .dashboard-container h1 {
@@ -150,6 +152,7 @@
   .first-card p {
     font-size: 18px;
     color: #6c757d;
+    margin-top: 10px;
   }
   
   .flex-container {
@@ -392,7 +395,7 @@
     
     .first-card h3 {
       margin-top: 10px;
-      font-size: 12px;
+      font-size: 16px;
       font-weight: lighter;
       text-align: left;
     }
@@ -426,5 +429,86 @@
   
   .countdown {
     font-size: 28px;
+  }
+  
+  .dashboard-skeleton {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .skeleton-header {
+    height: 2.5rem;
+    background-color: #e2e8f0;
+    border-radius: 0.25rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .skeleton-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .skeleton-cards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .skeleton-card {
+    height: 150px;
+    background-color: #e2e8f0;
+    border-radius: 0.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .skeleton-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .skeleton-line {
+    height: 1.25rem;
+    background-color: #e2e8f0;
+    border-radius: 0.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .skeleton-line:nth-child(2) {
+    width: 80%;
+  }
+  
+  .skeleton-line:last-child {
+    width: 60%;
+  }
+  
+  /* Shared shimmer animation for all skeleton elements */
+  .skeleton-header::after,
+  .skeleton-card::after,
+  .skeleton-line::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0,
+      rgba(255, 255, 255, 0.2) 20%,
+      rgba(255, 255, 255, 0.5) 60%,
+      rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 2s infinite;
   }
   

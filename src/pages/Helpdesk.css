@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+
 .container {
     max-width: 800px;
     margin: 0 auto;
     padding: 16px;
+    font-family: 'Quicksand';
 }
 
 h1 {

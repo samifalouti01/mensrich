@@ -12,12 +12,14 @@ const Settings = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
 
   // Fetch current user data
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user && user.id) {
       const fetchUserData = async () => {
+        setIsLoading(true);
         const { data, error } = await supabase
           .from("user_data")
           .select("email, phone, rip")
@@ -31,6 +33,7 @@ const Settings = () => {
           setPhone(data.phone || "");
           setRip(data.rip || "");
         }
+        setIsLoading(false);
       };
       fetchUserData();
     } else {
@@ -67,6 +70,20 @@ const Settings = () => {
       setMessage("Something went wrong while updating.");
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-skeleton">
+          <div className="skeleton-content">
+            <div className="skeleton-title"></div>
+            <div className="skeleton-text"></div>
+            <div className="skeleton-text"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

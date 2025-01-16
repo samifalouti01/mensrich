@@ -11,8 +11,10 @@ const Payments = () => {
   const [referrals, setReferrals] = useState([]);
   const [income, setIncome] = useState(0);
   const [currentTime, setCurrentTime] = useState(""); 
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchUserData = useCallback(async () => {
+    setIsLoading(true);
     const currentUser = JSON.parse(localStorage.getItem("user"));
     if (!currentUser) {
       alert("Please log in.");
@@ -48,6 +50,7 @@ const Payments = () => {
     } else {
       console.error("Error fetching user data:", userError);
     }
+    setIsLoading(false);
   }, []);  
 
   const fetchReferrals = useCallback(async () => {
@@ -250,6 +253,19 @@ const Payments = () => {
     return perso >= thresholds[level] ? "Actif" : "Inactif";
   };
   
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-skeleton">
+          <div className="skeleton-content">
+            <div className="skeleton-title"></div>
+            <div className="skeleton-text"></div>
+            <div className="skeleton-text"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

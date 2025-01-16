@@ -1,9 +1,9 @@
 import React, { createContext, useState, useEffect, useCallback, useContext } from "react";
 import { supabase } from "../supabaseClient";
 
-const UserContext = createContext();
+const LevelContext = createContext();
 
-export const UserProvider = ({ children }) => {
+export const LevelProvider = ({ children }) => {
   const [level, setLevel] = useState("Distributeur");
   const [totalPoints, setTotalPoints] = useState(0);
   const [nextLevel, setNextLevel] = useState("");
@@ -59,7 +59,7 @@ export const UserProvider = ({ children }) => {
 
   const fetchUserData = useCallback(async (userId) => {
     const { data, error } = await supabase
-      .from("user_data")
+      .from("history_data")
       .select("ppcg")
       .eq("id", userId)
       .single();
@@ -82,7 +82,7 @@ export const UserProvider = ({ children }) => {
   }, [fetchUserData]);
 
   return (
-    <UserContext.Provider
+    <LevelContext.Provider
       value={{
         level,
         totalPoints,
@@ -93,10 +93,10 @@ export const UserProvider = ({ children }) => {
       }}
     >
       {children}
-    </UserContext.Provider>
+    </LevelContext.Provider>
   );
 };
 
-export const useUser = () => {
-  return useContext(UserContext);
+export const useLevel = () => {
+  return useContext(LevelContext);
 };

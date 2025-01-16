@@ -8,10 +8,12 @@ import "./MonEquipe.css";
 const MonEquipe = () => {
   const [teamMembers, setTeamMembers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchTeamMembers = async () => {
       setLoading(true);
+      setIsLoading(true);
 
       const currentUser = JSON.parse(localStorage.getItem("user"));
       if (!currentUser) {
@@ -41,12 +43,30 @@ const MonEquipe = () => {
 
       setTeamMembers(filteredData);
       setLoading(false);
+    
+      setIsLoading(false);
     };
 
     fetchTeamMembers();
   }, []);
 
-  
+  if (isLoading) {
+    return (
+      <div className="skeleton-grid">
+        {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
+          <div key={index} className="skeleton-card">
+            <div className="skeleton-image" />
+            <div className="skeleton-content">
+              <div className="skeleton-title" />
+              <div className="skeleton-text" />
+              <div className="skeleton-text" />
+              <div className="skeleton-text" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div>

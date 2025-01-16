@@ -1,14 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { supabase } from "../supabaseClient";
 import './Helpdesk.css';
 
 const Helpdesk = () => {
+    const [isLoading, setIsLoading] = useState(true);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         message: '',
     });
+
+    useEffect(() => {
+        // Simulate data loading or fetch resources
+        const fetchData = async () => {
+            try {
+                // Simulate a delay (e.g., fetching help topics)
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+                setIsLoading(false);
+            } catch (error) {
+                console.error("Error during loading:", error);
+                setIsLoading(false); // Fallback to disable loading
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -37,12 +54,28 @@ const Helpdesk = () => {
             }
 
             setFormData({ name: '', email: '', message: '' });
-
         } catch (error) {
             console.error("Error:", error);
             alert("An error occurred. Please try again.");
         }
     };
+
+    if (isLoading) {
+        return (
+            <div className="loading-container">
+                <div className="loading-skeleton">
+                    <div className="skeleton-content">
+                        <div className="skeleton-title"></div>
+                        <div className="skeleton-text"></div>
+                        <div className="skeleton-text"></div>
+                        <div className="skeleton-title"></div>
+                        <div className="skeleton-text"></div>
+                        <div className="skeleton-text"></div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div>

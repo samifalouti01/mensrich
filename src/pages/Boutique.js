@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
 import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../components/UserContext";
+import { useLevel } from "../components/LevelContext";
+import { Search, X } from "lucide-react";
 import "./Boutique.css";
 
 const commissionRates = {
@@ -19,7 +20,8 @@ const Boutique = () => {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-  const { level } = useUser(); // Get level from UserContext
+  const { level } = useLevel();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -29,27 +31,38 @@ const Boutique = () => {
           .select("id, product_image, title, description, price");
 
         if (error) throw error;
-
         setProducts(data);
       } catch (error) {
         console.error("Error fetching products:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchProducts();
   }, []);
 
-  const handleSearch = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const handleClearSearch = () => {
-    setSearchQuery("");
-  };
-
   const filteredProducts = products.filter((product) =>
     product.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const LoadingSkeleton = () => {
+    return (
+      <div className="skeleton-grid">
+        {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
+          <div key={index} className="skeleton-card">
+            <div className="skeleton-image" />
+            <div className="skeleton-content">
+              <div className="skeleton-title" />
+              <div className="skeleton-text" />
+              <div className="skeleton-text" />
+              <div className="skeleton-text" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   const handleProductClick = (productId) => {
     navigate(`/productpage/${productId}`);
@@ -58,51 +71,70 @@ const Boutique = () => {
   return (
     <div className="boutique">
       <Header />
-      <header className="boutique-header">
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search for products..."
-            value={searchQuery}
-            onChange={handleSearch}
-            className="search-bar"
-          />
-          {searchQuery && (
-            <button className="clear-search" onClick={handleClearSearch}>
-              ×
-            </button>
-          )}
+      <div className="boutique-container">
+        <div className="search-wrapper">
+          <div className="search-container">
+            <Search className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+            />
+            {searchQuery && (
+              <button
+                className="clear-button"
+                onClick={() => setSearchQuery("")}
+              >
+                <X className="clear-icon" />
+              </button>
+            )}
+          </div>
         </div>
-      </header>
 
-      <div className="product-grid">
-        {filteredProducts.map((product) => {
-          const commissionRate = commissionRates[level] || commissionRates.Distributeur;
-          const commission = product.price * commissionRate;
+        {isLoading ? (
+        <LoadingSkeleton />
+      ) : filteredProducts.length > 0 ? (
+        <div className="products-grid">
+          {filteredProducts.map((product) => {
+            const commissionRate = commissionRates[level] || commissionRates.Distributeur;
+            const commission = product.price * commissionRate;
 
-          return (
-            <div
-              key={product.id}
-              className="product-card"
-              onClick={() => handleProductClick(product.id)}
-            >
-              <img
-                src={product.product_image}
-                alt={product.title}
-                className="product-image-store"
-                loading="lazy"
-              />
-              <h3 className="product-title">{product.title}</h3>
-              <p className="product-points">{product.price} points</p>
-              <p className="product-price">
-                {(product.price * 100).toLocaleString() + " DA"}
-              </p>
-              <p className="product-commission">
-                Commission: {(commission * 100).toFixed(2)} DA
-              </p>
-            </div>
-          );
-        })}
+            return (
+              <div
+                key={product.id}
+                className="product-card"
+                onClick={() => handleProductClick(product.id)}
+              >
+                <div className="product-image-container">
+                  <img
+                    src={product.product_image}
+                    alt={product.title}
+                    className="product-image"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="product-details">
+                  <h3 className="product-title2">{product.title}</h3>
+                  <p className="product-points">{(product.price - 6).toLocaleString()} points</p>
+                  <p className="product-price">
+                    {(product.price * 100).toLocaleString()} DA
+                  </p>
+                  <p className="product-commission">
+                    {(commission * 100).toFixed(2)} DA
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        ) : (
+          <div className="empty-state">
+            <h3 style={{ color: "#5700B4" }}>No products found</h3>
+            <p>Try adjusting your search criteria</p>
+          </div>
+        )}
       </div>
     </div>
   );

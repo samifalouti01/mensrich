@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import { FaTimes, FaUserPlus, FaCartPlus, FaPlus, FaCopy } from "react-icons/fa";
+import { FaTimes, FaPlus } from "react-icons/fa";
 import { supabase } from "../supabaseClient";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import Parrain from "../components/Parrain";
 import "react-circular-progressbar/dist/styles.css";
 import { useUser } from "../components/UserContext";
+import { useLevel } from "../components/LevelContext";
 import Pay from "../components/Pay";
 import CommissionFetcher from '../components/CommissionFetcher';
 import "./Dashboard.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { level, calculateLevel, nextLevel, levelProgress, pointsToNextLevel } = useUser();
+  const { calculateLevel, levelProgress } = useUser();
+  const { level, nextLevel, pointsToNextLevel } = useLevel();
   const [message, setMessage] = useState("");
   const [id, setId] = useState("");
   const [name, setName] = useState("");
@@ -28,9 +30,11 @@ const Dashboard = () => {
   const parrainModalRef = useRef(null);
   const [timeLeft, setTimeLeft] = useState('');
   const [showButtons, setShowButtons] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
 
   const fetchUserData = useCallback(async (userId) => {
+    setIsLoading(true);
     const { data: userData, error: userError } = await supabase
       .from("user_data")
       .select("id, user_image, identifier, name, perso, parainage_points, parainage_users, ppcg")
@@ -50,7 +54,7 @@ const Dashboard = () => {
     }
 
     const { data: historyData, error: historyError } = await supabase
-      .from("history_data")
+      .from("user_data")
       .select("perso, parainage_points, ppcg")
       .eq("id", userId)
       .single();
@@ -61,6 +65,17 @@ const Dashboard = () => {
       const total = Number(historyData.ppcg || 0);
       calculateLevel(total); 
     }
+
+    const { data: levelData, error: levelError } = await supabase
+      .from("history_data")
+      .select("perso, parainage_points, ppcg")
+      .eq("id", userId)
+      .single();
+
+    if (levelError) {
+      console.historyError("Error fetching user data:", levelError);
+    }
+    setIsLoading(false);
   }, [calculateLevel]);
 
   console.log(userImage);
@@ -205,6 +220,53 @@ const Dashboard = () => {
       fontSize: "20px",
     },
   };
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="skeleton-grid">
+        {[1].map((index) => (
+          <div key={index} className="skeleton-card">
+            <div className="skeleton-image" />
+            <div className="skeleton-content">
+              <div className="skeleton-title" />
+              <div className="skeleton-text" />
+              <div className="skeleton-text" />
+              <div className="skeleton-text" />
+            </div>
+          </div>
+        ))}
+      </div>
+        <div className="loading-skeleton">
+          <div className="skeleton-content">
+            <div className="skeleton-title"></div>
+            <div className="skeleton-text"></div>
+            <div className="skeleton-text"></div>
+          </div>
+        </div>
+        <div className="skeleton-grid">
+        {[1].map((index) => (
+          <div key={index} className="skeleton-card">
+            <div className="skeleton-image" />
+            <div className="skeleton-content">
+              <div className="skeleton-title" />
+              <div className="skeleton-text" />
+              <div className="skeleton-text" />
+              <div className="skeleton-text" />
+            </div>
+          </div>
+        ))}
+      </div>
+        <div className="loading-skeleton">
+          <div className="skeleton-content">
+            <div className="skeleton-title"></div>
+            <div className="skeleton-text"></div>
+            <div className="skeleton-text"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="dashboard-container">
@@ -259,7 +321,7 @@ const Dashboard = () => {
               <div className="copy-container">
                 <div className="copy-text">
                   <p style={{ color: "#5700B4"}}>ID: {id || "Loading..."}</p>
-                  <FaCopy style={{ color: '#5700B4', padding: '0' }} onClick={() => handleCopy(id)} />
+                  <i style={{ color: '#5700B4', padding: '0' }} onClick={() => handleCopy(id)} class="bi bi-copy"></i>
                 </div>
               </div>
               {message && (
@@ -303,7 +365,6 @@ const Dashboard = () => {
                     })}
                   />
                 </div>
-                <h3>{level}</h3>
                 <p>
                   Points needed to reach <span style={{ color: "#5700B4", fontWeight: "bold" }}>{nextLevel}</span>:{" "}
                   <span style={{ color: "#000", fontWeight: "bold" }}>{pointsToNextLevel}</span>
