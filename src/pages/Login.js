@@ -52,10 +52,22 @@ const Login = () => {
         }
     };
 
+    const isValidIdentifier = (identifier) => {
+         const prefix = "MR"; 
+         if (!identifier.startsWith(prefix)) 
+            return false; const numericPart = identifier.slice(prefix.length); 
+        return /^\d{9,13}$/.test(numericPart);
+    };
+
     const handleRegister = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError("");
+
+        if (!isValidIdentifier(registerData.identifier)) { 
+            setError("Identifier must start with 'MR' followed by 9 to 13 digits."); 
+            setLoading(false); return;
+        }
     
         try {
             const { data: existingUser, error: checkError } = await supabase
@@ -158,9 +170,9 @@ const Login = () => {
     
     return (
         <div className="login-container">
-            <img src="Mencedes.svg" alt="Logo" className="login-logo" />
             {!isRegistering ? (
                 <form onSubmit={handleLogin} className="login-form">
+                    <img src="Mencedes.svg" alt="Logo" className="login-logo" />
                     <h1 className="login-title">Login</h1>
                     <input
                         type="text"
@@ -188,10 +200,12 @@ const Login = () => {
                         {loading ? <div className="spinner"></div> : "Login"}
                     </button>
                     {error && <p className="error-message">{error}</p>}
-                    <p className="switch-mode" onClick={() => setIsRegistering(true)}>Don't have an account? Register</p>
+                    <p className="switch-mode" onClick={() => setIsRegistering(true)}><span style={{ color: "gray" }}>Don't have an account?</span> Register</p>
+                    <p style={{ color: 'gray' }}>See <span  onClick={() => navigate("/privacy-policy")} className="switch-mode">Privacy Policy</span> or <span onClick={() => navigate("/terms-and-conditions")} className="switch-mode">Terms of Use</span></p>
                 </form>
             ) : (
                 <form onSubmit={handleRegister} className="register-form">
+                    <img src="Mencedes.svg" alt="Logo" className="login-logo" />
                     <h1 className="register-title">Register</h1>
                     <input
                         type="text"
@@ -207,12 +221,15 @@ const Login = () => {
                         className="register-input"
                         value={registerData.identifier}
                         onChange={(e) => {
-                            const value = e.target.value;
+                            let value = e.target.value;
                             if (!value.startsWith("MR")) {
-                                setRegisterData({ ...registerData, identifier: "MR" + value });
-                            } else {
-                                setRegisterData({ ...registerData, identifier: value });
+                            value = "MR" + value;
                             }
+                            const numericPart = value.slice(2); // Extract the numeric part after "MR"
+                            if (!/^\d{0,13}$/.test(numericPart)) { // Allow only up to 13 digits
+                            return; // Reject the change if it doesn't match the pattern
+                            }
+                            setRegisterData({ ...registerData, identifier: value });
                         }}
                         required
                     />
@@ -241,7 +258,7 @@ const Login = () => {
                         {loading ? <div className="spinner"></div> : "Register"}
                     </button>
                     {error && <p className="error-message">{error}</p>}
-                    <p className="switch-mode" onClick={() => setIsRegistering(false)}>Already have an account? Login</p>
+                    <p className="switch-mode" onClick={() => setIsRegistering(false)}><span style={{ color: "gray" }}>Already have an account?</span> Login</p>
                 </form>
             )}
             {showPopup && (

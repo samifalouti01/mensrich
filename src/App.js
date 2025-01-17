@@ -13,6 +13,8 @@ import { LevelProvider } from "./components/LevelContext";
 import Settings from "./pages/Settings";
 import Presentation from "./pages/Presentation";
 import ProductPage from "./pages/ProductPage";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsAndConditions from "./pages/TermsAndConditions";
 
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
           <div className="App">
             <Routes>
               <Route path="/" element={<Login />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/helpdesk" element={<Helpdesk />} />
               <Route path="/boutique" element={<Boutique />} />

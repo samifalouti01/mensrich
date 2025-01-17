@@ -14,7 +14,7 @@ import "./Dashboard.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { calculateLevel, levelProgress } = useUser();
+  const { calculateLevel } = useUser();
   const { level, nextLevel, pointsToNextLevel } = useLevel();
   const [message, setMessage] = useState("");
   const [id, setId] = useState("");
@@ -31,7 +31,16 @@ const Dashboard = () => {
   const [timeLeft, setTimeLeft] = useState('');
   const [showButtons, setShowButtons] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [monthlyPpcg, setMonthlyPpcg] = useState(0);
   
+  // Calculate total progress
+  const totalProgress = Number(monthlyPpcg) + Number(ppcg);
+
+  // Calculate progress as percentage
+  const progressPercentage = (totalProgress / pointsToNextLevel) * 100;
+
+  // Ensure percentage doesn't exceed 100%
+  const result = progressPercentage > 100 ? 100 : progressPercentage;
 
   const fetchUserData = useCallback(async (userId) => {
     setIsLoading(true);
@@ -75,6 +84,20 @@ const Dashboard = () => {
     if (levelError) {
       console.historyError("Error fetching user data:", levelError);
     }
+
+    const { data: monthlyData, error: monthlyError } = await supabase
+      .from("first_month")
+      .select("ppcg")
+      .eq("id", userId)
+      .single();
+
+    if (monthlyError) {
+      console.monthlyError("Error fetching user data:", monthlyError);
+    } else {
+      const monthlyPpcg = monthlyData.ppcg || 0;
+      setMonthlyPpcg(monthlyPpcg);
+    }
+
     setIsLoading(false);
   }, [calculateLevel]);
 
@@ -215,7 +238,7 @@ const Dashboard = () => {
     color: "#5700B4",
     trailColor: "#d3d3d3",
     text: {
-      value: `${levelProgress.toFixed(1)}%`,
+      value: `${result.toFixed(1)}%`,
       color: "#5700B4",
       fontSize: "20px",
     },
@@ -356,8 +379,8 @@ const Dashboard = () => {
                 </h2>
                 <div className="donut-container">
                   <CircularProgressbar
-                    value={levelProgress}
-                    text={`${levelProgress.toFixed(1)}%`}
+                    value={result}
+                    text={`${result.toFixed(1)}%`}
                     styles={buildStyles({
                       textColor: "#5700B4",
                       pathColor: "#5700B4",
@@ -365,8 +388,10 @@ const Dashboard = () => {
                     })}
                   />
                 </div>
+                <p>Previous month: <span style={{ color: "#000", fontWeight: "bold" }}>{monthlyPpcg}</span></p>
+                <p>This month: <span style={{ color: "#000", fontWeight: "bold" }}>{ppcg}</span></p>
                 <p>
-                  Points needed to reach <span style={{ color: "#5700B4", fontWeight: "bold" }}>{nextLevel}</span>:{" "}
+                  Points to reach <span style={{ color: "#5700B4", fontWeight: "bold" }}>{nextLevel}</span>:{" "}
                   <span style={{ color: "#000", fontWeight: "bold" }}>{pointsToNextLevel}</span>
                 </p>
             </div>

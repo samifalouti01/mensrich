@@ -20,27 +20,27 @@ export const LevelProvider = ({ children }) => {
       currentLevel = "Animateur";
       nextLevel = "Animateur Junior";
       progress = ((points - 100) / (6250 - 100)) * 100;
-      pointsNeeded = 6250 - points;
+      pointsNeeded = 6250;
     } else if (points >= 6250 && points < 12500) {
       currentLevel = "Animateur Junior";
       nextLevel = "Animateur Senior";
       progress = ((points - 6250) / (12500 - 6250)) * 100;
-      pointsNeeded = 12500 - points;
+      pointsNeeded = 12500;
     } else if (points >= 12500 && points < 18700) {
       currentLevel = "Animateur Senior";
       nextLevel = "Manager";
       progress = ((points - 12500) / (18700 - 12500)) * 100;
-      pointsNeeded = 18700 - points;
+      pointsNeeded = 18700;
     } else if (points >= 18700 && points < 30000) {
       currentLevel = "Manager";
       nextLevel = "Manager Junior";
       progress = ((points - 18700) / (30000 - 18700)) * 100;
-      pointsNeeded = 30000 - points;
+      pointsNeeded = 30000;
     } else if (points >= 30000 && points < 50000) {
       currentLevel = "Manager Junior";
       nextLevel = "Manager Senior";
       progress = ((points - 30000) / (50000 - 30000)) * 100;
-      pointsNeeded = 50000 - points;
+      pointsNeeded = 50000;
     } else if (points >= 50000) {
       currentLevel = "Manager Senior";
       nextLevel = "Maximum Level Achieved";
@@ -48,7 +48,7 @@ export const LevelProvider = ({ children }) => {
       pointsNeeded = 0;
     } else {
       progress = (points / 100) * 100;
-      pointsNeeded = 100 - points;
+      pointsNeeded = 100;
     }
 
     setLevel(currentLevel);
