@@ -3,6 +3,7 @@ import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { FaSave } from "react-icons/fa";
 import Header from "../components/Header";
+import Loader from '../components/Loader';
 import "./Settings.css";
 
 const Settings = () => {
@@ -74,13 +75,7 @@ const Settings = () => {
   if (isLoading) {
     return (
       <div className="loading-container">
-        <div className="loading-skeleton">
-          <div className="skeleton-content">
-            <div className="skeleton-title"></div>
-            <div className="skeleton-text"></div>
-            <div className="skeleton-text"></div>
-          </div>
-        </div>
+        <Loader />
       </div>
     );
   }

@@ -1,8 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
 
 .loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 300px auto;
   padding: 2rem 1rem;
   font-family: 'Quicksand';
 }

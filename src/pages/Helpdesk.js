@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { supabase } from "../supabaseClient";
+import Loader from '../components/Loader';
 import './Helpdesk.css';
 
 const Helpdesk = () => {
@@ -62,20 +63,11 @@ const Helpdesk = () => {
 
     if (isLoading) {
         return (
-            <div className="loading-container">
-                <div className="loading-skeleton">
-                    <div className="skeleton-content">
-                        <div className="skeleton-title"></div>
-                        <div className="skeleton-text"></div>
-                        <div className="skeleton-text"></div>
-                        <div className="skeleton-title"></div>
-                        <div className="skeleton-text"></div>
-                        <div className="skeleton-text"></div>
-                    </div>
-                </div>
-            </div>
+          <div className="loading-container">
+            <Loader />
+          </div>
         );
-    }
+      }
 
     return (
         <div>

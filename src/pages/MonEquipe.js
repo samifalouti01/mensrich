@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import { FaPhoneAlt } from "react-icons/fa";
 import { Email } from "@mui/icons-material";
 import { supabase } from "../supabaseClient";
+import Loader from '../components/Loader';
 import "./MonEquipe.css";
 
 const MonEquipe = () => {
@@ -52,18 +53,8 @@ const MonEquipe = () => {
 
   if (isLoading) {
     return (
-      <div className="skeleton-grid">
-        {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
-          <div key={index} className="skeleton-card">
-            <div className="skeleton-image" />
-            <div className="skeleton-content">
-              <div className="skeleton-title" />
-              <div className="skeleton-text" />
-              <div className="skeleton-text" />
-              <div className="skeleton-text" />
-            </div>
-          </div>
-        ))}
+      <div className="loading-container">
+        <Loader />
       </div>
     );
   }
@@ -81,7 +72,7 @@ const MonEquipe = () => {
           ) : (
             <div className="card-container">
               {teamMembers.map((member) => (
-                <div key={member.id} className="team-card">
+                <div key={member.id} className="equipe-card">
                   <div className="card-image2">
                   <img
                     src={member.user_image || "/default-profile.png"}

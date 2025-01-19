@@ -174,24 +174,44 @@ const Login = () => {
                 <form onSubmit={handleLogin} className="login-form">
                     <img src="Mencedes.svg" alt="Logo" className="login-logo" />
                     <h1 className="login-title">Login</h1>
-                    <input
-                        type="text"
-                        value={identifier}
-                        onChange={(e) => setIdentifier(e.target.value)}
-                        placeholder="ID Numérique"
-                        className="login-input"
-                        required
-                    />
-                    <div className="password-input-containers">
+                    <div className="form-control2">
                         <input
-                            type={isPasswordVisible ? "text" : "password"}
-                            placeholder="Password"
-                            name="password"
-                            className="password-input"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            type="text"
                             required
+                            value={identifier}
+                            onChange={(e) => setIdentifier(e.target.value)} 
                         />
+                        <label>
+                            <span style={{ transitionDelay: '0ms' }}>U</span>
+                            <span style={{ transitionDelay: '50ms' }}>s</span>
+                            <span style={{ transitionDelay: '100ms' }}>e</span>
+                            <span style={{ transitionDelay: '150ms' }}>r</span>
+                            <span style={{ transitionDelay: '200ms' }}>n</span>
+                            <span style={{ transitionDelay: '250ms' }}>a</span>
+                            <span style={{ transitionDelay: '300ms' }}>m</span>
+                            <span style={{ transitionDelay: '350ms' }}>e</span>
+                        </label>
+                    </div>
+                    <div className="password-input-containers">
+                        <div className="form-control2">
+                            <input
+                                type={isPasswordVisible ? "text" : "password"}
+                                name="password"
+                                required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)} 
+                            />
+                            <label>
+                                <span style={{ transitionDelay: '0ms' }}>P</span>
+                                <span style={{ transitionDelay: '50ms' }}>a</span>
+                                <span style={{ transitionDelay: '100ms' }}>s</span>
+                                <span style={{ transitionDelay: '150ms' }}>s</span>
+                                <span style={{ transitionDelay: '200ms' }}>w</span>
+                                <span style={{ transitionDelay: '250ms' }}>o</span>
+                                <span style={{ transitionDelay: '300ms' }}>r</span>
+                                <span style={{ transitionDelay: '350ms' }}>d</span>
+                            </label>
+                        </div>
                         <span className="toggle-password" onClick={togglePasswordVisibility}>
                             {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                         </span>
@@ -207,53 +227,98 @@ const Login = () => {
                 <form onSubmit={handleRegister} className="register-form">
                     <img src="Mencedes.svg" alt="Logo" className="login-logo" />
                     <h1 className="register-title">Register</h1>
-                    <input
-                        type="text"
-                        placeholder="Name"
-                        className="register-input"
-                        value={registerData.name}
-                        onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
-                        required
-                    />
-                    <input
-                        type="text"
-                        placeholder="Identifier"
-                        className="register-input"
-                        value={registerData.identifier}
-                        onChange={(e) => {
-                            let value = e.target.value;
-                            if (!value.startsWith("MR")) {
-                            value = "MR" + value;
-                            }
-                            const numericPart = value.slice(2); // Extract the numeric part after "MR"
-                            if (!/^\d{0,13}$/.test(numericPart)) { // Allow only up to 13 digits
-                            return; // Reject the change if it doesn't match the pattern
-                            }
-                            setRegisterData({ ...registerData, identifier: value });
-                        }}
-                        required
-                    />
+                        <div className="form-control2">
+                            <input
+                                type="text"
+                                required
+                                value={registerData.name}
+                                onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
+                            />
+                            <label>
+                                <span style={{ transitionDelay: '0ms' }}>F</span>
+                                <span style={{ transitionDelay: '50ms' }}>u</span>
+                                <span style={{ transitionDelay: '100ms' }}>l</span>
+                                <span style={{ transitionDelay: '150ms' }}>l</span>
+                                <span style={{ transitionDelay: '200ms' }}></span>
+                                <span style={{ transitionDelay: '250ms' }}>N</span>
+                                <span style={{ transitionDelay: '300ms' }}>a</span>
+                                <span style={{ transitionDelay: '350ms' }}>m</span>
+                                <span style={{ transitionDelay: '400ms' }}>e</span>
+                            </label>
+                        </div>
+                        <div className="form-control2">
+                            <input
+                                type="text"
+                                required
+                                value={registerData.identifier}
+                                onChange={(e) => {
+                                    let value = e.target.value;
+                                    if (!value.startsWith("MR")) {
+                                    value = "MR" + value;
+                                    }
+                                    const numericPart = value.slice(2); // Extract the numeric part after "MR"
+                                    if (!/^\d{0,13}$/.test(numericPart)) { // Allow only up to 13 digits
+                                    return; // Reject the change if it doesn't match the pattern
+                                    }
+                                    setRegisterData({ ...registerData, identifier: value });
+                                }}
+                            />
+                            <label>
+                                <span style={{ transitionDelay: '0ms' }}>U</span>
+                                <span style={{ transitionDelay: '50ms' }}>s</span>
+                                <span style={{ transitionDelay: '100ms' }}>e</span>
+                                <span style={{ transitionDelay: '150ms' }}>r</span>
+                                <span style={{ transitionDelay: '200ms' }}>n</span>
+                                <span style={{ transitionDelay: '250ms' }}>a</span>
+                                <span style={{ transitionDelay: '300ms' }}>m</span>
+                                <span style={{ transitionDelay: '350ms' }}>e</span>
+                            </label>
+                        </div>
                     <div className="password-input-containers">
-                        <input
-                            type={isPasswordVisible ? "text" : "password"}
-                            placeholder="Password"
-                            name="password"
-                            className="password-input"
-                            value={registerData.password}
-                            onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
-                            required
-                        />
+                        <div className="form-control2">
+                            <input
+                                type={isPasswordVisible ? "text" : "password"}
+                                name="password"
+                                required
+                                value={registerData.password}
+                                onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
+                            />
+                            <label>
+                                <span style={{ transitionDelay: '0ms' }}>P</span>
+                                <span style={{ transitionDelay: '50ms' }}>a</span>
+                                <span style={{ transitionDelay: '100ms' }}>s</span>
+                                <span style={{ transitionDelay: '150ms' }}>s</span>
+                                <span style={{ transitionDelay: '200ms' }}>w</span>
+                                <span style={{ transitionDelay: '250ms' }}>o</span>
+                                <span style={{ transitionDelay: '300ms' }}>r</span>
+                                <span style={{ transitionDelay: '350ms' }}>d</span>
+                            </label>
+                        </div>
                         <span className="toggle-password" onClick={togglePasswordVisibility}>
                             {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                         </span>
                     </div>
-                    <input
-                        type="text"
-                        placeholder="Referral ID"
-                        className="register-input"
-                        value={registerData.referralId}
-                        onChange={(e) => setRegisterData({ ...registerData, referralId: e.target.value })}
-                    />
+                        <div className="form-control2">
+                            <input
+                                type="text"
+                                required
+                                value={registerData.referralId}
+                                onChange={(e) => setRegisterData({ ...registerData, referralId: e.target.value })}
+                            />
+                            <label>
+                                <span style={{ transitionDelay: '0ms' }}>R</span>
+                                <span style={{ transitionDelay: '50ms' }}>e</span>
+                                <span style={{ transitionDelay: '100ms' }}>f</span>
+                                <span style={{ transitionDelay: '150ms' }}>e</span>
+                                <span style={{ transitionDelay: '200ms' }}>r</span>
+                                <span style={{ transitionDelay: '250ms' }}>r</span>
+                                <span style={{ transitionDelay: '300ms' }}>a</span>
+                                <span style={{ transitionDelay: '350ms' }}>l</span>
+                                <span style={{ transitionDelay: '400ms' }}></span>
+                                <span style={{ transitionDelay: '410ms' }}>I</span>
+                                <span style={{ transitionDelay: '420ms' }}>D</span>
+                            </label>
+                        </div>
                     <button type="submit" className="register-button" disabled={loading}>
                         {loading ? <div className="spinner"></div> : "Register"}
                     </button>

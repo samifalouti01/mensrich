@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import Header from "../components/Header";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Badge, Card, Container, Row, Col, Button, Spinner } from 'react-bootstrap';
+import Loader from '../components/Loader';
+import { Badge, Card, Container, Row, Col, Button } from 'react-bootstrap';
 
 const Historique = () => {
   const [orders, setOrders] = useState([]);
@@ -98,11 +99,7 @@ const Historique = () => {
         </Row>
         
         {loading ? (
-          <div className="text-center py-5">
-            <Spinner animation="border" role="status" variant="primary">
-              <span className="visually-hidden">Chargement...</span>
-            </Spinner>
-          </div>
+          <Loader />
         ) : orders.length === 0 ? (
           <Card className="text-center py-5">
             <Card.Body>

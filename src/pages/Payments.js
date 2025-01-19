@@ -3,6 +3,7 @@ import { supabase } from "../supabaseClient";
 import Header from "../components/Header";
 import { jsPDF } from "jspdf";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import Loader from '../components/Loader';
 import "./Payments.css";
 
 const Payments = () => {
@@ -256,13 +257,7 @@ const Payments = () => {
   if (isLoading) {
     return (
       <div className="loading-container">
-        <div className="loading-skeleton">
-          <div className="skeleton-content">
-            <div className="skeleton-title"></div>
-            <div className="skeleton-text"></div>
-            <div className="skeleton-text"></div>
-          </div>
-        </div>
+        <Loader />
       </div>
     );
   }

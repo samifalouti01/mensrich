@@ -10,6 +10,7 @@ import { useUser } from "../components/UserContext";
 import { useLevel } from "../components/LevelContext";
 import Pay from "../components/Pay";
 import CommissionFetcher from '../components/CommissionFetcher';
+import Loader from '../components/Loader';
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -247,46 +248,7 @@ const Dashboard = () => {
   if (isLoading) {
     return (
       <div className="loading-container">
-        <div className="skeleton-grid">
-        {[1].map((index) => (
-          <div key={index} className="skeleton-card">
-            <div className="skeleton-image" />
-            <div className="skeleton-content">
-              <div className="skeleton-title" />
-              <div className="skeleton-text" />
-              <div className="skeleton-text" />
-              <div className="skeleton-text" />
-            </div>
-          </div>
-        ))}
-      </div>
-        <div className="loading-skeleton">
-          <div className="skeleton-content">
-            <div className="skeleton-title"></div>
-            <div className="skeleton-text"></div>
-            <div className="skeleton-text"></div>
-          </div>
-        </div>
-        <div className="skeleton-grid">
-        {[1].map((index) => (
-          <div key={index} className="skeleton-card">
-            <div className="skeleton-image" />
-            <div className="skeleton-content">
-              <div className="skeleton-title" />
-              <div className="skeleton-text" />
-              <div className="skeleton-text" />
-              <div className="skeleton-text" />
-            </div>
-          </div>
-        ))}
-      </div>
-        <div className="loading-skeleton">
-          <div className="skeleton-content">
-            <div className="skeleton-title"></div>
-            <div className="skeleton-text"></div>
-            <div className="skeleton-text"></div>
-          </div>
-        </div>
+        <Loader />
       </div>
     );
   }

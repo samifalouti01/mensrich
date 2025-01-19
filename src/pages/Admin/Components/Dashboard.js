@@ -11,10 +11,12 @@ const Dashboard = () => {
         income: 0,
         totalUsers: 0,
         activeUsers: 0,
-        animateursAdjoints: 0,
         animateurs: 0,
-        managersAdjoints: 0,
+        animateursJuniors: 0,
+        animateursSeniors: 0,
         managers: 0,
+        managersJuniors: 0,
+        managersSeniors: 0,
     });
 
     const [loading, setLoading] = useState(true);
@@ -42,13 +44,13 @@ const Dashboard = () => {
                 const { data: ordersData, error: ordersError } = await supabase
                 .from("order")
                 .select("total_price")
-                .eq("order_status", "validé");
+                .eq("order_status", "validated");
 
             if (ordersError) throw ordersError;
 
             const income = ordersData.reduce((sum, order) => sum + parseFloat(order.total_price || 0) * 100, 0);
 
-                const roles = ["Animateurs Adjoints", "Animateurs", "Managers Adjoints", "Managers"];
+                const roles = ["Animateur", "Animateur Junior", "Animateur Senior", "Manager", "Manager Junior", "Manager Senior"];
             const roleCounts = {};
             for (const role of roles) {
                 const { count } = await supabase
@@ -64,22 +66,28 @@ const Dashboard = () => {
 
             const levelCounts = {
                 Distributeur: 0,
-                "Animateur Adjoint": 0,
                 Animateur: 0,
-                "Manager Adjoint": 0,
+                "Animateur Junior": 0,
+                "Animateur Senior": 0,
                 Manager: 0,
+                "Manager Junior": 0,
+                "Manager Senior": 0,
             };
 
             userPoints.forEach((user) => {
                 const ppcg = user.ppcg || 0; 
-                if (ppcg >= 30000) {
-                    levelCounts.Manager++;
+                if (ppcg >= 50000) {
+                    levelCounts["Manager Senior"]++;
+                } else if (ppcg >= 30000) {
+                    levelCounts["Manager Junior"]++;
                 } else if (ppcg >= 18700) {
-                    levelCounts["Manager Adjoint"]++;
+                    levelCounts.Manager++;
+                } else if (ppcg >= 12500) {
+                    levelCounts["Animateur Senior"]++;
                 } else if (ppcg >= 6250) {
-                    levelCounts.Animateur++;
+                    levelCounts["Animateur Junior"]++;
                 } else if (ppcg >= 100) {
-                    levelCounts["Animateur Adjoint"]++;
+                    levelCounts.Animateur++;
                 } else {
                     levelCounts.Distributeur++;
                 }
@@ -91,10 +99,12 @@ const Dashboard = () => {
                     income,
                     totalUsers,
                     activeUsers,
-                    animateursAdjoints: roleCounts["animateursadjoints"],
                     animateurs: roleCounts["animateurs"],
-                    managersAdjoints: roleCounts["managersadjoints"],
+                    animateursJuniors: roleCounts["animateursjuniors"],
+                    animateursSeniors: roleCounts["animateurssenior"],
                     managers: roleCounts["managers"],
+                    managersJuniors: roleCounts["managersjuniors"],
+                    managersSeniors: roleCounts["managerseniors"],
                     ...levelCounts, 
                 }));
             } catch (error) {
@@ -112,30 +122,42 @@ const Dashboard = () => {
     }
 
     const chartData = {
-        labels: ['Distributeur', 'Animateur AD', 'Animateur', 'Manager AD', 'Manager'],
+        labels: ['Distributeur', 'Animateur', 'Animateur Junior', 'Animateur Senior', 'Manager', 'Manager Junior', 'Manager Senior'],
         datasets: [
             {
                 label: 'User Count',
                 data: [
                     data.Distributeur,
-                    data["Animateur Adjoint"],
                     data.Animateur,
-                    data["Manager Adjoint"],
+                    data["Animateur Junior"],
+                    data["Animateur Senior"],
                     data.Manager,
+                    data["Manager Junior"],
+                    data["Manager Senior"],
                 ],
                 backgroundColor: [
-                    'rgba(127, 140, 141)',
-                    'rgba(142, 68, 173)', 
-                    'rgba(52, 73, 94)', 
-                    'rgba(230, 126, 34)', 
-                    'rgba(231, 76, 60)', 
+                    'rgba(127, 140, 141, 0.6)', // Gray
+                    'rgba(142, 68, 173, 0.6)', // Purple
+                    'rgba(52, 73, 94, 0.6)', // Dark Blue
+                    'rgba(230, 126, 34, 0.6)', // Orange
+                    'rgba(231, 76, 60, 0.6)', // Red
+                    'rgba(46, 204, 113, 0.6)', // Green
+                    'rgba(52, 152, 219, 0.6)', // Light Blue
+                    'rgba(155, 89, 182, 0.6)', // Lavender
+                    'rgba(241, 196, 15, 0.6)', // Yellow
+                    'rgba(39, 174, 96, 0.6)', // Emerald
                 ],
                 borderColor: [
-                    'rgba(127, 140, 141)', 
-                    'rgba(142, 68, 173)', 
-                    'rgba(52, 73, 94)', 
-                    'rgba(230, 126, 34)', 
-                    'rgba(231, 76, 60)', 
+                    'rgba(127, 140, 141, 1)', // Gray
+                    'rgba(142, 68, 173, 1)', // Purple
+                    'rgba(52, 73, 94, 1)', // Dark Blue
+                    'rgba(230, 126, 34, 1)', // Orange
+                    'rgba(231, 76, 60, 1)', // Red
+                    'rgba(46, 204, 113, 1)', // Green
+                    'rgba(52, 152, 219, 1)', // Light Blue
+                    'rgba(155, 89, 182, 1)', // Lavender
+                    'rgba(241, 196, 15, 1)', // Yellow
+                    'rgba(39, 174, 96, 1)', // Emerald
                 ],
                 borderWidth: 1,
                 borderRadius: 10,
@@ -168,24 +190,34 @@ const Dashboard = () => {
                     <p>{data.Distributeur}</p>
                 </div>
                 <div className="card card-adjoints">
-                    <h3>Animateur AD</h3>
-                    <br />
-                    <p>{data["Animateur Adjoint"]}</p>
-                </div>
-                <div className="card card-animateurs">
                     <h3>Animateur</h3>
                     <br />
                     <p>{data.Animateur}</p>
                 </div>
-                <div className="card card-managers-adjoints">
-                    <h3>Manager AD</h3>
+                <div className="card card-juniorA">
+                    <h3>Animateur Junior</h3>
                     <br />
-                    <p>{data["Manager Adjoint"]}</p>
+                    <p>{data["Animateur Junior"]}</p>
+                </div>
+                <div className="card card-SeniorA">
+                    <h3>Animateur Senior</h3>
+                    <br />
+                    <p>{data["Animateur Senior"]}</p>
                 </div>
                 <div className="card card-managers">
                     <h3>Manager</h3>
                     <br />
                     <p>{data.Manager}</p>
+                </div>
+                <div className="card card-juniorM">
+                    <h3>Manager Junior</h3>
+                    <br />
+                    <p>{data["Manager Junior"]}</p>
+                </div>
+                <div className="card card-SeniorM">
+                    <h3>Manager Senior</h3>
+                    <br />
+                    <p>{data["Manager Senior"]}</p>
                 </div>
             </div>
             <br />

@@ -66,7 +66,7 @@ const Help = () => {
     }, []);
 
     return (
-        <div>
+        <div className="bg-gray-100 min-h-screen">
             <div className="main-content container mx-auto px-4 py-8">
                 <h1 style={{ color: "#000" }} className="text-3xl font-bold mb-4">Admin Helpdesk</h1>
                 <p style={{ color: "#000" }} className="mb-8">Manage user help requests below.</p>
@@ -74,7 +74,7 @@ const Help = () => {
                 {loading && <p>Loading help requests...</p>}
                 {error && <p className="text-red-500">{error}</p>}
 
-                <table className="min-w-full bg-white border border-gray-200">
+                <table>
                     <thead>
                         <tr>
                             <th className="px-6 py-3 border-b">ID</th>

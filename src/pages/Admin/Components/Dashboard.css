@@ -1,26 +1,3 @@
-h1 {
-    font-size: 2.5rem;
-    color: #ffffff;
-    margin-bottom: 16px;
-}
-
-h2 {
-    font-size: 2rem;
-    color: #ffffff;
-    margin-bottom: 12px;
-}
-
-h3 {
-    font-size: 1.25rem;
-    color: #ffffff;
-}
-
-p {
-    line-height: 1.6;
-    margin-bottom: 16px;
-    color: #ffffff;
-}
-
 .dashboard {
     padding: 30px;
     background-color: #eef1f7;
@@ -46,6 +23,10 @@ p {
     justify-content: center;
 }
 
+.dashboard-grid p {
+    color: white;
+}
+
 .card {
     padding: 25px;
     border-radius: 12px;
@@ -58,7 +39,7 @@ p {
 }
 
 .card-income {
-    background-color: #27ae60; 
+    background-color: black; 
 }
 
 .card-users {
@@ -66,28 +47,50 @@ p {
 }
 
 .card-active {
-    background-color: #f1c40f; 
-    color: #333; 
+    background-color: #52c41a; 
+}
+
+.card-income,
+.card-income p {
+    color: white;
 }
 
 .card-adjoints {
-    background-color: #8e44ad; 
+    background-color: #8e44ad; /* Purple */
 }
 
 .card-animateurs {
-    background-color: #34495e; 
+    background-color: #34495e; /* Dark Blue */
 }
 
 .card-managers-adjoints {
-    background-color: #e67e22; 
+    background-color: #e67e22; /* Orange */
 }
 
 .card-managers {
-    background-color: #e74c3c; 
+    background-color: #e74c3c; /* Red */
 }
 
 .card-distributeurs {
-    background-color: #7f8c8d; 
+    background-color: #7f8c8d; /* Gray */
+}
+
+.card-juniorA {
+    background-color: #2ecc71; /* Green */
+}
+
+.card-SeniorA {
+    background-color: #1abc9c; /* Teal */
+}
+
+.card-juniorM,
+.card-juniorM p {
+    background-color: #f1c40f; 
+    color: #605218; 
+}
+
+.card-SeniorM {
+    background-color: #16a085; /* Dark Teal */
 }
 
 .card:hover {

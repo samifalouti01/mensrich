@@ -1,8 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
+import Loader from '../components/Loader';
 import "./Presentation.css";
 
 const Presentation = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); 
+
+    return () => clearTimeout(timer); 
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <div className="documentation-container">
       <Header />

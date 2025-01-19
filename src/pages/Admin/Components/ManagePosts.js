@@ -7,9 +7,6 @@ const ManagePosts = () => {
   const [searchQuery, setSearchQuery] = useState(() => {
     return localStorage.getItem("searchQuery") || "";
   });
-  const [selectedCategory, setSelectedCategory] = useState(() => {
-    return localStorage.getItem("selectedCategory") || "Tous";
-  });
   const [products, setProducts] = useState([]); 
   const [isScrollVisible, setIsScrollVisible] = useState(false); 
   const [loading, setLoading] = useState(false); 
@@ -22,7 +19,7 @@ const ManagePosts = () => {
     setLoading(true); 
     const { data, error } = await supabase
       .from("store")
-      .select("id, product_image, title, ref, price, sex");
+      .select("id, product_image, title, description, price");
 
     setLoading(false); 
     if (error) {
@@ -57,26 +54,8 @@ const ManagePosts = () => {
     localStorage.setItem("searchQuery", searchQuery);
   }, [searchQuery]);
 
-  useEffect(() => {
-    localStorage.setItem("selectedCategory", selectedCategory);
-  }, [selectedCategory]);
-
-  const handleCopy = (text) => {
-    navigator.clipboard.writeText(text).catch((err) => {
-      console.error("Failed to copy text:", err);
-    });
-  };
-
   const handleSearch = () => {
     setSearchQuery(searchRef.current.value);
-  };
-
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
-    setSearchQuery("");  
-    if (searchRef.current) {
-      searchRef.current.value = ""; 
-    }
   };
 
   const handleEdit = (product) => {
@@ -98,11 +77,11 @@ const ManagePosts = () => {
   };
 
   const handleSaveEdit = async () => {
-    const { id, title, price, sex, ref } = editingProduct;
+    const { id, title, price, description } = editingProduct;
 
     const { error } = await supabase
       .from("store")
-      .update({ title, price, sex, ref })
+      .update({ title, price, description })
       .eq("id", id);
 
     if (error) {
@@ -120,41 +99,19 @@ const ManagePosts = () => {
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesCategory =
-      selectedCategory === "Tous" || product.sex.toLowerCase() === selectedCategory.toLowerCase();
-    const matchesSearch = product.ref
+    return product.title
       .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+      .includes(searchQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
   return (
     <div className="shop-container">
       <div className="toolbar">
-        <div className="category-buttons">
-          <button
-            className={selectedCategory === "Tous" ? "active" : ""}
-            onClick={() => handleCategoryChange("Tous")}
-          >
-            Tous
-          </button>
-          <button
-            className={selectedCategory === "Hommes" ? "active" : ""}
-            onClick={() => handleCategoryChange("Hommes")}
-          >
-            Hommes
-          </button>
-          <button
-            className={selectedCategory === "Femmes" ? "active" : ""}
-            onClick={() => handleCategoryChange("Femmes")}
-          >
-            Femmes
-          </button>
-        </div>
         <input
           ref={searchRef}
           type="text"
-          placeholder={`Rechercher dans ${selectedCategory}...`}
+          placeholder="Rechercher..."
           className="search-bar"
           onChange={handleSearch}
           defaultValue={searchQuery}
@@ -162,7 +119,7 @@ const ManagePosts = () => {
       </div>
 
       <div className="recommended">
-        <h2>{selectedCategory}</h2>
+        <h2 style={{ color: "black" }}>Products</h2>
 
         {loading ? (
           <div className="loading-spinner">Loading...</div>
@@ -177,31 +134,21 @@ const ManagePosts = () => {
                     <img src={product.product_image} alt={product.title} />
                     <div className="title-info">
                       <h3>{product.title}</h3>
-                      <div className="ref-info">
-                        <p>Réf : {product.ref}</p>
-                        <FaCopy
-                          className="copy-icon"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleCopy(product.ref);
-                          }}
-                        />
-                      </div>
+                      <p>{product.description}</p>
                     </div>
                   </div>
                   <div className="product-right">
                     <div className="price-info">
                       <div className="price">
-                        <img src="Coin.svg" alt="currency" />
                         <p>{product.price} FC</p>
                       </div>
                       <h3>{(product.price * 100).toLocaleString()} DZD</h3>
                     </div>
                   </div>
                   <div className="actions">
-                      <FaEdit style={{ fontSize: "30px"}} className="edit-icon" onClick={() => handleEdit(product)} />
-                      <FaTrash style={{ fontSize: "30px"}} className="delete-icon" onClick={() => handleDelete(product.id)} />
-                    </div>
+                    <FaEdit style={{ fontSize: "30px"}} className="edit-icon" onClick={() => handleEdit(product)} />
+                    <FaTrash style={{ fontSize: "30px"}} className="delete-icon" onClick={() => handleDelete(product.id)} />
+                  </div>
                 </div>
               ))
             )}
@@ -212,7 +159,7 @@ const ManagePosts = () => {
       {isEditing && (
         <div className="edit-modal">
           <div className="modal-content">
-            <h3>Edit Product</h3>
+            <h3 style={{ color: "black" }}>Edit Product</h3>
             <label>Title:</label>
             <input
               type="text"
@@ -220,11 +167,11 @@ const ManagePosts = () => {
               value={editingProduct.title}
               onChange={handleInputChange}
             />
-            <label>Ref:</label>
+            <label>Description:</label>
             <input
               type="text"
-              name="ref"
-              value={editingProduct.ref}
+              name="description"
+              value={editingProduct.description}
               onChange={handleInputChange}
             />
             <label>Price:</label>
@@ -234,15 +181,6 @@ const ManagePosts = () => {
               value={editingProduct.price}
               onChange={handleInputChange}
             />
-            <label>Category (sex):</label>
-            <select
-              name="sex"
-              value={editingProduct.sex}
-              onChange={handleInputChange}
-            >
-              <option value="hommes">Hommes</option>
-              <option value="femmes">Femmes</option>
-            </select>
             <button onClick={handleSaveEdit}>Save</button>
             <button onClick={() => setIsEditing(false)}>Cancel</button>
           </div>
