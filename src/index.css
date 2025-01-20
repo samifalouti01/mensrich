@@ -1,6 +1,11 @@
 /* Importing Modern Font from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
 
+html[lang="ar"] {
+  direction: rtl;
+  text-align: right;
+}
+
 body {
   margin: 0;
   font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

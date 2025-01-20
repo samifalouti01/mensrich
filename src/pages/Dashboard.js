@@ -11,6 +11,7 @@ import { useLevel } from "../components/LevelContext";
 import Pay from "../components/Pay";
 import CommissionFetcher from '../components/CommissionFetcher';
 import Loader from '../components/Loader';
+import { useTranslation } from 'react-i18next';
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -33,6 +34,7 @@ const Dashboard = () => {
   const [showButtons, setShowButtons] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [monthlyPpcg, setMonthlyPpcg] = useState(0);
+  const { t, i18n } = useTranslation();
   
   // Calculate total progress
   const totalProgress = Number(monthlyPpcg) + Number(ppcg);
@@ -234,6 +236,10 @@ const Dashboard = () => {
     setShowButtons((prev) => !prev);
   };
 
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
+
   const progressOptions = {
     strokeWidth: 4,
     color: "#5700B4",
@@ -265,10 +271,10 @@ const Dashboard = () => {
           {showButtons && (
             <div className="float">
               <button className="bouncy-button" onClick={openParrainModal}>
-                <i class="bi bi-person-add" style={{ marginRight: "10px" }}></i> Referral
+                <i class="bi bi-person-add" style={{ marginRight: "10px" }}></i> {t('referral')}
               </button>
               <button className="bouncy-button" onClick={() => navigate("/boutique")}>
-                <i class="bi bi-shop" style={{ marginRight: "10px" }}></i> Store
+                <i class="bi bi-shop" style={{ marginRight: "10px" }}></i> {t('store')}
               </button>
             </div>
           )}
@@ -305,7 +311,7 @@ const Dashboard = () => {
               <br />
               <div className="copy-container">
                 <div className="copy-text">
-                  <p style={{ color: "#5700B4"}}>ID: {id || "Loading..."}</p>
+                  <p style={{ color: "#5700B4"}}>{t('id')}: {id || "Loading..."}</p>
                   <i style={{ color: '#5700B4', padding: '0' }} onClick={() => handleCopy(id)} class="bi bi-copy"></i>
                 </div>
               </div>
@@ -317,27 +323,27 @@ const Dashboard = () => {
             </div>
 
             <div className="first-card">
-              <p>For this month</p>
+              <p>{t("forThisMonth")}</p>
               <div className="flex-container">
-                <h3>Sales points:</h3>
+                <h3>{t("salesPoints")}:</h3>
                 <p>{perso || "Loading..."}</p>
               </div>
               <div className="flex-container">
-                <h3>Referral points:</h3>
+                <h3>{t("referralPoints")}:</h3>
                 <p>{parainagePoints || "Loading..."}</p>
               </div>
               <div className="flex-container">
-                <h3>Referred Users:</h3>
+                <h3>{t("referredUsers")}:</h3>
                 <p>{parainageUsers || "Loading..."}</p>
               </div>
               <div className="flex-container">
-                <h3>Group points:</h3>
+                <h3>{t("groupPoints")}:</h3>
                 <p>{ppcg || "Loading..."}</p>
               </div>
             </div>
             <div className="first-card">
               <h2>
-                  Progress to Next Level: <span style={{ color: "#5700B4" }}>{nextLevel}</span>
+                  {t("Ptnl")}: <span style={{ color: "#5700B4" }}>{nextLevel}</span>
                 </h2>
                 <div className="donut-container">
                   <CircularProgressbar
@@ -350,10 +356,10 @@ const Dashboard = () => {
                     })}
                   />
                 </div>
-                <p>Previous month: <span style={{ color: "#000", fontWeight: "bold" }}>{monthlyPpcg}</span></p>
-                <p>This month: <span style={{ color: "#000", fontWeight: "bold" }}>{ppcg}</span></p>
+                <p>{t("previousMonth")}: <span style={{ color: "#000", fontWeight: "bold" }}>{monthlyPpcg}</span></p>
+                <p>{t("thisMonth")}: <span style={{ color: "#000", fontWeight: "bold" }}>{ppcg}</span></p>
                 <p>
-                  Points to reach <span style={{ color: "#5700B4", fontWeight: "bold" }}>{nextLevel}</span>:{" "}
+                  {t("pointsToReach")} <span style={{ color: "#5700B4", fontWeight: "bold" }}>{nextLevel}</span>:{" "}
                   <span style={{ color: "#000", fontWeight: "bold" }}>{pointsToNextLevel}</span>
                 </p>
             </div>
@@ -363,23 +369,23 @@ const Dashboard = () => {
         <section className="doc-section-dash">
           <div className="section-header-dash">
             <i class="bi bi-trophy"></i>
-            <h2>Challenge</h2>
+            <h2>{t("Challenge")}</h2>
           </div>
           <div className="section-content-dash">
             <div className="column-dash">
-              <p>To win this challenge you need to follow steps:</p>
+              <p>{t("challengeTitle")}:</p>
               <div className="feature-list">
                 <div className="feature-item">
                   <i className="bi bi-check2-circle"></i>
-                  <p>10 referred users actif</p>
+                  <p>{t("firstStep")}</p>
                 </div>
                 <div className="feature-item">
                   <i className="bi bi-check2-circle"></i>
-                  <p>100 MC / Sales points</p>
+                  <p>{t("secondStep")}</p>
                 </div>
                 <div className="feature-item">
                   <i class="bi bi-stopwatch" style={{ color: "red" }}></i>
-                  <p>Challenge ends in <br /> <span style={{ color: "#5700B4" }}>{timeLeft}</span></p>
+                  <p>{t("challengeDuration")}: <br /> <span style={{ color: "#5700B4" }}>{timeLeft}</span></p>
                 </div>
               </div>
             </div>
@@ -391,17 +397,17 @@ const Dashboard = () => {
         <section className="doc-section">
           <div className="section-header">
             <i className="bi bi-credit-card"></i>
-            <h2>Payment</h2>
+            <h2>{t("payment")}</h2>
           </div>
           <div className="section-content">
-            <p>You will get your Salary and your Comission monthly.</p>
+            <p>{t("paymentTitle")}</p>
             <div className="payment-grid">
               <div className="payment-card">
-                <h3>Salary</h3>
+                <h3>{t("salary")}</h3>
                 <p><Pay /></p>
               </div>
               <div className="payment-card">
-                <h3>Comission</h3>
+                <h3>{t("commission")}</h3>
                 {id && <CommissionFetcher userId={id} />}
               </div>
             </div>

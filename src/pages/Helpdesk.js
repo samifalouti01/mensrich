@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { supabase } from "../supabaseClient";
 import Loader from '../components/Loader';
+import { useTranslation } from 'react-i18next';
 import './Helpdesk.css';
 
 const Helpdesk = () => {
     const [isLoading, setIsLoading] = useState(true);
+    const { t, i18n } = useTranslation();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -61,6 +63,10 @@ const Helpdesk = () => {
         }
     };
 
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+      };
+
     if (isLoading) {
         return (
           <div className="loading-container">
@@ -73,14 +79,14 @@ const Helpdesk = () => {
         <div>
             <Header />
             <div className="main-content container mx-auto px-4 py-8">
-                <h1 style={{ color: "#000" }} className="text-3xl font-bold mb-4">Helpdesk</h1>
-                <p style={{ color: "#000" }} className="mb-8">Find help and support resources below or contact us directly.</p>
+                <h1 style={{ color: "#000" }} className="text-3xl font-bold mb-4">{t("helpdesk")}</h1>
+                <p style={{ color: "#000" }} className="mb-8">{t("helpdeskHeading")}</p>
 
                 <section className="contact-section">
-                    <h2>Contact Us</h2>
+                    <h2>{t("contactUs")}</h2>
                     <form className="space-y-4" onSubmit={handleSubmit}>
                         <div>
-                            <label className="block text-sm font-medium mb-1" htmlFor="name">Name</label>
+                            <label className="block text-sm font-medium mb-1" htmlFor="name">{t("name")}</label>
                             <input
                                 type="text"
                                 className="parrain-input"
@@ -93,7 +99,7 @@ const Helpdesk = () => {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1" htmlFor="email">Email</label>
+                            <label className="block text-sm font-medium mb-1" htmlFor="email">{t("email")}</label>
                             <input
                                 type="email"
                                 className="parrain-input"
@@ -106,7 +112,7 @@ const Helpdesk = () => {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1" htmlFor="message">Message</label>
+                            <label className="block text-sm font-medium mb-1" htmlFor="message">{t("message")}</label>
                             <textarea
                                 id="message"
                                 name="message"
@@ -119,9 +125,8 @@ const Helpdesk = () => {
                         </div>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                         >
-                            Submit
+                            {t("submit")}
                         </button>
                     </form>
                 </section>

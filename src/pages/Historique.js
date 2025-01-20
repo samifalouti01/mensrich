@@ -4,10 +4,12 @@ import Header from "../components/Header";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Loader from '../components/Loader';
 import { Badge, Card, Container, Row, Col, Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 const Historique = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -62,15 +64,15 @@ const Historique = () => {
   const getStatusBadge = (status) => {
     switch (status.toLowerCase()) {
       case "validated": 
-        return <Badge bg="success">Validée</Badge>;
+        return <Badge bg="success">{t("validated")}</Badge>;
       case "pending":
-        return <Badge bg="warning" text="dark">En attente</Badge>;
+        return <Badge bg="warning" text="dark">{t("Pending")}</Badge>;
       case "refused":
-        return <Badge bg="danger">Refusée</Badge>;
+        return <Badge bg="danger">{t("refused")}</Badge>;
       case "canceled":
-        return <Badge bg="danger">Annulée</Badge>;
+        return <Badge bg="danger">{t("canceled")}</Badge>;
       default:
-        return <Badge bg="secondary">Statut inconnu</Badge>;
+        return <Badge bg="secondary">{t("unknownStatus")}</Badge>;
     }
   };  
 
@@ -88,13 +90,17 @@ const Historique = () => {
     });
   };
 
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
+
   return (
     <>
       <Header />
       <Container className="py-5">
         <Row className="mb-4">
           <Col>
-            <h2 className="text-center mb-4 fw-bold">Historique des Commandes</h2>
+            <h2 className="text-center mb-4 fw-bold">{t("historyTitle")}</h2>
           </Col>
         </Row>
         
@@ -103,7 +109,7 @@ const Historique = () => {
         ) : orders.length === 0 ? (
           <Card className="text-center py-5">
             <Card.Body>
-              <p className="mb-0 text-muted">Aucune commande enregistrée pour le moment.</p>
+              <p className="mb-0 text-muted">{t("historyResult")}</p>
             </Card.Body>
           </Card>
         ) : (
@@ -121,7 +127,7 @@ const Historique = () => {
                   )}
                   <Card.Body>
                     <div className="d-flex justify-content-between align-items-start mb-3">
-                      <Card.Title style={{ color: "#5700B4" }} className="mb-0">Commande #{order.id}</Card.Title>
+                      <Card.Title style={{ color: "#5700B4" }} className="mb-0">{t("orderId")} #{order.id}</Card.Title>
                       {getStatusBadge(order.order_status)}
                     </div>
                     <Card.Text>

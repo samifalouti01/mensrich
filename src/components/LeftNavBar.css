@@ -5,7 +5,7 @@
     top: 0;
     left: 0;
     height: 100%;
-    width: 200px;
+    width: 250px;
     background-color: #00000070; 
     color: #000;
     display: flex;
@@ -60,6 +60,7 @@
     position: fixed;
     left: 20px;
     bottom: 100px;
+    width: 80%;
     display: flex;
     align-items: center;
     justify-content: center;
