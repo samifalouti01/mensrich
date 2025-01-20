@@ -15,7 +15,6 @@ import Presentation from "./pages/Presentation";
 import ProductPage from "./pages/ProductPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
-import Media from "./pages/Media";
 import './i18n';
 
 
@@ -39,7 +38,6 @@ function App() {
               <Route path="/settings" element={<Settings />} />
               <Route path="/presentation" element={<Presentation />} />
               <Route path="/productpage/:productId" element={<ProductPage />} />
-              <Route path="/media" element={<Media />} />
             </Routes>
           </div>
         </Router>
