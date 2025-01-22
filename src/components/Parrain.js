@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { FaTimes, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
-import { useTranslation } from 'react-i18next';
 import "./Parrain.css";
 
 const Parrain = React.forwardRef((props, ref) => {
@@ -22,7 +21,6 @@ const Parrain = React.forwardRef((props, ref) => {
   const [success, setSuccess] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -156,16 +154,12 @@ const Parrain = React.forwardRef((props, ref) => {
     }
   };
 
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
-
   const togglePasswordVisibility = () => { setIsPasswordVisible(!isPasswordVisible); };
 
   return (
     <div className="parrain" ref={ref}>
       <div className="parrain-header">
-        <h2 className="parrain-title">{t("referral")}</h2>
+        <h2 className="parrain-title">Register</h2>
         <button className="close-button" onClick={props.onClose}>
           <FaTimes size={24} />
         </button>
@@ -179,7 +173,7 @@ const Parrain = React.forwardRef((props, ref) => {
         />
           <input
             type="text"
-            placeholder={t("name")}
+            placeholder="Nom et Prénom"
             name="name"
             className="parrain-input"
             value={formData.name}
@@ -188,7 +182,7 @@ const Parrain = React.forwardRef((props, ref) => {
           />
           <input
             type="text"
-            placeholder={t("username")}
+            placeholder="ID Numérique"
             name="identifier"
             className="parrain-input"
             value={formData.identifier}
@@ -198,7 +192,7 @@ const Parrain = React.forwardRef((props, ref) => {
           <div className="password-input-container">
             <input
               type={isPasswordVisible ? "text" : "password"}
-              placeholder={t("password")}
+              placeholder="Mot de Passe"
               name="password"
               className="parrain-input"
               value={formData.password}
@@ -211,7 +205,7 @@ const Parrain = React.forwardRef((props, ref) => {
           </div>
           <input
             type="text"
-            placeholder={t("phoneNumber")}
+            placeholder="Téléphone"
             name="phone"
             className="parrain-input"
             value={formData.phone}
@@ -220,14 +214,14 @@ const Parrain = React.forwardRef((props, ref) => {
           />
           <input
             type="email"
-            placeholder={t("email")}
+            placeholder="Email"
             name="email"
             className="parrain-input"
             value={formData.email}
             onChange={handleChange}
             required
           />
-          {t("birthdate")}:
+          Birthdate:
           <input
             type="date"
             name="birthdate"
@@ -238,7 +232,7 @@ const Parrain = React.forwardRef((props, ref) => {
             required
           />
         <button className="parrain-button" type="submit" disabled={loading}>
-          {loading ? "En cours..." : t("register")}
+          {loading ? "En cours..." : "Parrainer"}
         </button>
       </form>
       {error && <p className="error-message">{error}</p>}
@@ -246,11 +240,11 @@ const Parrain = React.forwardRef((props, ref) => {
       {showPopup && (
         <div className="popup">
           <div className="popup-content">
-            <h3 style={{ color: "#000" }}>{t("credentials")}</h3>
-            <p style={{ color: "#000" }}>{t("id")}: {formData.identifier}</p>
-            <p style={{ color: "#000" }}>{t("password")}: {formData.password}</p>
-            <button onClick={handleCopy}>{t("copy")}</button>
-            <button onClick={() => setShowPopup(false)}>{t("close")}</button>
+            <h3 style={{ color: "#000" }}>Credentials</h3>
+            <p style={{ color: "#000" }}>ID: {formData.identifier}</p>
+            <p style={{ color: "#000" }}>Password: {formData.password}</p>
+            <button onClick={handleCopy}>Copy</button>
+            <button onClick={() => setShowPopup(false)}>Close</button>
           </div>
         </div>
       )}

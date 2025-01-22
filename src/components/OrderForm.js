@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { useUser } from "../components/UserContext";
-import { useTranslation } from 'react-i18next';
 import "./OrderForm.css";
 
 const commissionRates = {
@@ -82,7 +81,6 @@ const OrderForm = ({ product }) => {
   const [deliveryType, setDeliveryType] = useState("desktop");
   const [userId, setUserId] = useState(null);
   const { level } = useUser();
-  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     // Get user from localStorage
@@ -193,24 +191,20 @@ const OrderForm = ({ product }) => {
     }
   };
 
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
-
   return (
     <form className="order-form" onSubmit={handleSubmit}>
       <div>
-        <label>{t("name")}:</label>
+        <label>Name:</label>
         <input className="input-form" type="text" name="name" required />
       </div>
       <div>
-        <label>{t("phoneNumber")}:</label>
+        <label>Phone Number:</label>
         <input className="input-form" type="text" name="phone" required />
       </div>
       <div>
-        <label>{t("wilaya")}:</label>
+        <label>Wilaya:</label>
         <select onChange={handleWilayaChange} required>
-          <option value="">{t("selectWilaya")}</option>
+          <option value="">Select Wilaya</option>
           {wilayas.map((wilaya) => (
             <option key={wilaya.id} value={wilaya.id}>
               {wilaya.name}
@@ -219,13 +213,13 @@ const OrderForm = ({ product }) => {
         </select>
       </div>
       <div>
-        <label>{t("commune")}:</label>
+        <label>Commune:</label>
         <select
           onChange={(e) => setSelectedCommune(e.target.value)}
           value={selectedCommune}
           required
         >
-          <option value="">{t("selectCommune")}</option>
+          <option value="">Select Commune</option>
           {communes.map((commune, index) => (
             <option key={index} value={commune}>
               {commune}
@@ -234,18 +228,18 @@ const OrderForm = ({ product }) => {
         </select>
       </div>
       <div>
-        <label>{t("deliveryType")}:</label>
+        <label>Delivery Type:</label>
         <select
           onChange={(e) => setDeliveryType(e.target.value)}
           value={deliveryType}
         >
-          <option value="desktop">{t("desktop")}</option>
+          <option value="desktop">Desktop</option>
         </select>
       </div>
       <div>
-        <p className="p-text">{t("totalPrice")}: {(product.price * 100).toLocaleString()} DA</p>
+        <p className="p-text">Total Price: {(product.price * 100).toLocaleString()} DA</p>
       </div>
-      <button className="btn-form" type="submit">{t("buy")}</button>
+      <button className="btn-form" type="submit">Buy</button>
     </form>
   );
 };
