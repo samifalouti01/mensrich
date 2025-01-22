@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { FaAlignLeft } from "react-icons/fa";
 import { GB, FR, SA } from 'country-flag-icons/react/3x2';
 import LeftNavBar from "./LeftNavBar";
-import { useTranslation } from 'react-i18next';
 import "./Header.css";
+import { getTranslation } from "./localization";
 
 const Header = () => {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -11,7 +11,6 @@ const Header = () => {
         return localStorage.getItem('selectedLanguage') || 'en';
     });
     const navRef = useRef(null);
-    const { i18n } = useTranslation();
 
     const languageOptions = [
         { code: 'en', flag: GB, label: 'English', type: 'component' },
@@ -30,7 +29,6 @@ const Header = () => {
     };
 
     const changeLanguage = (lng) => {
-        i18n.changeLanguage(lng);
         setSelectedLang(lng);
         localStorage.setItem('selectedLanguage', lng);
     };
@@ -38,7 +36,6 @@ const Header = () => {
     useEffect(() => {
         const savedLanguage = localStorage.getItem('selectedLanguage');
         if (savedLanguage) {
-            i18n.changeLanguage(savedLanguage);
             setSelectedLang(savedLanguage);
         }
 
@@ -52,7 +49,7 @@ const Header = () => {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [i18n]);
+    }, []);
 
     // Custom select component to show current flag
     const SelectedFlag = () => {
@@ -81,7 +78,7 @@ const Header = () => {
                         >
                             {languageOptions.map(({ code, label }) => (
                                 <option key={code} value={code}>
-                                    {label}
+                                    {getTranslation(selectedLang, label.toLowerCase())}
                                 </option>
                             ))}
                         </select>

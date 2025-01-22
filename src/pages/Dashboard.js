@@ -11,7 +11,7 @@ import { useLevel } from "../components/LevelContext";
 import Pay from "../components/Pay";
 import CommissionFetcher from '../components/CommissionFetcher';
 import Loader from '../components/Loader';
-import { useTranslation } from 'react-i18next';
+import { getTranslation } from "../components/localization";
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -34,7 +34,7 @@ const Dashboard = () => {
   const [showButtons, setShowButtons] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [monthlyPpcg, setMonthlyPpcg] = useState(0);
-  const { t, i18n } = useTranslation();
+  const [language, setLanguage] = useState("en")
   
   // Calculate total progress
   const totalProgress = Number(monthlyPpcg) + Number(ppcg);
@@ -236,8 +236,8 @@ const Dashboard = () => {
     setShowButtons((prev) => !prev);
   };
 
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
+  const changeLanguage = (lang) => {
+    setLanguage(lang);
   };
 
   const progressOptions = {
@@ -271,10 +271,10 @@ const Dashboard = () => {
           {showButtons && (
             <div className="float">
               <button className="bouncy-button" onClick={openParrainModal}>
-                <i class="bi bi-person-add" style={{ marginRight: "10px" }}></i> {t('referral')}
+                <i class="bi bi-person-add" style={{ marginRight: "10px" }}></i>{getTranslation(language, "referral")}
               </button>
               <button className="bouncy-button" onClick={() => navigate("/boutique")}>
-                <i class="bi bi-shop" style={{ marginRight: "10px" }}></i> {t('store')}
+                <i class="bi bi-shop" style={{ marginRight: "10px" }}></i>{getTranslation(language, "store")}
               </button>
             </div>
           )}
@@ -311,7 +311,7 @@ const Dashboard = () => {
               <br />
               <div className="copy-container">
                 <div className="copy-text">
-                  <p style={{ color: "#5700B4"}}>{t('id')}: {id || "Loading..."}</p>
+                  <p style={{ color: "#5700B4"}}>{getTranslation(language, "id")}: {id || "Loading..."}</p>
                   <i style={{ color: '#5700B4', padding: '0' }} onClick={() => handleCopy(id)} class="bi bi-copy"></i>
                 </div>
               </div>
@@ -323,27 +323,27 @@ const Dashboard = () => {
             </div>
 
             <div className="first-card">
-              <p>{t("forThisMonth")}</p>
+              <p>{getTranslation(language, "forThisMonth")}</p>
               <div className="flex-container">
-                <h3>{t("salesPoints")}:</h3>
+                <h3>{getTranslation(language, "salesPoints")}:</h3>
                 <p>{perso || "Loading..."}</p>
               </div>
               <div className="flex-container">
-                <h3>{t("referralPoints")}:</h3>
+                <h3>{getTranslation(language, "referralPoints")}:</h3>
                 <p>{parainagePoints || "Loading..."}</p>
               </div>
               <div className="flex-container">
-                <h3>{t("referredUsers")}:</h3>
+                <h3>{getTranslation(language, "referredUsers")}:</h3>
                 <p>{parainageUsers || "Loading..."}</p>
               </div>
               <div className="flex-container">
-                <h3>{t("groupPoints")}:</h3>
+                <h3>{getTranslation(language, "groupPoints")}:</h3>
                 <p>{ppcg || "Loading..."}</p>
               </div>
             </div>
             <div className="first-card">
               <h2>
-                  {t("Ptnl")}: <span style={{ color: "#5700B4" }}>{nextLevel}</span>
+              {getTranslation(language, "Ptnl")}: <span style={{ color: "#5700B4" }}>{nextLevel}</span>
                 </h2>
                 <div className="donut-container">
                   <CircularProgressbar
@@ -356,10 +356,10 @@ const Dashboard = () => {
                     })}
                   />
                 </div>
-                <p>{t("previousMonth")}: <span style={{ color: "#000", fontWeight: "bold" }}>{monthlyPpcg}</span></p>
-                <p>{t("thisMonth")}: <span style={{ color: "#000", fontWeight: "bold" }}>{ppcg}</span></p>
+                <p>{getTranslation(language, "previousMonth")}: <span style={{ color: "#000", fontWeight: "bold" }}>{monthlyPpcg}</span></p>
+                <p>{getTranslation(language, "thisMonth")}: <span style={{ color: "#000", fontWeight: "bold" }}>{ppcg}</span></p>
                 <p>
-                  {t("pointsToReach")} <span style={{ color: "#5700B4", fontWeight: "bold" }}>{nextLevel}</span>:{" "}
+                  {getTranslation(language, "pointsToReach")} <span style={{ color: "#5700B4", fontWeight: "bold" }}>{nextLevel}</span>:{" "}
                   <span style={{ color: "#000", fontWeight: "bold" }}>{pointsToNextLevel}</span>
                 </p>
             </div>
@@ -369,23 +369,23 @@ const Dashboard = () => {
         <section className="doc-section-dash">
           <div className="section-header-dash">
             <i class="bi bi-trophy"></i>
-            <h2>{t("Challenge")}</h2>
+            <h2>{getTranslation(language, "Challenge")}</h2>
           </div>
           <div className="section-content-dash">
             <div className="column-dash">
-              <p>{t("challengeTitle")}:</p>
+              <p>{getTranslation(language, "challengeTitle")}:</p>
               <div className="feature-list">
                 <div className="feature-item">
                   <i className="bi bi-check2-circle"></i>
-                  <p>{t("firstStep")}</p>
+                  <p>{getTranslation(language, "firstStep")}</p>
                 </div>
                 <div className="feature-item">
                   <i className="bi bi-check2-circle"></i>
-                  <p>{t("secondStep")}</p>
+                  <p>{getTranslation(language, "secondStep")}</p>
                 </div>
                 <div className="feature-item">
                   <i class="bi bi-stopwatch" style={{ color: "red" }}></i>
-                  <p>{t("challengeDuration")}: <br /> <span style={{ color: "#5700B4" }}>{timeLeft}</span></p>
+                  <p>{getTranslation(language, "challengeDuration")}: <br /> <span style={{ color: "#5700B4" }}>{timeLeft}</span></p>
                 </div>
               </div>
             </div>
@@ -397,17 +397,17 @@ const Dashboard = () => {
         <section className="doc-section">
           <div className="section-header">
             <i className="bi bi-credit-card"></i>
-            <h2>{t("payment")}</h2>
+            <h2>{getTranslation(language, "payment")}</h2>
           </div>
           <div className="section-content">
-            <p>{t("paymentTitle")}</p>
+            <p>{getTranslation(language, "paymentTitle")}</p>
             <div className="payment-grid">
               <div className="payment-card">
-                <h3>{t("salary")}</h3>
+                <h3>{getTranslation(language, "salary")}</h3>
                 <p><Pay /></p>
               </div>
               <div className="payment-card">
-                <h3>{t("commission")}</h3>
+                <h3>{getTranslation(language, "commission")}</h3>
                 {id && <CommissionFetcher userId={id} />}
               </div>
             </div>

@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { FaSave } from "react-icons/fa";
 import Header from "../components/Header";
 import Loader from '../components/Loader';
-import { useTranslation } from 'react-i18next';
 import "./Settings.css";
 
 const Settings = () => {
@@ -15,7 +14,6 @@ const Settings = () => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const { t, i18n } = useTranslation();
 
   // Fetch current user data
   useEffect(() => {
@@ -74,10 +72,6 @@ const Settings = () => {
     }
   };
 
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
-
   if (isLoading) {
     return (
       <div className="loading-container">
@@ -90,10 +84,10 @@ const Settings = () => {
     <div>
         <Header />
     <div className="settings-container">
-      <h2>{t("settingsHeading")}</h2>
+      <h2>Update Your Information</h2>
       <div className="settings-form">
         <div className="input-group">
-          <label>{t("email")}:</label>
+          <label>Email:</label>
           <input
             type="email"
             className="parrain-input"
@@ -103,7 +97,7 @@ const Settings = () => {
           />
         </div>
         <div className="input-group">
-          <label>{t("phoneNumber")}:</label>
+          <label>Phone:</label>
           <input
             type="text"
             className="parrain-input"
@@ -113,7 +107,7 @@ const Settings = () => {
           />
         </div>
         <div className="input-group">
-            <label>{t("rip")}:</label>
+            <label>RIp:</label>
             <input
               type="text"
               className="parrain-input"
@@ -123,7 +117,7 @@ const Settings = () => {
             />
         </div>
         <div className="input-group">
-          <label>{t("password")}:</label>
+          <label>Password:</label>
           <input
             type="password"
             className="parrain-input"
@@ -135,13 +129,11 @@ const Settings = () => {
         <button onClick={handleUpdate} className="save-btn">
         <div style={{ display: "flex", alignItems: "center" }}>
           <FaSave style={{ marginRight: "5px" }} />
-          <span>{t("save")}</span>
+          <span>Save</span>
         </div>
         </button>
         {message && <p className="message">{message}</p>}
       </div>
-      <p style={{ color: 'gray' }}>See <span  onClick={() => navigate("/privacy-policy")} className="switch-mode">Privacy Policy</span> or <span onClick={() => navigate("/terms-and-conditions")} className="switch-mode">Terms of Use</span></p>
-
     </div>
     </div>
   );

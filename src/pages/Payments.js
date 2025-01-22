@@ -4,7 +4,6 @@ import Header from "../components/Header";
 import { jsPDF } from "jspdf";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Loader from '../components/Loader';
-import { useTranslation } from 'react-i18next';
 import "./Payments.css";
 
 const Payments = () => {
@@ -14,7 +13,6 @@ const Payments = () => {
   const [income, setIncome] = useState(0);
   const [currentTime, setCurrentTime] = useState(""); 
   const [isLoading, setIsLoading] = useState(true);
-  const { t, i18n } = useTranslation();
 
   const fetchUserData = useCallback(async () => {
     setIsLoading(true);
@@ -255,10 +253,6 @@ const Payments = () => {
   
     return perso >= thresholds[level] ? "Actif" : "Inactif";
   };
-
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
   
   if (isLoading) {
     return (
@@ -273,12 +267,12 @@ const Payments = () => {
       <Header />
       <button onClick={downloadPDF} className="download-btn">
         <i class="bi bi-file-earmark-arrow-down" style={{ marginRight: "8px" }}></i>
-       {t("downloadPDF")}</button>
+       Download PDF</button>
       <div className="payments-container">
         <div className="row-p">
           <p style={{ color: "#333" }}>{currentTime}</p> 
           <p>
-          {t("status")}:{" "}
+          Status:{" "}
             <span
               style={{
                 color: userData.userStatus === "Actif" ? "green" : "red",
@@ -305,17 +299,17 @@ const Payments = () => {
             <h2><i class="bi bi-cash-coin" style={{ color: "#5700B4", marginRight: "10px" }}></i> 
              {(income * 100).toFixed(2)} DA</h2>
           </div>
-          <p style={{ color: "#333" }}>{t("paymentTitlePPCG")}: <span style={{ color: "#5700B4", fontWeight: "bold" }}>{userData.perso}</span></p>
-          <h3 style={{ color: "#333" }}>{t("teamSize")}: {referrals.length}</h3>
+          <p style={{ color: "#333" }}>Your Sales Points for this month: <span style={{ color: "#5700B4", fontWeight: "bold" }}>{userData.perso}</span></p>
+          <h3 style={{ color: "#333" }}>Team Size: {referrals.length}</h3>
         </div>
         <br />
-        <h3 style={{ color: "#333" }}>{t("referralDetails")}:</h3>
+        <h3 style={{ color: "#333" }}>Referral Details:</h3>
         <ul className="referral-list">
           {referrals.map((referral) => (
             <li key={referral.id} className="referral-item">
               <span>{referral.name}</span>
               <span>{determineLevel(referral.ppcg)}</span>
-              <span>{t("revenue")}: {((parseFloat(referral.referralIncome) || 0) * 100).toFixed(2)} DA</span>
+              <span>Income: {((parseFloat(referral.referralIncome) || 0) * 100).toFixed(2)} DA</span>
             </li>          
           ))}
         </ul>

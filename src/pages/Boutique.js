@@ -4,7 +4,6 @@ import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 import { useLevel } from "../components/LevelContext";
 import { Search, X } from "lucide-react";
-import { useTranslation } from 'react-i18next';
 import "./Boutique.css";
 
 const commissionRates = {
@@ -23,7 +22,6 @@ const Boutique = () => {
   const navigate = useNavigate();
   const { level } = useLevel();
   const [isLoading, setIsLoading] = useState(true);
-  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -47,10 +45,6 @@ const Boutique = () => {
   const filteredProducts = products.filter((product) =>
     product.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
 
   const LoadingSkeleton = () => {
     return (
@@ -83,7 +77,7 @@ const Boutique = () => {
             <Search className="search-icon" />
             <input
               type="text"
-              placeholder={t("search")}
+              placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"
@@ -123,7 +117,7 @@ const Boutique = () => {
                 </div>
                 <div className="product-details">
                   <h3 className="product-title2">{product.title}</h3>
-                  <p className="product-points">{(product.price - 6).toLocaleString()} {t("points")}</p>
+                  <p className="product-points">{(product.price - 6).toLocaleString()} points</p>
                   <p className="product-price">
                     {(product.price * 100).toLocaleString()} DA
                   </p>

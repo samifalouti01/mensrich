@@ -4,7 +4,6 @@ import { supabase } from "../supabaseClient";
 import { ChevronLeft } from "lucide-react";
 import OrderForm from "../components/OrderForm";
 import { useLevel } from "../components/LevelContext";
-import { useTranslation } from 'react-i18next';
 import "./ProductPage.css";
 
 const commissionRates = {
@@ -23,7 +22,6 @@ const ProductPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { level } = useLevel();
-  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -47,10 +45,6 @@ const ProductPage = () => {
 
     fetchProducts();
   }, [productId]);
-
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
 
   if (isLoading) {
     return (
@@ -114,7 +108,7 @@ const ProductPage = () => {
                 {(product.price * 100).toLocaleString()} DA
               </p>
               <p className="product-points">
-                {(product.price - 6).toLocaleString()} {t("points")}
+                {(product.price - 6).toLocaleString()} points
               </p>
               <p className="product-commission">
                 Commission: {(commission * 100).toFixed(2)} DA
@@ -122,7 +116,7 @@ const ProductPage = () => {
             </div>
 
             <div className="product-description">
-              <h2 className="description-title">{t("productDescription")}</h2>
+              <h2 className="description-title">Description</h2>
               <p className="description-text">{product.description}</p>
             </div>
 

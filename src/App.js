@@ -16,8 +16,6 @@ import ProductPage from "./pages/ProductPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import Media from "./pages/Media";
-import './i18n';
-
 
 function App() {
   return (
