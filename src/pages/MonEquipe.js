@@ -64,7 +64,7 @@ const MonEquipe = () => {
       <Header />
         <>
         <div className="team-container">
-          <h2>Mon Équipe <span style={{ color: "#5700B4" }}>{teamMembers.length}</span></h2>
+          <h2>My Team <span style={{ color: "#5700B4" }}>{teamMembers.length}</span></h2>
           {loading ? (
             <p>Chargement...</p>
           ) : teamMembers.length === 0 ? (
@@ -83,7 +83,7 @@ const MonEquipe = () => {
                   <h3 style={{ color: "#000" }}>{member.name}</h3>
                   <div className="column10">
                   <p style={{ color: "#000" }}>
-                    <strong style={{ color: "#5700B4" }}>ID:</strong> {member.identifier}
+                    <strong style={{ color: "#5700B4" }}>Useename:</strong> {member.identifier}
                   </p>
                   <p style={{ color: "#000" }}>
                     <strong style={{ color: "#5700B4" }}>Sales Points:</strong> {member.perso}

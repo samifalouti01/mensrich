@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { supabase } from "../../../supabaseClient"; 
-import "./Dashboard.css"; 
+import { supabase } from "../../../supabaseClient";
+import "./Dashboard.css";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
@@ -26,14 +26,16 @@ const Dashboard = () => {
             try {
                 setLoading(true);
 
+                // Fetch total users
                 const { count: totalUsers } = await supabase
                     .from("user_data")
                     .select("*", { count: "exact", head: true });
 
+                // Fetch active users (perso >= 100)
                 const { count: activeUsers, error: activeUsersError } = await supabase
                     .from("user_data")
                     .select("*", { count: "exact", head: true })
-                    .gte("perso", "100")
+                    .gt("perso::int", 100); // Cast `perso` to integer and compare
 
                 if (activeUsersError) {
                     console.error("Error fetching active users:", activeUsersError.message);
@@ -41,59 +43,62 @@ const Dashboard = () => {
                     console.log("Active Users Count (perso > 100):", activeUsers);
                 }
 
+                // Fetch income from validated orders
                 const { data: ordersData, error: ordersError } = await supabase
-                .from("order")
-                .select("total_price")
-                .eq("order_status", "validated");
+                    .from("order")
+                    .select("total_price")
+                    .eq("order_status", "validated");
 
-            if (ordersError) throw ordersError;
+                if (ordersError) throw ordersError;
 
-            const income = ordersData.reduce((sum, order) => sum + parseFloat(order.total_price || 0) * 100, 0);
+                const income = ordersData.reduce((sum, order) => sum + parseFloat(order.total_price || 0) * 100, 0);
 
+                // Fetch role counts
                 const roles = ["Animateur", "Animateur Junior", "Animateur Senior", "Manager", "Manager Junior", "Manager Senior"];
-            const roleCounts = {};
-            for (const role of roles) {
-                const { count } = await supabase
-                    .from("user_data")
-                    .select("*", { count: "exact", head: true })
-                    .eq("role", role);
-                roleCounts[role.toLowerCase().replace(" ", "")] = count || 0;
-            }
-
-            const { data: userPoints } = await supabase
-                .from("history_data")
-                .select("ppcg"); 
-
-            const levelCounts = {
-                Distributeur: 0,
-                Animateur: 0,
-                "Animateur Junior": 0,
-                "Animateur Senior": 0,
-                Manager: 0,
-                "Manager Junior": 0,
-                "Manager Senior": 0,
-            };
-
-            userPoints.forEach((user) => {
-                const ppcg = user.ppcg || 0; 
-                if (ppcg >= 50000) {
-                    levelCounts["Manager Senior"]++;
-                } else if (ppcg >= 30000) {
-                    levelCounts["Manager Junior"]++;
-                } else if (ppcg >= 18700) {
-                    levelCounts.Manager++;
-                } else if (ppcg >= 12500) {
-                    levelCounts["Animateur Senior"]++;
-                } else if (ppcg >= 6250) {
-                    levelCounts["Animateur Junior"]++;
-                } else if (ppcg >= 100) {
-                    levelCounts.Animateur++;
-                } else {
-                    levelCounts.Distributeur++;
+                const roleCounts = {};
+                for (const role of roles) {
+                    const { count } = await supabase
+                        .from("user_data")
+                        .select("*", { count: "exact", head: true })
+                        .eq("role", role);
+                    roleCounts[role.toLowerCase().replace(" ", "")] = count || 0;
                 }
-            });
 
+                // Fetch user points and calculate level counts
+                const { data: userPoints } = await supabase
+                    .from("history_data")
+                    .select("ppcg");
 
+                const levelCounts = {
+                    Distributeur: 0,
+                    Animateur: 0,
+                    "Animateur Junior": 0,
+                    "Animateur Senior": 0,
+                    Manager: 0,
+                    "Manager Junior": 0,
+                    "Manager Senior": 0,
+                };
+
+                userPoints.forEach((user) => {
+                    const ppcg = user.ppcg || 0;
+                    if (ppcg >= 50000) {
+                        levelCounts["Manager Senior"]++;
+                    } else if (ppcg >= 30000) {
+                        levelCounts["Manager Junior"]++;
+                    } else if (ppcg >= 18700) {
+                        levelCounts.Manager++;
+                    } else if (ppcg >= 12500) {
+                        levelCounts["Animateur Senior"]++;
+                    } else if (ppcg >= 6250) {
+                        levelCounts["Animateur Junior"]++;
+                    } else if (ppcg >= 100) {
+                        levelCounts.Animateur++;
+                    } else {
+                        levelCounts.Distributeur++;
+                    }
+                });
+
+                // Update state with fetched data
                 setData((prevState) => ({
                     ...prevState,
                     income,
@@ -105,7 +110,7 @@ const Dashboard = () => {
                     managers: roleCounts["managers"],
                     managersJuniors: roleCounts["managersjuniors"],
                     managersSeniors: roleCounts["managerseniors"],
-                    ...levelCounts, 
+                    ...levelCounts,
                 }));
             } catch (error) {
                 console.error("Error fetching data:", error.message);
@@ -143,9 +148,6 @@ const Dashboard = () => {
                     'rgba(231, 76, 60, 0.6)', // Red
                     'rgba(46, 204, 113, 0.6)', // Green
                     'rgba(52, 152, 219, 0.6)', // Light Blue
-                    'rgba(155, 89, 182, 0.6)', // Lavender
-                    'rgba(241, 196, 15, 0.6)', // Yellow
-                    'rgba(39, 174, 96, 0.6)', // Emerald
                 ],
                 borderColor: [
                     'rgba(127, 140, 141, 1)', // Gray
@@ -155,16 +157,12 @@ const Dashboard = () => {
                     'rgba(231, 76, 60, 1)', // Red
                     'rgba(46, 204, 113, 1)', // Green
                     'rgba(52, 152, 219, 1)', // Light Blue
-                    'rgba(155, 89, 182, 1)', // Lavender
-                    'rgba(241, 196, 15, 1)', // Yellow
-                    'rgba(39, 174, 96, 1)', // Emerald
                 ],
                 borderWidth: 1,
                 borderRadius: 10,
             },
         ],
     };
-    
 
     return (
         <div className="dashboard">

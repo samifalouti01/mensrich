@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../supabaseClient'; // Make sure to import supabase client
+import { supabase } from '../supabaseClient';
 
 const CommissionFetcher = ({ userId }) => {
   const [commission, setCommission] = useState(0);
@@ -9,11 +9,12 @@ const CommissionFetcher = ({ userId }) => {
   useEffect(() => {
     const fetchCommissionData = async () => {
       try {
-        // Fetch all orders for the current user
+        // Fetch all orders for the current user where order_status is 'validated'
         const { data, error } = await supabase
           .from('order')
           .select('commission')
-          .eq('user_id', userId); // Match with the current user's ID
+          .eq('user_id', userId)
+          .eq('order_status', 'validated'); // Add this line to filter by order_status
 
         if (error) {
           throw error;

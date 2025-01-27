@@ -47,6 +47,10 @@ const LeftNavBar = forwardRef((props, ref) => {
           <i class="bi bi-patch-question" style={{ marginRight: "8px" }}></i>
           Helpdesk
         </button>
+        <button className="nav-item" onClick={() => navigate("/media")}>
+          <i class="bi bi-images" style={{ marginRight: "8px" }}></i>
+          Media
+        </button>
       </nav>
       <button
         className="logout2-button"

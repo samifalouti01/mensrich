@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaAlignLeft, FaCoins } from "react-icons/fa";
+import { FaAlignLeft } from "react-icons/fa";
 import LeftNavBar from "./LeftNavBar";
-import Pay from "./Pay";
 import "./Header.css";
 
 const Header = () => {
@@ -31,10 +30,6 @@ const Header = () => {
                 <FaAlignLeft className="menu-icon" onClick={toggleNav} />
                 <img src="Mencedes.svg" alt="logo" />
                 <div>
-                <div className="pay-container">
-                  <FaCoins className="pay-icon" />
-                  <Pay />
-                </div>
                 </div>
             </header>
             <div

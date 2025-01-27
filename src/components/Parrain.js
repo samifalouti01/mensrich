@@ -14,7 +14,6 @@ const Parrain = React.forwardRef((props, ref) => {
     password: "",
     phone: "",
     email: "",
-    birthdate: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -173,7 +172,7 @@ const Parrain = React.forwardRef((props, ref) => {
         />
           <input
             type="text"
-            placeholder="Nom et Prénom"
+            placeholder="Full name"
             name="name"
             className="parrain-input"
             value={formData.name}
@@ -182,7 +181,7 @@ const Parrain = React.forwardRef((props, ref) => {
           />
           <input
             type="text"
-            placeholder="ID Numérique"
+            placeholder="Username"
             name="identifier"
             className="parrain-input"
             value={formData.identifier}
@@ -192,7 +191,7 @@ const Parrain = React.forwardRef((props, ref) => {
           <div className="password-input-container">
             <input
               type={isPasswordVisible ? "text" : "password"}
-              placeholder="Mot de Passe"
+              placeholder="Password"
               name="password"
               className="parrain-input"
               value={formData.password}
@@ -200,12 +199,12 @@ const Parrain = React.forwardRef((props, ref) => {
               required
             />
             <span className="toggle-password" onClick={togglePasswordVisibility}>
-              {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+              {isPasswordVisible ? <FaEyeSlash style={{ color: "#333" }} /> : <FaEye style={{ color: "#333" }} />}
             </span>
           </div>
           <input
             type="text"
-            placeholder="Téléphone"
+            placeholder="Phone"
             name="phone"
             className="parrain-input"
             value={formData.phone}
@@ -221,18 +220,8 @@ const Parrain = React.forwardRef((props, ref) => {
             onChange={handleChange}
             required
           />
-          Birthdate:
-          <input
-            type="date"
-            name="birthdate"
-            placeholder="Date de Naissance"
-            className="parrain-input"
-            value={formData.birthdate}
-            onChange={handleChange}
-            required
-          />
         <button className="parrain-button" type="submit" disabled={loading}>
-          {loading ? "En cours..." : "Parrainer"}
+          {loading ? "En cours..." : "Register"}
         </button>
       </form>
       {error && <p className="error-message">{error}</p>}

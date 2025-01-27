@@ -17,6 +17,8 @@ const Login = () => {
         password: "",
         referralId: "",
         validate: "unvalidate",
+        email: "",
+        phone: "",
     });
     const [showPopup, setShowPopup] = useState(false);
 
@@ -221,7 +223,6 @@ const Login = () => {
                     </button>
                     {error && <p className="error-message">{error}</p>}
                     <p className="switch-mode" onClick={() => setIsRegistering(true)}><span style={{ color: "gray" }}>Don't have an account?</span> Register</p>
-                    <p style={{ color: 'gray' }}>See <span  onClick={() => navigate("/privacy-policy")} className="switch-mode">Privacy Policy</span> or <span onClick={() => navigate("/terms-and-conditions")} className="switch-mode">Terms of Use</span></p>
                 </form>
             ) : (
                 <form onSubmit={handleRegister} className="register-form">
@@ -302,6 +303,36 @@ const Login = () => {
                             <input
                                 type="text"
                                 required
+                                value={registerData.email}
+                                onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
+                            />
+                            <label>
+                                <span style={{ transitionDelay: '0ms' }}>E</span>
+                                <span style={{ transitionDelay: '50ms' }}>m</span>
+                                <span style={{ transitionDelay: '100ms' }}>a</span>
+                                <span style={{ transitionDelay: '150ms' }}>i</span>
+                                <span style={{ transitionDelay: '200ms' }}>l</span>
+                            </label>
+                        </div>
+                        <div className="form-control2">
+                            <input
+                                type="text"
+                                required
+                                value={registerData.phone}
+                                onChange={(e) => setRegisterData({ ...registerData, phone: e.target.value })}
+                            />
+                            <label>
+                                <span style={{ transitionDelay: '0ms' }}>P</span>
+                                <span style={{ transitionDelay: '50ms' }}>h</span>
+                                <span style={{ transitionDelay: '100ms' }}>o</span>
+                                <span style={{ transitionDelay: '150ms' }}>n</span>
+                                <span style={{ transitionDelay: '200ms' }}>e</span>
+                            </label>
+                        </div>
+                        <div className="form-control2">
+                            <input
+                                type="text"
+                                required
                                 value={registerData.referralId}
                                 onChange={(e) => setRegisterData({ ...registerData, referralId: e.target.value })}
                             />
@@ -326,6 +357,9 @@ const Login = () => {
                     <p className="switch-mode" onClick={() => setIsRegistering(false)}><span style={{ color: "gray" }}>Already have an account?</span> Login</p>
                 </form>
             )}
+
+            <p style={{ color: 'gray' }}>See <span  onClick={() => navigate("/privacy-policy")} className="switch-mode">Privacy Policy</span> or <span onClick={() => navigate("/terms-and-conditions")} className="switch-mode">Terms of Use</span></p>
+
             {showPopup && (
                 <div className="popup">
                     <h3 style={{ color: "green" }}>Registration Successful!</h3>
