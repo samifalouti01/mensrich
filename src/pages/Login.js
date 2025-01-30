@@ -72,6 +72,21 @@ const Login = () => {
         }
     
         try {
+
+            if (registerData.referralId) {
+                const { data: referringUser, error: referringUserError } = await supabase
+                    .from("user_data")
+                    .select("id")
+                    .eq("id", registerData.referralId)
+                    .single();
+
+                if (referringUserError || !referringUser) {
+                    setError("This referral ID doesn't exist");
+                    setLoading(false);
+                    return;
+                }
+            }
+
             const { data: existingUser, error: checkError } = await supabase
                 .from("user_data")
                 .select("id")
