@@ -15,6 +15,7 @@ import Presentation from "./pages/Presentation";
 import ProductPage from "./pages/ProductPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
+import Documentation from "./pages/Documentation";
 import Media from "./pages/Media";
 
 function App() {
@@ -35,7 +36,8 @@ function App() {
               <Route path="/mon-equipe" element={<MonEquipe />} />
               <Route path="/payments" element={<Payments />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="/presentation" element={<Presentation />} />
+              <Route path="/docs" element={<Presentation />} />
+              <Route path="/documentation" element={<Documentation />} />
               <Route path="/productpage/:productId" element={<ProductPage />} />
               <Route path="/media" element={<Media />} />
             </Routes>

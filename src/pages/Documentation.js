@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Header from "../components/Header";
 import Loader from '../components/Loader';
+import { ChevronLeft } from "lucide-react";
 import "./Presentation.css";
 
-const Presentation = () => {
+const Documentation = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -24,7 +24,14 @@ const Presentation = () => {
 
   return (
     <div className="documentation-container">
-      <Header />
+        <br />
+        <br />
+        <button
+          className="back-button"
+          onClick={() => window.history.back()}
+        >
+          <ChevronLeft className="back-icon" />
+        </button>
       <div className="documentation-wrapper">
         {/* Documentation Header */}
         <div className="documentation-header">
@@ -83,8 +90,6 @@ const Presentation = () => {
                   <img src="Algerie Poste.svg" alt="Algerie Poste"></img>
                   <img src="Baridimob.svg" alt="Baridimob"></img>
                 </div>
-                <br />
-                <a href="/settings" className="btn btn-secondary">Update RIP</a>
               </div>
               <div className="payment-card">
                 <h3>Payment Cycle</h3>
@@ -255,4 +260,4 @@ const Presentation = () => {
   );
 };
 
-export default Presentation;
+export default Documentation;

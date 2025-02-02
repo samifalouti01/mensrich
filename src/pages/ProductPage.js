@@ -29,7 +29,7 @@ const ProductPage = () => {
         setIsLoading(true);
         const { data, error } = await supabase
           .from("store")
-          .select("id, title, description, price, product_image")
+          .select("id, title, description, price, product_image, product_status")
           .eq("id", productId)
           .single();
 
@@ -113,6 +113,9 @@ const ProductPage = () => {
               <p className="product-commission">
                 Commission: {(commission * 100).toFixed(2)} DA
               </p>
+              <div className={`product-statu ${product.product_status ? product.product_status.toLowerCase() : ''}`}>
+                    {product.product_status || "Unknown"}
+              </div>
             </div>
 
             <div className="product-description">

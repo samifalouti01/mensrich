@@ -59,7 +59,7 @@
 .logout2-button {
     position: fixed;
     left: 20px;
-    bottom: 20px;
+    bottom: 100px;
     width: 84%;
     display: flex;
     align-items: center;
@@ -79,7 +79,7 @@
     .logout2-button {
         position: fixed;
         left: 20px;
-        bottom: 70px;
+        bottom: 100px;
         width: 84%;
         display: flex;
         align-items: center;

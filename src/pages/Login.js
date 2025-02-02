@@ -54,22 +54,10 @@ const Login = () => {
         }
     };
 
-    const isValidIdentifier = (identifier) => {
-         const prefix = "MR"; 
-         if (!identifier.startsWith(prefix)) 
-            return false; const numericPart = identifier.slice(prefix.length); 
-        return /^\d{9,13}$/.test(numericPart);
-    };
-
     const handleRegister = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError("");
-
-        if (!isValidIdentifier(registerData.identifier)) { 
-            setError("Identifier must start with 'MR' followed by 9 to 13 digits."); 
-            setLoading(false); return;
-        }
     
         try {
 
@@ -98,7 +86,7 @@ const Login = () => {
             }
     
             if (existingUser) {
-                setError("Identifier already exists.");
+                setError("Username already exists.");
                 setLoading(false);
                 return;
             }
@@ -187,9 +175,9 @@ const Login = () => {
     
     return (
         <div className="login-container">
+            <img src="Mencedes.svg" alt="Logo" className="login-logo" />
             {!isRegistering ? (
                 <form onSubmit={handleLogin} className="login-form">
-                    <img src="Mencedes.svg" alt="Logo" className="login-logo" />
                     <h1 className="login-title">Login</h1>
                     <div className="form-control2">
                         <input
@@ -241,7 +229,6 @@ const Login = () => {
                 </form>
             ) : (
                 <form onSubmit={handleRegister} className="register-form">
-                    <img src="Mencedes.svg" alt="Logo" className="login-logo" />
                     <h1 className="register-title">Register</h1>
                         <div className="form-control2">
                             <input
@@ -267,17 +254,7 @@ const Login = () => {
                                 type="text"
                                 required
                                 value={registerData.identifier}
-                                onChange={(e) => {
-                                    let value = e.target.value;
-                                    if (!value.startsWith("MR")) {
-                                    value = "MR" + value;
-                                    }
-                                    const numericPart = value.slice(2); // Extract the numeric part after "MR"
-                                    if (!/^\d{0,13}$/.test(numericPart)) { // Allow only up to 13 digits
-                                    return; // Reject the change if it doesn't match the pattern
-                                    }
-                                    setRegisterData({ ...registerData, identifier: value });
-                                }}
+                                onChange={(e) => setRegisterData({ ...registerData, identifier: e.target.value })}
                             />
                             <label>
                                 <span style={{ transitionDelay: '0ms' }}>U</span>
@@ -374,6 +351,8 @@ const Login = () => {
             )}
 
             <p style={{ color: 'gray' }}>See <span  onClick={() => navigate("/privacy-policy")} className="switch-mode">Privacy Policy</span> or <span onClick={() => navigate("/terms-and-conditions")} className="switch-mode">Terms of Use</span></p>
+
+            <button className="btn btn-secondary" onClick={() => navigate("/documentation")}>Documentation</button>
 
             {showPopup && (
                 <div className="popup">

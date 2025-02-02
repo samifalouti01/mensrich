@@ -35,9 +35,9 @@ const LeftNavBar = forwardRef((props, ref) => {
           <i class="bi bi-wallet2" style={{ marginRight: "8px" }}></i>
           Paiment
         </button>
-        <button className="nav-item" onClick={() => navigate("/presentation")}>
+        <button className="nav-item" onClick={() => navigate("/docs")}>
           <i class="bi bi-map" style={{ marginRight: "8px" }}></i>
-          User Guide
+          Documentation
         </button>
         <button className="nav-item" onClick={() => navigate("/settings")}>
           <i class="bi bi-sliders" style={{ marginRight: "8px" }}></i>

@@ -269,3 +269,32 @@
     box-shadow: none;
   }
 }
+
+.product-statu {
+  padding: 5px 10px;
+  border-radius: 12px;
+  width: fit-content;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.product-statu.available {
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  margin-top: 4px;
+  display: inline-block;
+  background-color: rgba(34, 197, 94, 0.4);
+  color: rgba(34, 197, 94);
+}
+
+.product-statu.unavailable {
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  margin-top: 4px;
+  display: inline-block;
+  background-color: rgba(239, 68, 68, 0.5); 
+  color: rgba(239, 68, 68); 
+}

@@ -28,8 +28,8 @@ const Boutique = () => {
       try {
         const { data, error } = await supabase
           .from("store")
-          .select("id, product_image, title, description, price");
-
+          .select("id, product_image, title, description, price, product_status");
+  
         if (error) throw error;
         setProducts(data);
       } catch (error) {
@@ -38,12 +38,12 @@ const Boutique = () => {
         setIsLoading(false);
       }
     };
-
+  
     fetchProducts();
   }, []);
 
   const filteredProducts = products.filter((product) =>
-    product.title.toLowerCase().includes(searchQuery.toLowerCase())
+    product.title && product.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const LoadingSkeleton = () => {
@@ -107,6 +107,9 @@ const Boutique = () => {
                 className="product-card"
                 onClick={() => handleProductClick(product.id)}
               >
+                 <div className={`product-status ${product.product_status ? product.product_status.toLowerCase() : ''}`}>
+                    {product.product_status || "Unknown"}
+                  </div>
                 <div className="product-image-container">
                   <img
                     src={product.product_image}

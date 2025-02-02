@@ -1,21 +1,82 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
-import { FaSave } from "react-icons/fa";
+import { Edit2, Save, X } from "lucide-react";
 import Header from "../components/Header";
 import Loader from '../components/Loader';
 import "./Settings.css";
 
+const SettingsField = ({ label, value, onSave, type = "text", placeholder = "" }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(value);
+
+  const handleSave = () => {
+    onSave(editValue);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditValue(value);
+    setIsEditing(false);
+  };
+
+  return (
+    <div className="settings-field">
+      <div className="settings-field-header">
+        <span className="settings-field-label">{label}</span>
+        {!isEditing ? (
+          <button 
+            className="edit-button"
+            onClick={() => setIsEditing(true)}
+          >
+            <Edit2 className="button-icon" />
+          </button>
+        ) : (
+          <div className="button-group">
+            <button 
+              className="save-button"
+              onClick={handleSave}
+            >
+              <Save className="button-icon" />
+            </button>
+            <button 
+              className="cancel-button"
+              onClick={handleCancel}
+            >
+              <X className="button-icon" />
+            </button>
+          </div>
+        )}
+      </div>
+      {!isEditing ? (
+        <p className="settings-field-value">
+          {value || <span className="empty-value">Not set</span>}
+        </p>
+      ) : (
+        <input
+          type={type}
+          value={editValue}
+          onChange={(e) => setEditValue(e.target.value)}
+          className="settings-input"
+          placeholder={placeholder}
+        />
+      )}
+    </div>
+  );
+};
+
 const Settings = () => {
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [rip, setRip] = useState("");
-  const [password, setPassword] = useState("");
+  const [userData, setUserData] = useState({
+    email: "",
+    phone: "",
+    rip: "",
+    identifier: "",
+    name: "",
+  });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch current user data
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user && user.id) {
@@ -23,16 +84,14 @@ const Settings = () => {
         setIsLoading(true);
         const { data, error } = await supabase
           .from("user_data")
-          .select("email, phone, rip")
+          .select("email, phone, rip, identifier, name")
           .eq("id", user.id)
           .single();
 
         if (error) {
           console.error("Error fetching user data:", error);
         } else {
-          setEmail(data.email || "");
-          setPhone(data.phone || "");
-          setRip(data.rip || "");
+          setUserData(data);
         }
         setIsLoading(false);
       };
@@ -42,7 +101,7 @@ const Settings = () => {
     }
   }, [navigate]);
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (field, value) => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || !user.id) {
       setMessage("User not logged in.");
@@ -50,21 +109,17 @@ const Settings = () => {
     }
 
     try {
-      const updates = {};
-      if (email) updates.email = email;
-      if (phone) updates.phone = phone;
-      if (rip) updates.rip = rip;
-      if (password) updates.password = password; 
-
       const { error } = await supabase
         .from("user_data")
-        .update(updates)
+        .update({ [field]: value })
         .eq("id", user.id);
 
       if (error) {
         setMessage("Error updating details");
       } else {
         setMessage("Details updated successfully!");
+        setUserData(prev => ({ ...prev, [field]: value }));
+        setTimeout(() => setMessage(""), 3000);
       }
     } catch (error) {
       console.error("Update failed:", error);
@@ -74,67 +129,62 @@ const Settings = () => {
 
   if (isLoading) {
     return (
-      <div className="loading-container">
+      <div className="loader-container">
         <Loader />
       </div>
     );
   }
 
   return (
-    <div>
-        <Header />
-    <div className="settings-container">
-      <h2>Update Your Information</h2>
-      <div className="settings-form">
-        <div className="input-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            className="parrain-input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-          />
-        </div>
-        <div className="input-group">
-          <label>Phone:</label>
-          <input
-            type="text"
-            className="parrain-input"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="Enter your phone number"
-          />
-        </div>
-        <div className="input-group">
-            <label>RIp:</label>
-            <input
-              type="text"
-              className="parrain-input"
-              value={rip}
-              onChange={(e) => setRip(e.target.value)}
-              placeholder="Enter your RIP"
+    <div className="settings-page">
+      <Header />
+      <div className="settings-container">
+        <div className="settings-card">
+          <div className="settings-header">
+            <h2 className="settings-title">Account Settings</h2>
+          </div>
+          <div className="settings-content">
+            {message && (
+              <div className="message">
+                {message}
+              </div>
+            )}
+            <SettingsField
+              label="Name"
+              value={userData.name}
+              onSave={(value) => handleUpdate("name", value)}
             />
+            <SettingsField
+              label="Email"
+              value={userData.email}
+              onSave={(value) => handleUpdate("email", value)}
+              type="email"
+            />
+            <SettingsField
+              label="Username"
+              value={userData.identifier}
+              onSave={(value) => handleUpdate("identifier", value)}
+            />
+            <SettingsField
+              label="Phone"
+              value={userData.phone}
+              onSave={(value) => handleUpdate("phone", value)}
+            />
+            <SettingsField
+              label="RIP"
+              value={userData.rip}
+              onSave={(value) => handleUpdate("rip", value)}
+              placeholder="RIP: 007 99999 0021212121"
+            />
+            <SettingsField
+              label="Password"
+              value="********"
+              onSave={(value) => handleUpdate("password", value)}
+              type="password"
+            />
+          </div>
         </div>
-        <div className="input-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            className="parrain-input"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter new password"
-          />
-        </div>
-        <button onClick={handleUpdate} className="save-btn">
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <FaSave style={{ marginRight: "5px" }} />
-          <span>Save</span>
-        </div>
-        </button>
-        {message && <p className="message">{message}</p>}
       </div>
-    </div>
     </div>
   );
 };

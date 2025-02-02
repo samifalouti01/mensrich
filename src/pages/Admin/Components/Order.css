@@ -36,6 +36,7 @@
     outline: none;
     background-color: white;
     cursor: pointer;
+    color: #000;
     transition: background-color 0.3s;
   }
   

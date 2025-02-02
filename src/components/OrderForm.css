@@ -63,7 +63,7 @@
   }
   
   @media (max-width: 600px) {
-    form {
+    .order-form {
       padding: 15px;
     }
   

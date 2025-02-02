@@ -1,31 +1,121 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import Header from "../components/Header";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Loader from '../components/Loader';
-import { Badge, Card, Container, Row, Col, Button } from 'react-bootstrap';
+import { ShoppingBag, Calendar, DollarSign, Ban } from "lucide-react";
+import './Historique.css';
+
+const OrderCard = ({ order, onCancel }) => {
+  const getStatusClass = (status) => {
+    switch (status.toLowerCase()) {
+      case "validated": return "status-badge status-validated";
+      case "pending": return "status-badge status-pending";
+      case "refused": return "status-badge status-refused";
+      case "canceled": return "status-badge status-canceled";
+      default: return "status-badge";
+    }
+  };
+
+  const getStatusLabel = (status) => {
+    switch (status.toLowerCase()) {
+      case "validated": return "Validée";
+      case "pending": return "En attente";
+      case "refused": return "Refusée";
+      case "canceled": return "Annulée";
+      default: return "Statut inconnu";
+    }
+  };
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('fr-FR').format(price * 100) + ' DA';
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  return (
+    <div className="order-card">
+      <div className="order-header">
+        <div className="order-title">
+          <ShoppingBag className="order-icon" />
+          <span>Commande #{order.id}</span>
+        </div>
+        <span className={getStatusClass(order.order_status)}>
+          {getStatusLabel(order.order_status)}
+        </span>
+      </div>
+      
+      {order.product_image && (
+        <div className="order-image-container">
+          <img 
+            src={order.product_image} 
+            alt={`Produit ${order.id}`}
+            className="order-image"
+          />
+        </div>
+      )}
+
+      <div className="order-details">
+        <div className="detail-item">
+          <Calendar className="detail-icon" />
+          <span>{formatDate(order.created_at)}</span>
+        </div>
+        
+        <div className="detail-item">
+          <DollarSign className="detail-icon" />
+          <div className="price-details">
+            <div>Prix Total: <span className="price">{formatPrice(order.total_price)}</span></div>
+            <div>Commission: <span className="commission">{formatPrice(order.commission)}</span></div>
+          </div>
+        </div>
+      </div>
+
+      {order.order_status !== "canceled" && 
+       order.order_status !== "validated" && 
+       order.order_status !== "refused" && (
+        <button 
+          className="cancel-order-btn"
+          onClick={() => onCancel(order.id)}
+        >
+          <Ban className="cancel-icon" />
+          Annuler la commande
+        </button>
+      )}
+    </div>
+  );
+};
 
 const Historique = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchOrders = async () => {
       const user = JSON.parse(localStorage.getItem("user"));
 
       if (!user) {
-        alert("Please log in before making a purchase.");
+        setMessage("Veuillez vous connecter pour voir votre historique de commandes.");
+        setLoading(false);
         return;
       }
 
       const { data, error } = await supabase
         .from("order")
-        .select("id, name, phone, total_price, created_at, order_status, product_image, commission")
+        .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
       if (error) {
         console.error("Error fetching orders:", error);
+        setMessage("Erreur lors du chargement des commandes.");
       } else {
         setOrders(data);
       }
@@ -41,121 +131,73 @@ const Historique = () => {
     );
     if (!confirmCancel) return;
 
-    const { error } = await supabase
-      .from("order")
-      .update({ order_status: "canceled" })
-      .eq("id", orderId);
+    try {
+      const { error } = await supabase
+        .from("order")
+        .update({ order_status: "canceled" })
+        .eq("id", orderId);
 
-    if (error) {
-      console.error("Error cancelling order:", error);
-      alert("Erreur lors de l'annulation de la commande.");
-    } else {
-      alert("Commande annulée avec succès.");
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.id === orderId ? { ...order, order_status: "canceled" } : order
+      if (error) throw error;
+
+      setOrders(prevOrders =>
+        prevOrders.map(order =>
+          order.id === orderId 
+            ? { ...order, order_status: "canceled" } 
+            : order
         )
       );
+      
+      setMessage("Commande annulée avec succès.");
+      setTimeout(() => setMessage(""), 3000);
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+      setMessage("Erreur lors de l'annulation de la commande.");
+      setTimeout(() => setMessage(""), 3000);
     }
   };
 
-  const getStatusBadge = (status) => {
-    switch (status.toLowerCase()) {
-      case "validated": 
-        return <Badge bg="success">Validée</Badge>;
-      case "pending":
-        return <Badge bg="warning" text="dark">En attente</Badge>;
-      case "refused":
-        return <Badge bg="danger">Refusée</Badge>;
-      case "canceled":
-        return <Badge bg="danger">Annulée</Badge>;
-      default:
-        return <Badge bg="secondary">Statut inconnu</Badge>;
-    }
-  };  
-
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('fr-FR').format(price) + ' DA';
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <Loader />
+      </div>
+    );
+  }
 
   return (
-    <>
+    <div className="historique-page">
       <Header />
-      <Container className="py-5">
-        <Row className="mb-4">
-          <Col>
-            <h2 className="text-center mb-4 fw-bold">Historique des Commandes</h2>
-          </Col>
-        </Row>
-        
-        {loading ? (
-          <Loader />
-        ) : orders.length === 0 ? (
-          <Card className="text-center py-5">
-            <Card.Body>
-              <p className="mb-0 text-muted">Aucune commande enregistrée pour le moment.</p>
-            </Card.Body>
-          </Card>
-        ) : (
-          <Row xs={1} md={2} lg={3} className="g-4">
-            {orders.map((order) => (
-              <Col key={order.id}>
-                <Card className="h-100 shadow-sm">
-                  {order.product_image && (
-                    <Card.Img 
-                      variant="top" 
-                      src={order.product_image} 
-                      alt={`Produit ${order.id}`}
-                      style={{ height: '150px', objectFit: 'cover' }}
-                    />
-                  )}
-                  <Card.Body>
-                    <div className="d-flex justify-content-between align-items-start mb-3">
-                      <Card.Title style={{ color: "#5700B4" }} className="mb-0">Commande #{order.id}</Card.Title>
-                      {getStatusBadge(order.order_status)}
-                    </div>
-                    <Card.Text>
-                      <small className="text-muted d-block mb-2">
-                        {formatDate(order.created_at)}
-                      </small>
-                      <strong style={{ color: "#5700B4" }} className="d-block mb-3">
-                        {formatPrice(order.total_price * 100)}
-                      </strong>
-                      <p style={{ color: "#5700B4", fontSize: "18px" }} className="d-block mb-3">
-                        {formatPrice(order.commission * 100)}
-                      </p>
-                    </Card.Text>
-                    {order.order_status !== "canceled" && 
-                     order.order_status !== "validated" && 
-                     order.order_status !== "refused" && (
-                      <Button 
-                        variant="outline-danger" 
-                        size="sm"
-                        onClick={() => handleCancelOrder(order.id)}
-                        className="w-100"
-                        style={{ borderColor: "#5700B4", color: "#5700B4" }}
-                      >
-                        Annuler la commande
-                      </Button>
-                    )}
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        )}
-      </Container>
-    </>
+      <div className="historique-container">
+        <div className="historique-card">
+          <div className="historique-header">
+            <h2 className="historique-title">Historique des Commandes</h2>
+          </div>
+          <div className="historique-content">
+            {message && (
+              <div className="message">
+                {message}
+              </div>
+            )}
+            
+            {orders.length === 0 ? (
+              <div className="empty-state">
+                Aucune commande enregistrée pour le moment.
+              </div>
+            ) : (
+              <div className="orders-grid">
+                {orders.map((order) => (
+                  <OrderCard 
+                    key={order.id} 
+                    order={order} 
+                    onCancel={handleCancelOrder}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

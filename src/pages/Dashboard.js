@@ -34,6 +34,7 @@ const Dashboard = () => {
   const [showButtons, setShowButtons] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [monthlyPpcg, setMonthlyPpcg] = useState(0);
+  const [historyPpcg, setHistoryPpcg] = useState(0);
   const [language, setLanguage] = useState("en")
   
   // Calculate total progress
@@ -86,6 +87,8 @@ const Dashboard = () => {
 
     if (levelError) {
       console.historyError("Error fetching user data:", levelError);
+    } else {
+      setHistoryPpcg(levelData.ppcg || 0);
     }
 
     const { data: monthlyData, error: monthlyError } = await supabase
@@ -311,8 +314,14 @@ const Dashboard = () => {
               <br />
               <div className="copy-container">
                 <div className="copy-text">
-                  <p style={{ color: "#5700B4"}}>{getTranslation(language, "id")}: {id || "Loading..."}</p>
-                  <i style={{ color: '#5700B4', padding: '0' }} onClick={() => handleCopy(id)} class="bi bi-copy"></i>
+                  {historyPpcg >= 100 ? (
+                    <>
+                      <p style={{ color: "#5700B4" }}>{getTranslation(language, "id")}: {id || "Loading..."}</p>
+                      <i style={{ color: '#5700B4', padding: '0' }} onClick={() => handleCopy(id)} className="bi bi-copy"></i>
+                    </>
+                  ) : (
+                    <p style={{ color: "#5700B4" }}>Your ID will be hidden even when you reach Animateur level.</p>
+                  )}
                 </div>
               </div>
               {message && (
@@ -326,7 +335,7 @@ const Dashboard = () => {
               <p>{getTranslation(language, "forThisMonth")}</p>
               <div className="flex-container">
                 <h3>{getTranslation(language, "salesPoints")}:</h3>
-                <p>{perso || "Loading..."}</p>
+                <p>{perso !== null && perso !== undefined ? perso : "Loading..."}</p>
               </div>
               <div className="flex-container">
                 <h3>{getTranslation(language, "referralPoints")}:</h3>
