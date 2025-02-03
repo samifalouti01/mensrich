@@ -9,7 +9,7 @@
 }
 
 .boutique-container {
-  width: 95%;
+  width: 90%;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 15px;
@@ -25,6 +25,7 @@
 .search-container {
   position: relative;
   width: 100%;
+  display: flex;
 }
 
 .search-input {

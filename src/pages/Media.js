@@ -70,8 +70,9 @@ const Media = () => {
         .from('likes')
         .select('*')
         .eq('post_id', postId);
-
+  
       if (error) throw error;
+      console.log(`Likes for post ${postId}:`, likesData.length); // Add this log to check the fetched likes count
       setLikes(prev => ({ ...prev, [postId]: likesData.length }));
       const userLike = likesData.find(like => like.user_id === userId);
       setUserLikes(prev => ({ ...prev, [postId]: !!userLike }));
@@ -79,6 +80,7 @@ const Media = () => {
       console.error('Error fetching likes:', error.message);
     }
   };
+  
 
   const handleLike = async (postId) => {
     try {
@@ -128,6 +130,18 @@ const Media = () => {
     document.body.removeChild(link);
   };
 
+  const formatLikes = (count) => {
+    console.log(`Formatting likes count: ${count}`); // Add this log to see the number being passed
+    if (count >= 1000000) {
+      return (count / 1000000).toFixed(1) + "M";
+    } else if (count >= 1000) {
+      return Math.floor(count / 1000) + "K"; // Ensure proper rounding for values >= 1000
+    } else {
+      return count;
+    }
+  };
+  
+
   if (isLoading) {
     return <div className="flex justify-center p-8">Loading...</div>;
   }
@@ -172,10 +186,10 @@ const Media = () => {
                   )}
                 </button>
                 <button onClick={() => handleDownload(post.image_url, `post_${post.id}`)}>
-                <i class="bi bi-download"></i>
+                  <i class="bi bi-download"></i>
                 </button>
               </div>
-              <div className="like-count">{likes[post.id] || 0} likes</div>
+              <div className="like-count">{formatLikes(likes[post.id] || 0)} likes</div>
               <div className="post-caption">
                 <span className="user-email">{post.email || "Men's Rich"}</span> {post.text}
               </div>

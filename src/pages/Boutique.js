@@ -69,7 +69,8 @@ const Boutique = () => {
   };
 
   return (
-    <div className="boutique">
+    <div>
+      <div className="boutique">
       <Header />
       <div className="boutique-container">
         <div className="search-wrapper">
@@ -120,7 +121,7 @@ const Boutique = () => {
                 </div>
                 <div className="product-details">
                   <h3 className="product-title2">{product.title}</h3>
-                  <p className="product-points">{(product.price - 6).toLocaleString()} points</p>
+                  <p className="product-points">{(product.price).toLocaleString()} points</p>
                   <p className="product-price">
                     {(product.price * 100).toLocaleString()} DA
                   </p>
@@ -139,6 +140,7 @@ const Boutique = () => {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };

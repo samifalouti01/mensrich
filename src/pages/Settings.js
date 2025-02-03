@@ -72,10 +72,14 @@ const Settings = () => {
     rip: "",
     identifier: "",
     name: "",
+    birthdate: "",
   });
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);  // Defined here
+  const [uploadProgress, setUploadProgress] = useState(0); // Defined here
+  const [userImage, setUserImage] = useState(null); // Defined here
+  const navigate = useNavigate();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -84,7 +88,7 @@ const Settings = () => {
         setIsLoading(true);
         const { data, error } = await supabase
           .from("user_data")
-          .select("email, phone, rip, identifier, name")
+          .select("email, phone, rip, identifier, name, birthdate, user_image")
           .eq("id", user.id)
           .single();
 
@@ -92,6 +96,7 @@ const Settings = () => {
           console.error("Error fetching user data:", error);
         } else {
           setUserData(data);
+          setUserImage(data.user_image); // Set user image from fetched data
         }
         setIsLoading(false);
       };
@@ -127,6 +132,59 @@ const Settings = () => {
     }
   };
 
+  const handleImageUpload = async (file) => {
+    setIsUploading(true);
+    setMessage('Uploading...');
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+  
+      if (!user || !user.id) {
+        setMessage("User not logged in.");
+        return;
+      }
+  
+      await supabase.from("user_data").update({ user_image: null }).eq("id", user.id);
+  
+      const fileName = `${user.id}-${Date.now()}-${file.name}`;
+      const { data: storageData, error: storageError } = await supabase.storage
+        .from("user_pic")
+        .upload(fileName, file);
+  
+      if (storageError) {
+        setMessage("Failed to upload image.");
+        return;
+      }
+  
+      const { data: publicURLData, error: publicURLError } = supabase.storage
+        .from("user_pic")
+        .getPublicUrl(fileName);
+  
+      if (publicURLError) {
+        setMessage("Failed to get public URL.");
+        return;
+      }
+  
+      const newImageUrl = publicURLData.publicUrl;
+      await supabase.from("user_data").update({ user_image: newImageUrl }).eq("id", user.id);
+      setUserImage(newImageUrl);
+      setMessage("Image updated successfully!");
+    } catch (error) {
+      setMessage("Something went wrong.");
+    }
+  
+    const uploadInterval = setInterval(() => {
+      setUploadProgress((prev) => {
+        if (prev < 100) return prev + 10;
+        clearInterval(uploadInterval);
+        setMessage('Upload Complete');
+        setIsUploading(false);
+        return 100;
+      });
+    }, 500);
+  
+    setTimeout(() => setUserImage(URL.createObjectURL(file)), 3000);
+  };
+
   if (isLoading) {
     return (
       <div className="loader-container">
@@ -144,6 +202,24 @@ const Settings = () => {
             <h2 className="settings-title">Account Settings</h2>
           </div>
           <div className="settings-content">
+            <div onClick={() => document.getElementById('file-input').click()}>
+              <div className="card-image">
+                <img src={userImage || "Loading..."} alt="User" className="hidden-alt" />
+              </div>
+              <input
+                id="file-input"
+                type="file"
+                accept="image/*"
+                onChange={async (event) => {
+                  const file = event.target.files[0];
+                  if (file) {
+                    await handleImageUpload(file);
+                  }
+                }}
+                style={{ display: "none" }}
+              />
+              {isUploading && <progress value={uploadProgress} max="100"></progress>}
+            </div>
             {message && (
               <div className="message">
                 {message}
@@ -181,6 +257,12 @@ const Settings = () => {
               value="********"
               onSave={(value) => handleUpdate("password", value)}
               type="password"
+            />
+            <SettingsField
+              label="Birthdate"  
+              value={userData.birthdate || ""}
+              onSave={(value) => handleUpdate("birthdate", value)}
+              type="date"
             />
           </div>
         </div>

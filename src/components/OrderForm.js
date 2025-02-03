@@ -193,11 +193,11 @@ const OrderForm = ({ product }) => {
 
   return (
     <form className="order-form" onSubmit={handleSubmit}>
-      <div>
+      <div className="inp">
         <label>Name:</label>
         <input className="input-form" type="text" name="name" required />
       </div>
-      <div>
+      <div className="inp">
         <label>Phone Number:</label>
         <input className="input-form" type="text" name="phone" required />
       </div>

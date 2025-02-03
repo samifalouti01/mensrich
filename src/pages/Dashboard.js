@@ -19,6 +19,8 @@ const Dashboard = () => {
   const { calculateLevel } = useUser();
   const { level, nextLevel, pointsToNextLevel } = useLevel();
   const [message, setMessage] = useState("");
+  const [notification, setNotification] = useState("");
+  const [phoneNotification, setPhoneNotification] = useState(false);
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [perso, setPerso] = useState("");
@@ -26,8 +28,6 @@ const Dashboard = () => {
   const [parainageUsers, setParainageUsers] = useState("");
   const [ppcg, setPpcg] = useState(0);
   const [userImage, setUserImage] = useState(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [showParrain, setShowParrain] = useState(false);
   const parrainModalRef = useRef(null);
   const [timeLeft, setTimeLeft] = useState('');
@@ -50,7 +50,7 @@ const Dashboard = () => {
     setIsLoading(true);
     const { data: userData, error: userError } = await supabase
       .from("user_data")
-      .select("id, user_image, identifier, name, perso, parainage_points, parainage_users, ppcg")
+      .select("id, user_image, identifier, name, perso, parainage_points, parainage_users, ppcg, email, phone")
       .eq("id", userId)
       .single();
 
@@ -64,6 +64,18 @@ const Dashboard = () => {
       setParainageUsers(userData.parainage_users);
       setPpcg(userData.ppcg);
       setUserImage(userData.user_image);
+
+      if (!userData.email) {
+        setNotification("Please update your email.");
+      } else {
+        setNotification("");
+      }   
+      
+      if (!userData.phone) {
+        setPhoneNotification("Please update your phone number.");
+      } else {
+        setPhoneNotification(""); 
+      }   
     }
 
     const { data: historyData, error: historyError } = await supabase
@@ -132,59 +144,6 @@ const Dashboard = () => {
 
   const openParrainModal = () => setShowParrain(true);
   const closeParrainModal = () => setShowParrain(false);
-
-  const handleImageUpload = async (file) => {
-    setIsUploading(true);
-    setMessage('Uploading...');
-    try {
-      const user = JSON.parse(localStorage.getItem("user"));
-
-      if (!user || !user.id) {
-        setMessage("User not logged in.");
-        return;
-      }
-
-      await supabase.from("user_data").update({ user_image: null }).eq("id", user.id);
-
-      const fileName = `${user.id}-${Date.now()}-${file.name}`;
-      const { data: storageData, error: storageError } = await supabase.storage
-        .from("user_pic")
-        .upload(fileName, file);
-
-      if (storageError) {
-        setMessage("Failed to upload image.");
-        return;
-      }
-
-      const { data: publicURLData, error: publicURLError } = supabase.storage
-        .from("user_pic")
-        .getPublicUrl(fileName);
-
-      if (publicURLError) {
-        setMessage("Failed to get public URL.");
-        return;
-      }
-
-      const newImageUrl = publicURLData.publicUrl;
-      await supabase.from("user_data").update({ user_image: newImageUrl }).eq("id", user.id);
-      setUserImage(newImageUrl);
-      setMessage("Image updated successfully!");
-    } catch (error) {
-      setMessage("Something went wrong.");
-    }
-
-    const uploadInterval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev < 100) return prev + 10;
-        clearInterval(uploadInterval);
-        setMessage('Upload Complete');
-        setIsUploading(false);
-        return 100;
-      });
-    }, 500);
-
-    setTimeout(() => setUserImage(URL.createObjectURL(file)), 3000);
-  };
 
   useEffect(() => {
     const fetchChallengeData = async () => {
@@ -266,6 +225,18 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <div className="dashboard-content">
         <Header />
+        {notification && (
+          <div className="notification">
+            <p>{notification}</p>
+            <button onClick={() => navigate("/settings")}>Update</button>
+          </div>
+        )}
+        {phoneNotification && (
+          <div className="notification">
+            <p>{phoneNotification}</p>
+            <button onClick={() => navigate("/settings")}>Update</button>
+          </div>
+        )}
         <div className="float-container">
           <button className="plus-button" onClick={toggleButtons}>
             {showButtons ? <FaTimes /> : <FaPlus />}
@@ -288,29 +259,13 @@ const Dashboard = () => {
         {/* Quick Links */}
         <div className="dash-links">
             <div className="first-card">
-              <div onClick={() => document.getElementById('file-input').click()}>
+              <div>
                     <div className="card-image">
                       <img src={userImage || "Loading..."} alt="ْ" className="hidden-alt" />
                     </div>
-                    <input
-                      id="file-input"
-                      type="file"
-                      accept="image/*"
-                      onChange={async (event) => {
-                        const file = event.target.files[0];
-                        if (file) {
-                          await handleImageUpload(file);
-                        }
-                      }}
-                      style={{ display: "none" }}
-                    />
-
-                    {isUploading && <progress value={uploadProgress} max="100"></progress>}
               </div>
-              <br />
-              <h4>{name || "Loading..."}</h4>
-              <br />
-              <h4>{level || "Loading..."}</h4>
+              <h2>{name || "Loading..."}</h2>
+              <h4 style={{ color: "#0022b9" }}>{level || "Loading..."}</h4>
               <br />
               <div className="copy-container">
                 <div className="copy-text">

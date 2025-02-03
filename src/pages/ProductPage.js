@@ -108,7 +108,7 @@ const ProductPage = () => {
                 {(product.price * 100).toLocaleString()} DA
               </p>
               <p className="product-points">
-                {(product.price - 6).toLocaleString()} points
+                {(product.price).toLocaleString()} points
               </p>
               <p className="product-commission">
                 Commission: {(commission * 100).toFixed(2)} DA

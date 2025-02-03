@@ -409,6 +409,18 @@
     .timer span {
       font-size: 24px;
     }
+
+    .notification {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      width: 90%;
+      background-color: #ffcc00;
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 1005;
+    }
+    
   }
   
   .challenge {
@@ -510,5 +522,15 @@
       rgba(255, 255, 255, 0)
     );
     animation: shimmer 2s infinite;
+  }
+  
+  .notification {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #ffcc00;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1005;
   }
   

@@ -20,8 +20,17 @@
     margin-bottom: 5px;
     color: #333;
   }
-  
-  .input-form[type="text"],
+
+  .order-form input {
+    width: 90%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
   .order-form select {
     width: 100%;
     padding: 10px;

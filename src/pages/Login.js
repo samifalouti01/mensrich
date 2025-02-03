@@ -129,6 +129,8 @@ const Login = () => {
                 parainage_points: 0,
                 parainage_users: 0, 
                 ppcg: 0,
+                email: registerData.email,
+                phone: registerData.phone,
                 validate: registerData.validate,
             };
     

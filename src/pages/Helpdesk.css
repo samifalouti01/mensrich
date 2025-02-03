@@ -38,6 +38,12 @@
   gap: 1rem;
 }
 
+.helpdesk-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 .help-field {
   background: white;
   border: 1px solid #eee;
@@ -64,7 +70,7 @@
 }
 
 .help-input, .help-textarea {
-  width: 100%;
+  width: 90%;
   padding: 0.75rem;
   border: 1px solid #ddd;
   border-radius: 6px;
