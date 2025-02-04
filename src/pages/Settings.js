@@ -199,12 +199,12 @@ const Settings = () => {
       <div className="settings-container">
         <div className="settings-card">
           <div className="settings-header">
-            <h2 className="settings-title">Account Settings</h2>
+            <h2 className="settings-title">إعدادات الحساب</h2>
           </div>
           <div className="settings-content">
             <div onClick={() => document.getElementById('file-input').click()}>
               <div className="card-image">
-                <img src={userImage || "Loading..."} alt="User" className="hidden-alt" />
+                <img src={userImage || "جار التحميل..."} alt="المستخدم" className="hidden-alt" />
               </div>
               <input
                 id="file-input"
@@ -226,23 +226,23 @@ const Settings = () => {
               </div>
             )}
             <SettingsField
-              label="Name"
+              label="الاسم"
               value={userData.name}
               onSave={(value) => handleUpdate("name", value)}
             />
             <SettingsField
-              label="Email"
+              label="البريد الإلكتروني"
               value={userData.email}
               onSave={(value) => handleUpdate("email", value)}
               type="email"
             />
             <SettingsField
-              label="Username"
+              label="اسم المستخدم"
               value={userData.identifier}
               onSave={(value) => handleUpdate("identifier", value)}
             />
             <SettingsField
-              label="Phone"
+              label="الهاتف"
               value={userData.phone}
               onSave={(value) => handleUpdate("phone", value)}
             />
@@ -253,13 +253,13 @@ const Settings = () => {
               placeholder="RIP: 007 99999 0021212121"
             />
             <SettingsField
-              label="Password"
+              label="كلمة المرور"
               value="********"
               onSave={(value) => handleUpdate("password", value)}
               type="password"
             />
             <SettingsField
-              label="Birthdate"  
+              label="تاريخ الميلاد"
               value={userData.birthdate || ""}
               onSave={(value) => handleUpdate("birthdate", value)}
               type="date"

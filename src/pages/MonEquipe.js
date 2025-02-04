@@ -64,11 +64,11 @@ const MonEquipe = () => {
       <Header />
         <>
         <div className="team-container">
-          <h2>My Team <span style={{ color: "#5700B4" }}>{teamMembers.length}</span></h2>
+          <h2>فريقي <span style={{ color: "#5700B4" }}>{teamMembers.length}</span></h2>
           {loading ? (
-            <p>Chargement...</p>
+            <p>جاري التحميل...</p>
           ) : teamMembers.length === 0 ? (
-            <p>Aucun membre trouvé.</p>
+            <p>لم يتم العثور على أي أعضاء.</p>
           ) : (
             <div className="card-container">
               {teamMembers.map((member) => (
@@ -83,13 +83,13 @@ const MonEquipe = () => {
                   <h3 style={{ color: "#000" }}>{member.name}</h3>
                   <div className="column10">
                   <p style={{ color: "#000" }}>
-                    <strong style={{ color: "#5700B4" }}>Useename:</strong> {member.identifier}
+                    <strong style={{ color: "#5700B4" }}>اسم المستخدم:</strong> {member.identifier}
                   </p>
                   <p style={{ color: "#000" }}>
-                    <strong style={{ color: "#5700B4" }}>Sales Points:</strong> {member.perso}
+                    <strong style={{ color: "#5700B4" }}>نقاط البيع:</strong> {member.perso}
                   </p>
                   <p style={{ color: "#000" }}>
-                    <strong style={{ color: "#5700B4" }}>Group Points:</strong> {member.ppcg}
+                    <strong style={{ color: "#5700B4" }}>النقاط الجماعية:</strong> {member.ppcg}
                   </p>
                   <p style={{ color: "#000" }}>
                     <strong style={{ color: "#5700B4" }}><Email /> :</strong>{" "}

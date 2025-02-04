@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Noto+Naskh+Arabic:wght@400..700&display=swap" rel="stylesheet');
 
 .parrain {
   position: fixed;
   top: 0;
-  right: 0;
+  left: 0;
   height: 100%;
   width: 250px;
   background: linear-gradient(to bottom, rgba(0, 19, 39, 0.35), rgba(0, 0, 0, 0.85)); 
@@ -11,14 +11,13 @@
   display: flex;
   flex-direction: column;
   padding: 20px 10px 100px 10px;
-  margin-bottom: 100px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
   z-index: 1003;
   backdrop-filter: blur(10px); 
   -webkit-backdrop-filter: blur(10px); 
   overflow-y: scroll;
-  font-family: 'Quicksand';
+  font-family: 'Noto Kufi Arabic';
 }
 
 .popup {
@@ -115,20 +114,28 @@
     cursor: pointer;
   }
 
+  .close-button:hover {
+    color: darkorchid;
+    background-color: transparent;
+  }
+
   .password-input-container {
-    position: relative;
-    width: fit-content;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 99%;
+    background-color: #dcdcdc;
+    border: 1px solid #595959;
+    border-radius: 10px;
   }
-  
-  .parrain-input {
-    padding-right: 30px; 
+
+  .password-input-container span {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
   }
-  
-  .toggle-password {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    cursor: pointer;
+
+  .password-input-container input {
+    border: none;
   }
-  

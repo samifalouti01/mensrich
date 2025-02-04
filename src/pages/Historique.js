@@ -18,11 +18,11 @@ const OrderCard = ({ order, onCancel }) => {
 
   const getStatusLabel = (status) => {
     switch (status.toLowerCase()) {
-      case "validated": return "Validée";
-      case "pending": return "En attente";
-      case "refused": return "Refusée";
-      case "canceled": return "Annulée";
-      default: return "Statut inconnu";
+      case "validated": return "تم التأكيد";
+      case "pending": return "قيد الانتظار";
+      case "refused": return "مرفوض";
+      case "canceled": return "تم الإلغاء";
+      default: return "الحالة غير معروفة";
     }
   };
 
@@ -45,7 +45,7 @@ const OrderCard = ({ order, onCancel }) => {
       <div className="order-header">
         <div className="order-title">
           <ShoppingBag className="order-icon" />
-          <span>Commande #{order.id}</span>
+          <span>الطلب #{order.id}</span>
         </div>
         <span className={getStatusClass(order.order_status)}>
           {getStatusLabel(order.order_status)}
@@ -71,8 +71,8 @@ const OrderCard = ({ order, onCancel }) => {
         <div className="detail-item">
           <DollarSign className="detail-icon" />
           <div className="price-details">
-            <div>Prix Total: <span className="price">{formatPrice(order.total_price)}</span></div>
-            <div>Commission: <span className="commission">{formatPrice(order.commission)}</span></div>
+            <div>السعر الإجمالي: <span className="price">{formatPrice(order.total_price)}</span></div>
+            <div>العمولة: <span className="commission">{formatPrice(order.commission)}</span></div>
           </div>
         </div>
       </div>
@@ -85,7 +85,7 @@ const OrderCard = ({ order, onCancel }) => {
           onClick={() => onCancel(order.id)}
         >
           <Ban className="cancel-icon" />
-          Annuler la commande
+          إلغاء الطلب
         </button>
       )}
     </div>
@@ -102,7 +102,7 @@ const Historique = () => {
       const user = JSON.parse(localStorage.getItem("user"));
 
       if (!user) {
-        setMessage("Veuillez vous connecter pour voir votre historique de commandes.");
+        setMessage("يرجى تسجيل الدخول لعرض سجل الطلبات الخاص بك.");
         setLoading(false);
         return;
       }
@@ -114,8 +114,8 @@ const Historique = () => {
         .order("created_at", { ascending: false });
 
       if (error) {
-        console.error("Error fetching orders:", error);
-        setMessage("Erreur lors du chargement des commandes.");
+        console.error("خطأ في إحضار الطلبات:", error);
+        setMessage("خطأ في تحميل الأوامر.");
       } else {
         setOrders(data);
       }
@@ -127,7 +127,7 @@ const Historique = () => {
 
   const handleCancelOrder = async (orderId) => {
     const confirmCancel = window.confirm(
-      "Êtes-vous sûr de vouloir annuler cette commande ?"
+      "هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟"
     );
     if (!confirmCancel) return;
 
@@ -147,11 +147,11 @@ const Historique = () => {
         )
       );
       
-      setMessage("Commande annulée avec succès.");
+      setMessage("تم إلغاء الطلب بنجاح.");
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
-      console.error("Error cancelling order:", error);
-      setMessage("Erreur lors de l'annulation de la commande.");
+      console.error("خطأ في إلغاء الطلب:", error);
+      setMessage("خطأ عند إلغاء الطلب.");
       setTimeout(() => setMessage(""), 3000);
     }
   };
@@ -170,7 +170,7 @@ const Historique = () => {
       <div className="historique-container">
         <div className="historique-card">
           <div className="historique-header">
-            <h2 className="historique-title">Historique des Commandes</h2>
+            <h2 className="historique-title">سجل الطلبات</h2>
           </div>
           <div className="historique-content">
             {message && (
@@ -181,7 +181,7 @@ const Historique = () => {
             
             {orders.length === 0 ? (
               <div className="empty-state">
-                Aucune commande enregistrée pour le moment.
+                لا توجد طلبات حتى الآن.
               </div>
             ) : (
               <div className="orders-grid">

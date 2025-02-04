@@ -180,7 +180,7 @@ const Login = () => {
             <img src="Mencedes.svg" alt="Logo" className="login-logo" />
             {!isRegistering ? (
                 <form onSubmit={handleLogin} className="login-form">
-                    <h1 className="login-title">Login</h1>
+                    <h1 className="login-title">تسجيل الدخول</h1>
                     <div className="form-control2">
                         <input
                             type="text"
@@ -189,14 +189,18 @@ const Login = () => {
                             onChange={(e) => setIdentifier(e.target.value)} 
                         />
                         <label>
-                            <span style={{ transitionDelay: '0ms' }}>U</span>
-                            <span style={{ transitionDelay: '50ms' }}>s</span>
-                            <span style={{ transitionDelay: '100ms' }}>e</span>
-                            <span style={{ transitionDelay: '150ms' }}>r</span>
-                            <span style={{ transitionDelay: '200ms' }}>n</span>
-                            <span style={{ transitionDelay: '250ms' }}>a</span>
-                            <span style={{ transitionDelay: '300ms' }}>m</span>
-                            <span style={{ transitionDelay: '350ms' }}>e</span>
+                            <span style={{ transitionDelay: '0ms' }}>ا</span>
+                            <span style={{ transitionDelay: '50ms' }}>سـ</span>
+                            <span style={{ transitionDelay: '100ms' }}>م</span>
+                            <span style={{ transitionDelay: '150ms' }}></span>
+                            <span style={{ transitionDelay: '200ms' }}>ا</span>
+                            <span style={{ transitionDelay: '250ms' }}>لـ</span>
+                            <span style={{ transitionDelay: '300ms' }}>مـ</span>
+                            <span style={{ transitionDelay: '350ms' }}>سـ</span>
+                            <span style={{ transitionDelay: '400ms' }}>تـ</span>
+                            <span style={{ transitionDelay: '450ms' }}>خـ</span>
+                            <span style={{ transitionDelay: '500ms' }}>د</span>
+                            <span style={{ transitionDelay: '550ms' }}>م</span>
                         </label>
                     </div>
                     <div className="password-input-containers">
@@ -209,14 +213,17 @@ const Login = () => {
                                 onChange={(e) => setPassword(e.target.value)} 
                             />
                             <label>
-                                <span style={{ transitionDelay: '0ms' }}>P</span>
-                                <span style={{ transitionDelay: '50ms' }}>a</span>
-                                <span style={{ transitionDelay: '100ms' }}>s</span>
-                                <span style={{ transitionDelay: '150ms' }}>s</span>
-                                <span style={{ transitionDelay: '200ms' }}>w</span>
-                                <span style={{ transitionDelay: '250ms' }}>o</span>
-                                <span style={{ transitionDelay: '300ms' }}>r</span>
-                                <span style={{ transitionDelay: '350ms' }}>d</span>
+                                <span style={{ transitionDelay: '0ms' }}>كـ</span>
+                                <span style={{ transitionDelay: '50ms' }}>لـ</span>
+                                <span style={{ transitionDelay: '100ms' }}>مـ</span>
+                                <span style={{ transitionDelay: '150ms' }}>ة</span>
+                                <span style={{ transitionDelay: '200ms' }}></span>
+                                <span style={{ transitionDelay: '250ms' }}>ا</span>
+                                <span style={{ transitionDelay: '300ms' }}>لـ</span>
+                                <span style={{ transitionDelay: '350ms' }}>مـ</span>
+                                <span style={{ transitionDelay: '400ms' }}>ر</span>
+                                <span style={{ transitionDelay: '450ms' }}>و</span>
+                                <span style={{ transitionDelay: '500ms' }}>ر</span>
                             </label>
                         </div>
                         <span className="toggle-password" onClick={togglePasswordVisibility}>
@@ -224,51 +231,58 @@ const Login = () => {
                         </span>
                     </div>
                     <button type="submit" className="login-button" disabled={loading}>
-                        {loading ? <div className="spinner"></div> : "Login"}
+                        {loading ? <div className="spinner"></div> : "تسجيل الدخول"}
                     </button>
                     {error && <p className="error-message">{error}</p>}
-                    <p className="switch-mode" onClick={() => setIsRegistering(true)}><span style={{ color: "gray" }}>Don't have an account?</span> Register</p>
+                    <p className="switch-mode" onClick={() => setIsRegistering(true)}><span style={{ color: "gray" }}>ليس لديك حساب؟</span> سجل الآن</p>
                 </form>
             ) : (
                 <form onSubmit={handleRegister} className="register-form">
-                    <h1 className="register-title">Register</h1>
-                        <div className="form-control2">
-                            <input
-                                type="text"
-                                required
-                                value={registerData.name}
-                                onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
-                            />
-                            <label>
-                                <span style={{ transitionDelay: '0ms' }}>F</span>
-                                <span style={{ transitionDelay: '50ms' }}>u</span>
-                                <span style={{ transitionDelay: '100ms' }}>l</span>
-                                <span style={{ transitionDelay: '150ms' }}>l</span>
-                                <span style={{ transitionDelay: '200ms' }}></span>
-                                <span style={{ transitionDelay: '250ms' }}>N</span>
-                                <span style={{ transitionDelay: '300ms' }}>a</span>
-                                <span style={{ transitionDelay: '350ms' }}>m</span>
-                                <span style={{ transitionDelay: '400ms' }}>e</span>
-                            </label>
-                        </div>
-                        <div className="form-control2">
-                            <input
-                                type="text"
-                                required
-                                value={registerData.identifier}
-                                onChange={(e) => setRegisterData({ ...registerData, identifier: e.target.value })}
-                            />
-                            <label>
-                                <span style={{ transitionDelay: '0ms' }}>U</span>
-                                <span style={{ transitionDelay: '50ms' }}>s</span>
-                                <span style={{ transitionDelay: '100ms' }}>e</span>
-                                <span style={{ transitionDelay: '150ms' }}>r</span>
-                                <span style={{ transitionDelay: '200ms' }}>n</span>
-                                <span style={{ transitionDelay: '250ms' }}>a</span>
-                                <span style={{ transitionDelay: '300ms' }}>m</span>
-                                <span style={{ transitionDelay: '350ms' }}>e</span>
-                            </label>
-                        </div>
+                    <h1 className="register-title">التسجيل</h1>
+                    <div className="form-control2">
+                        <input
+                            type="text"
+                            required
+                            value={registerData.name}
+                            onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
+                        />
+                        <label>
+                            <span style={{ transitionDelay: '0ms' }}>ا</span>
+                            <span style={{ transitionDelay: '50ms' }}>لـ</span>
+                            <span style={{ transitionDelay: '100ms' }}>ا</span>
+                            <span style={{ transitionDelay: '150ms' }}>سـ</span>
+                            <span style={{ transitionDelay: '200ms' }}>م</span>
+                            <span style={{ transitionDelay: '250ms' }}></span>
+                            <span style={{ transitionDelay: '300ms' }}>ا</span>
+                            <span style={{ transitionDelay: '350ms' }}>لـ</span>
+                            <span style={{ transitionDelay: '400ms' }}>كـ</span>
+                            <span style={{ transitionDelay: '450ms' }}>ا</span>
+                            <span style={{ transitionDelay: '500ms' }}>مـ</span>
+                            <span style={{ transitionDelay: '550ms' }}>ل</span>
+                        </label>
+                    </div>
+                    <div className="form-control2">
+                        <input
+                            type="text"
+                            required
+                            value={registerData.identifier}
+                            onChange={(e) => setRegisterData({ ...registerData, identifier: e.target.value })}
+                        />
+                        <label>
+                            <span style={{ transitionDelay: '0ms' }}>ا</span>
+                            <span style={{ transitionDelay: '50ms' }}>سـ</span>
+                            <span style={{ transitionDelay: '100ms' }}>م</span>
+                            <span style={{ transitionDelay: '150ms' }}></span>
+                            <span style={{ transitionDelay: '200ms' }}>ا</span>
+                            <span style={{ transitionDelay: '250ms' }}>لـ</span>
+                            <span style={{ transitionDelay: '300ms' }}>مـ</span>
+                            <span style={{ transitionDelay: '350ms' }}>سـ</span>
+                            <span style={{ transitionDelay: '400ms' }}>تـ</span>
+                            <span style={{ transitionDelay: '450ms' }}>خـ</span>
+                            <span style={{ transitionDelay: '500ms' }}>د</span>
+                            <span style={{ transitionDelay: '550ms' }}>م</span>
+                        </label>
+                    </div>
                     <div className="password-input-containers">
                         <div className="form-control2">
                             <input
@@ -279,93 +293,112 @@ const Login = () => {
                                 onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
                             />
                             <label>
-                                <span style={{ transitionDelay: '0ms' }}>P</span>
-                                <span style={{ transitionDelay: '50ms' }}>a</span>
-                                <span style={{ transitionDelay: '100ms' }}>s</span>
-                                <span style={{ transitionDelay: '150ms' }}>s</span>
-                                <span style={{ transitionDelay: '200ms' }}>w</span>
-                                <span style={{ transitionDelay: '250ms' }}>o</span>
-                                <span style={{ transitionDelay: '300ms' }}>r</span>
-                                <span style={{ transitionDelay: '350ms' }}>d</span>
+                                <span style={{ transitionDelay: '0ms' }}>كـ</span>
+                                <span style={{ transitionDelay: '50ms' }}>لـ</span>
+                                <span style={{ transitionDelay: '100ms' }}>مـ</span>
+                                <span style={{ transitionDelay: '150ms' }}>ة</span>
+                                <span style={{ transitionDelay: '200ms' }}></span>
+                                <span style={{ transitionDelay: '250ms' }}>ا</span>
+                                <span style={{ transitionDelay: '300ms' }}>لـ</span>
+                                <span style={{ transitionDelay: '350ms' }}>مـ</span>
+                                <span style={{ transitionDelay: '400ms' }}>ر</span>
+                                <span style={{ transitionDelay: '450ms' }}>و</span>
+                                <span style={{ transitionDelay: '500ms' }}>ر</span>
                             </label>
                         </div>
                         <span className="toggle-password" onClick={togglePasswordVisibility}>
                             {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                         </span>
                     </div>
-                        <div className="form-control2">
-                            <input
-                                type="text"
-                                required
-                                value={registerData.email}
-                                onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
-                            />
-                            <label>
-                                <span style={{ transitionDelay: '0ms' }}>E</span>
-                                <span style={{ transitionDelay: '50ms' }}>m</span>
-                                <span style={{ transitionDelay: '100ms' }}>a</span>
-                                <span style={{ transitionDelay: '150ms' }}>i</span>
-                                <span style={{ transitionDelay: '200ms' }}>l</span>
-                            </label>
-                        </div>
-                        <div className="form-control2">
-                            <input
-                                type="text"
-                                required
-                                value={registerData.phone}
-                                onChange={(e) => setRegisterData({ ...registerData, phone: e.target.value })}
-                            />
-                            <label>
-                                <span style={{ transitionDelay: '0ms' }}>P</span>
-                                <span style={{ transitionDelay: '50ms' }}>h</span>
-                                <span style={{ transitionDelay: '100ms' }}>o</span>
-                                <span style={{ transitionDelay: '150ms' }}>n</span>
-                                <span style={{ transitionDelay: '200ms' }}>e</span>
-                            </label>
-                        </div>
-                        <div className="form-control2">
-                            <input
-                                type="text"
-                                required
-                                value={registerData.referralId}
-                                onChange={(e) => setRegisterData({ ...registerData, referralId: e.target.value })}
-                            />
-                            <label>
-                                <span style={{ transitionDelay: '0ms' }}>R</span>
-                                <span style={{ transitionDelay: '50ms' }}>e</span>
-                                <span style={{ transitionDelay: '100ms' }}>f</span>
-                                <span style={{ transitionDelay: '150ms' }}>e</span>
-                                <span style={{ transitionDelay: '200ms' }}>r</span>
-                                <span style={{ transitionDelay: '250ms' }}>r</span>
-                                <span style={{ transitionDelay: '300ms' }}>a</span>
-                                <span style={{ transitionDelay: '350ms' }}>l</span>
-                                <span style={{ transitionDelay: '400ms' }}></span>
-                                <span style={{ transitionDelay: '410ms' }}>I</span>
-                                <span style={{ transitionDelay: '420ms' }}>D</span>
-                            </label>
-                        </div>
+                    <div className="form-control2">
+                        <input
+                            type="text"
+                            required
+                            value={registerData.email}
+                            onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
+                        />
+                        <label>
+                            <span style={{ transitionDelay: '0ms' }}>ا</span>
+                            <span style={{ transitionDelay: '50ms' }}>لـ</span>
+                            <span style={{ transitionDelay: '100ms' }}>بـ</span>
+                            <span style={{ transitionDelay: '150ms' }}>ر</span>
+                            <span style={{ transitionDelay: '200ms' }}>يـ</span>
+                            <span style={{ transitionDelay: '250ms' }}>د</span>
+                            <span style={{ transitionDelay: '300ms' }}></span>
+                            <span style={{ transitionDelay: '350ms' }}>ا</span>
+                            <span style={{ transitionDelay: '400ms' }}>لـ</span>
+                            <span style={{ transitionDelay: '450ms' }}>ا</span>
+                            <span style={{ transitionDelay: '500ms' }}>لـ</span>
+                            <span style={{ transitionDelay: '550ms' }}>كـ</span>
+                            <span style={{ transitionDelay: '600ms' }}>تـ</span>
+                            <span style={{ transitionDelay: '650ms' }}>ر</span>
+                            <span style={{ transitionDelay: '700ms' }}>و</span>
+                            <span style={{ transitionDelay: '750ms' }}>نـ</span>
+                            <span style={{ transitionDelay: '800ms' }}>ـي</span>
+                        </label>
+                    </div>
+                    <div className="form-control2">
+                        <input
+                            type="text"
+                            required
+                            value={registerData.phone}
+                            onChange={(e) => setRegisterData({ ...registerData, phone: e.target.value })}
+                        />
+                        <label>
+                            <span style={{ transitionDelay: '0ms' }}>ر</span>
+                            <span style={{ transitionDelay: '50ms' }}>قـ</span>
+                            <span style={{ transitionDelay: '100ms' }}>م</span>
+                            <span style={{ transitionDelay: '150ms' }}></span>
+                            <span style={{ transitionDelay: '200ms' }}>ا</span>
+                            <span style={{ transitionDelay: '250ms' }}>لـ</span>
+                            <span style={{ transitionDelay: '300ms' }}>ه</span>
+                            <span style={{ transitionDelay: '350ms' }}>ا</span>
+                            <span style={{ transitionDelay: '400ms' }}>تـ</span>
+                            <span style={{ transitionDelay: '450ms' }}>ف</span>
+                        </label>
+                    </div>
+                    <div className="form-control2">
+                        <input
+                            type="text"
+                            required
+                            value={registerData.referralId}
+                            onChange={(e) => setRegisterData({ ...registerData, referralId: e.target.value })}
+                        />
+                        <label>
+                            <span style={{ transitionDelay: '0ms' }}>كـ</span>
+                            <span style={{ transitionDelay: '50ms' }}>و</span>
+                            <span style={{ transitionDelay: '100ms' }}>د</span>
+                            <span style={{ transitionDelay: '150ms' }}></span>
+                            <span style={{ transitionDelay: '200ms' }}>ا</span>
+                            <span style={{ transitionDelay: '250ms' }}>لـ</span>
+                            <span style={{ transitionDelay: '300ms' }}>د</span>
+                            <span style={{ transitionDelay: '350ms' }}>عـ</span>
+                            <span style={{ transitionDelay: '400ms' }}>و</span>
+                            <span style={{ transitionDelay: '450ms' }}>ة</span>
+                        </label>
+                    </div>
                     <button type="submit" className="register-button" disabled={loading}>
-                        {loading ? <div className="spinner"></div> : "Register"}
+                        {loading ? <div className="spinner"></div> : "التسجيل"}
                     </button>
                     {error && <p className="error-message">{error}</p>}
-                    <p className="switch-mode" onClick={() => setIsRegistering(false)}><span style={{ color: "gray" }}>Already have an account?</span> Login</p>
+                    <p className="switch-mode" onClick={() => setIsRegistering(false)}><span style={{ color: "gray" }}>هل لديك حساب بالفعل؟</span> تسجيل الدخول</p>
                 </form>
             )}
-
-            <p style={{ color: 'gray' }}>See <span  onClick={() => navigate("/privacy-policy")} className="switch-mode">Privacy Policy</span> or <span onClick={() => navigate("/terms-and-conditions")} className="switch-mode">Terms of Use</span></p>
-
-            <button className="btn btn-secondary" onClick={() => navigate("/documentation")}>Documentation</button>
-
+    
+            <p style={{ color: 'gray' }}>اطلع على <span  onClick={() => navigate("/privacy-policy")} className="switch-mode">سياسة الخصوصية</span> أو <span onClick={() => navigate("/terms-and-conditions")} className="switch-mode">شروط الاستخدام</span></p>
+    
+            <button style={{ backgroundColor: "#d9770630", color: "#d97706", border: "1px solid #d97706", fontSize: "22px", width: "100%" }} onClick={() => navigate("/documentation")}>المستند</button>
+    
             {showPopup && (
                 <div className="popup">
-                    <h3 style={{ color: "green" }}>Registration Successful!</h3>
+                    <h3 style={{ color: "green" }}>تم التسجيل بنجاح!</h3>
                     <p style={{ color: "black" }}>ID: {registerData.identifier}</p>
-                    <p style={{ color: "black" }}>Password: {registerData.password}</p>
-                    <button onClick={() => setShowPopup(false)}>Close</button>
+                    <p style={{ color: "black" }}>كلمة المرور: {registerData.password}</p>
+                    <button onClick={() => setShowPopup(false)}>إغلاق</button>
                 </div>
             )}
         </div>
-    );    
+    );
 };
 
 export default Login;

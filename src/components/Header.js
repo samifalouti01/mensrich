@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaAlignLeft } from "react-icons/fa";
+import { FaAlignRight } from "react-icons/fa";
 import LeftNavBar from "./LeftNavBar";
 import "./Header.css";
 
@@ -27,10 +27,8 @@ const Header = () => {
     return (
         <>
             <header className="header">
-                <FaAlignLeft className="menu-icon" onClick={toggleNav} />
+                <FaAlignRight className="menu-icon" onClick={toggleNav} />
                 <img src="Mencedes.svg" alt="logo" />
-                <div>
-                </div>
             </header>
             <div
                 className={`left-navbar ${isNavOpen ? "" : "hidden"}`}

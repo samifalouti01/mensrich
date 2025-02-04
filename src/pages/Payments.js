@@ -219,9 +219,18 @@ const Payments = () => {
   
   const getCurrentTime = () => {
     const date = new Date();
-    const month = date.toLocaleString("default", { month: "long" });
-    const time = date.toLocaleTimeString();
-    return `${month} ${date.getFullYear()} | ${time}`;
+    
+    // Format the month in Arabic
+    const month = date.toLocaleString("ar", { month: "long" });
+    
+    // Format the time in Arabic
+    const time = date.toLocaleTimeString("ar");
+    
+    // Format the full date in Arabic (day, month, year)
+    const fullDate = date.toLocaleString("ar", { day: "numeric", month: "long", year: "numeric" });
+    
+    // Return the formatted string
+    return `${fullDate} | ${time}`;
   };
 
   useEffect(() => {
@@ -265,54 +274,57 @@ const Payments = () => {
   return (
     <div>
       <Header />
-      <button onClick={downloadPDF} className="download-btn">
-        <i class="bi bi-file-earmark-arrow-down" style={{ marginRight: "8px" }}></i>
-       Download PDF</button>
       <div className="payments-container">
-        <div className="row-p">
-          <p style={{ color: "#333" }}>{currentTime}</p> 
-          <p>
-          Status:{" "}
-            <span
-              style={{
-                color: userData.userStatus === "Actif" ? "green" : "red",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.4rem",
-              }}
-            >
-              <span
-                style={{
-                  width: "8px",
-                  height: "8px",
-                  borderRadius: "50%",
-                  backgroundColor: userData.userStatus === "Actif" ? "green" : "red",
-                }}
-              ></span>
-              {userData.userStatus}
-            </span>
-          </p> 
-        </div>
-        <div className="user-info">
+      <button onClick={downloadPDF} className="download-btn">
+          <i className="bi bi-file-earmark-arrow-down"></i>
+          تنزيل ملف PDF
+      </button>
           <div className="row-p">
-            <h1>{userData.ppcg ? determineLevel(parseFloat(userData.ppcg)) : "N/A"}</h1>
-            <h2><i class="bi bi-cash-coin" style={{ color: "#5700B4", marginRight: "10px" }}></i> 
-             {(income * 100).toFixed(2)} DA</h2>
+              <p style={{ color: "#555" }}>{currentTime}</p>
+              <p>
+                  الحالة:{" "}
+                  <span
+                      style={{
+                          color: userData.userStatus === "Actif" ? "green" : "red",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "0.4rem",
+                      }}
+                  >
+                      <span
+                          style={{
+                              width: "8px",
+                              height: "8px",
+                              borderRadius: "50%",
+                              backgroundColor: userData.userStatus === "Actif" ? "green" : "red",
+                          }}
+                      ></span>
+                      {userData.userStatus}
+                  </span>
+              </p>
           </div>
-          <p style={{ color: "#333" }}>Your Sales Points for this month: <span style={{ color: "#5700B4", fontWeight: "bold" }}>{userData.perso}</span></p>
-          <h3 style={{ color: "#333" }}>Team Size: {referrals.length}</h3>
-        </div>
-        <br />
-        <h3 style={{ color: "#333" }}>Referral Details:</h3>
-        <ul className="referral-list">
-          {referrals.map((referral) => (
-            <li key={referral.id} className="referral-item">
-              <span>{referral.name}</span>
-              <span>{determineLevel(referral.ppcg)}</span>
-              <span>Income: {((parseFloat(referral.referralIncome) || 0) * 100).toFixed(2)} DA</span>
-            </li>          
-          ))}
-        </ul>
+          <div className="user-info">
+              <div className="row-p">
+                  <h1>{userData.ppcg ? determineLevel(parseFloat(userData.ppcg)) : "Distribiteur"}</h1>
+                  <h2>
+                      <i className="bi bi-cash-coin" style={{ color: "#5700B4", marginLeft: "10px" }}></i>
+                      {(income * 100).toFixed(2)} دج
+                  </h2>
+              </div>
+              <p>نقاط مبيعاتك لهذا الشهر: <span style={{ color: "#5700B4", fontWeight: "bold" }}>{userData.perso}</span></p>
+              <h3>حجم فريقك: {referrals.length}</h3>
+          </div>
+          <br />
+          <h3>تفاصيل الإحالات:</h3>
+          <ul className="referral-list">
+              {referrals.map((referral) => (
+                  <li key={referral.id} className="referral-item">
+                      <span>{referral.name}</span>
+                      <span>{determineLevel(referral.ppcg)}</span>
+                      <span>الإيرادات: {((parseFloat(referral.referralIncome) || 0) * 100).toFixed(2)} دج</span>
+                  </li>
+              ))}
+          </ul>
       </div>
     </div>
   );

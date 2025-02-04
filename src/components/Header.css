@@ -60,7 +60,7 @@
         align-items: center;
         justify-content: space-between;
         padding: 10px 20px;
-        background-color: #000;
+        background-color: #16001c;
         color: white;
         height: 50px;
         z-index: 1003;
@@ -68,7 +68,6 @@
 
     .header img {
         height: 20px;
-        margin-left: -30px;
     }
 }
 

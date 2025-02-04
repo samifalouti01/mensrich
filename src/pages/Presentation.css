@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Noto+Naskh+Arabic:wght@400..700&display=swap" rel="stylesheet');
 
 .documentation-container {
     min-height: 100vh;
-    font-family: 'Quicksand';
+    font-family: 'Noto Kufi Arabic';
   }
   
   .documentation-wrapper {

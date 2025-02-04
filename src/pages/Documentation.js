@@ -24,7 +24,7 @@ const Documentation = () => {
 
   return (
     <div className="documentation-container">
-        <br />
+      <br />
         <br />
         <button
           className="back-button"
@@ -33,19 +33,18 @@ const Documentation = () => {
           <ChevronLeft className="back-icon" />
         </button>
       <div className="documentation-wrapper">
-        {/* Documentation Header */}
         <div className="documentation-header">
-          <h1>Documentation</h1>
-          <p>Everything you need to know about our platform</p>
+          <h1>المستند</h1>
+          <p>كل ما تحتاج معرفته عن منصتنا</p>
         </div>
-
-        {/* Quick Links */}
+  
+        {/* الروابط السريعة */}
         <div className="quick-links">
           {[
-            { icon: "book", title: "User Guide" },
-            { icon: "credit-card", title: "Payment" },
-            { icon: "youtube", title: "Explanatory video" },
-            { icon: "question-circle", title: "FAQs" },
+            { icon: "book", title: "دليل المستخدم" },
+            { icon: "credit-card", title: "الدفع" },
+            { icon: "youtube", title: "فديو توضيحي" },
+            { icon: "question-circle", title: "الأسئلة الشائعة" },
           ].map((item) => (
             <div key={item.title} className="quick-link-card">
               <i className={`bi bi-${item.icon}`}></i>
@@ -53,166 +52,168 @@ const Documentation = () => {
             </div>
           ))}
         </div>
-
-        {/* User Guide Section */}
+  
+        {/* قسم دليل المستخدم */}
         <section className="doc-section">
           <div className="section-header">
             <i className="bi bi-book"></i>
-            <h2>User Guide</h2>
+            <h2>دليل المستخدم</h2>
           </div>
           <div className="section-content">
-            <p>Get started with our comprehensive user guide to make the most of our platform.</p>
+            <p>ابدأ مع دليل المستخدم الشامل لتحقيق أقصى استفادة من منصتنا.</p>
             <div className="feature-list">
               <div className="feature-item">
                 <i className="bi bi-check2-circle"></i>
-                <p>Learn the basics of navigation and core features</p>
+                <p>تعلم أساسيات التنقل والميزات الأساسية</p>
               </div>
               <div className="feature-item">
                 <i className="bi bi-check2-circle"></i>
-                <p>Discover advanced features and customization options</p>
+                <p>اكتشف الميزات المتقدمة وخيارات التخصيص</p>
               </div>
             </div>
           </div>
         </section>
-
-        {/* Payment Section */}
+  
+        {/* قسم الدفع */}
         <section className="doc-section">
           <div className="section-header">
             <i className="bi bi-credit-card"></i>
-            <h2>Payment</h2>
+            <h2>الدفع</h2>
           </div>
           <div className="section-content">
-            <p>Learn about our secure payment options and billing procedures.</p>
+            <p>تعرف على خيارات الدفع الآمنة وإجراءات الفوترة لدينا.</p>
             <div className="payment-grid">
               <div className="payment-card">
-                <h3>Accepted Payment Methods</h3>
+                <h3>طرق الدفع المقبولة</h3>
                 <div className="payment-methods">
                   <img src="Algerie Poste.svg" alt="Algerie Poste"></img>
                   <img src="Baridimob.svg" alt="Baridimob"></img>
                 </div>
+                <br />
+                <a href="/settings" className="btn btn-secondary">تحديث RIP</a>
               </div>
               <div className="payment-card">
-                <h3>Payment Cycle</h3>
-                <p>Monthly</p>
+                <h3>دورة الدفع</h3>
+                <p>شهري</p>
               </div>
             </div>
           </div>
         </section>
-
-        {/* Monthly Income Section */}
+  
+        {/* قسم الدخل الشهري */}
         <section className="doc-section">
           <div className="section-header">
             <i className="bi bi-cash"></i>
-            <h2>Monthly Income</h2>
+            <h2>الدخل الشهري</h2>
           </div>
           <div className="section-content">
-            <p>Earn a monthly income through various activities on the platform.</p>
+            <p>احصل على دخل شهري من خلال أنشطة متنوعة على المنصة.</p>
             <div className="income-list">
               <div className="income-item">
-                <h3>Additional Income</h3>
-                <p>With your phone or computer, you can earn additional income by promoting products and referring friends.</p>
+                <h3>دخل إضافي</h3>
+                <p>باستخدام هاتفك أو جهاز الكمبيوتر الخاص بك، يمكنك كسب دخل إضافي عن طريق الترويج للمنتجات وإحالة الأصدقاء.</p>
               </div>
               <div className="income-item">
-                <h3>Ways to Profit</h3>
+                <h3>طرق الربح</h3>
                 <ul>
-                  <li>Commission for every confirmed order</li>
-                  <li>Refer or invite a friend</li>
-                  <li>Monthly income for the team's efforts</li>
+                  <li>عمولة عن كل طلب مؤكد</li>
+                  <li>إحالة أو دعوة صديق</li>
+                  <li>دخل شهري لجهود الفريق</li>
                 </ul>
               </div>
             </div>
           </div>
         </section>
-
-        {/* How to Start Section */}
+  
+        {/* قسم كيفية البدء */}
         <section className="doc-section">
           <div className="section-header">
             <i className="bi bi-play-circle"></i>
-            <h2>How to Start?</h2>
+            <h2>كيف تبدأ؟</h2>
           </div>
           <div className="section-content">
-            <p>Starting is very easy. Just follow these steps:</p>
+            <p>البدء سهل للغاية. فقط اتبع هذه الخطوات:</p>
             <div className="steps-list">
               <div className="step-item">
-                <h3>How to Register?</h3>
+                <h3>كيفية التسجيل؟</h3>
                 <ul>
-                  <li>Message the owner of the post privately to get the invitation code to join our team.</li>
-                  <li>If the invitation code is in the post, copy it.</li>
-                  <li>Put the code in the Referral ID box.</li>
+                  <li>راسل صاحب المنشور بشكل خاص للحصول على رمز الدعوة للانضمام إلى فريقنا.</li>
+                  <li>إذا كان رمز الدعوة موجودًا في المنشور، فانسخه.</li>
+                  <li>ضع الرمز في مربع Referral ID.</li>
                 </ul>
               </div>
               <div className="step-item">
-                <h3>How to Sell?</h3>
+                <h3>كيفية البيع؟</h3>
                 <ul>
-                  <li>Click on the + button at the bottom of Dashboard screen.</li>
-                  <li>Click on the store.</li>
-                  <li>Choose the product and click on it.</li>
-                  <li>Long press on the product image to download it and copy the title and price.</li>
-                  <li>Promote the product on social media.</li>
+                  <li>انقر على زر + في الجزء السفلي من شاشة Dashboard.</li>
+                  <li>انقر على المتجر.</li>
+                  <li>اختر المنتج وانقر عليه.</li>
+                  <li>اضغط مطولًا على صورة المنتج لتنزيلها وانسخ العنوان والسعر.</li>
+                  <li>قم بالترويج للمنتج على وسائل التواصل الاجتماعي.</li>
                 </ul>
               </div>
               <div className="step-item">
-                <h3>How to Order the Product?</h3>
+                <h3>كيفية طلب المنتج؟</h3>
                 <ul>
-                  <li>In case of an order, enter the product and fill in the order box with the customer's information.</li>
-                  <li>When the order is confirmed, you will receive your due commission.</li>
+                  <li>في حالة الطلب، أدخل المنتج واملأ مربع الطلب بمعلومات العميل.</li>
+                  <li>عند تأكيد الطلب، ستحصل على العمولة المستحقة لك.</li>
                 </ul>
               </div>
               <div className="step-item">
-                <h3>How to Refer a Friend?</h3>
+                <h3>كيفية إحالة صديق؟</h3>
                 <ul>
-                  <li>Copy you ID and share it with friends and on social media.</li>
+                  <li>انسخ معرفك وشاركه مع الأصدقاء وعلى وسائل التواصل الاجتماعي.</li>
                 </ul>
-                <p>Or</p>
+                <p>أو</p>
                 <ul>
-                  <li>Click on the + button.</li>
-                  <li>Click Refferal.</li>
-                  <li>Add your friend's informations and click register.</li>
+                  <li>انقر على زر +.</li>
+                  <li>انقر على Referral.</li>
+                  <li>أضف معلومات صديقك وانقر على تسجيل.</li>
                 </ul>
               </div>
             </div>
           </div>
         </section>
-
-        {/* Levels and Points Section */}
+  
+        {/* قسم المستويات والنقاط */}
         <section className="doc-section">
           <div className="section-header">
             <i className="bi bi-graph-up"></i>
-            <h2>Levels and Points</h2>
+            <h2>المستويات والنقاط</h2>
           </div>
           <div className="section-content">
-            <p>Your monthly salary depends on your team's efforts and the points you accumulate.</p>
+            <p>يعتمد راتبك الشهري على جهود فريقك والنقاط التي تتراكم لديك.</p>
             <div className="levels-list">
               <div className="level-item">
-                <h3>Levels</h3>
+                <h3>المستويات</h3>
                 <ul>
-                  <li>Distributeur level</li>
-                  <li>Animateur level</li>
-                  <li>Animateur Junior level</li>
-                  <li>Animateur Senior level</li>
-                  <li>Manager level</li>
-                  <li>Manager Junior level</li>
-                  <li>Manager Senior level</li>
+                  <li>Distributeur</li>
+                  <li>Animateur</li>
+                  <li>Animateur Junior</li>
+                  <li>Animateur Senior</li>
+                  <li>Manager</li>
+                  <li>Manager Junior</li>
+                  <li>Manager Senior</li>
                 </ul>
               </div>
               <div className="level-item">
-                <h3>Moving to the Next Level</h3>
+                <h3>الانتقال إلى المستوى التالي</h3>
                 <ul>
-                  <li>Points from the previous month</li>
-                  <li>Points from this month</li>
-                  <li>Points you need to move to the next level</li>
+                  <li>النقاط من الشهر السابق</li>
+                  <li>النقاط من هذا الشهر</li>
+                  <li>النقاط التي تحتاجها للانتقال إلى المستوى التالي</li>
                 </ul>
-                <p>Example: If you are at Animateur level and your Next level is Animateur Junior and you need 6250 points. Your points from the previous month is 2300 points + points from this month is 2100 points = 4400 points, you dont move to the next level. But if Your points from the previous month is 4900 points + points from this month is 1400 points = 6300 points, you will move to the next level.</p>
+                <p>مثال: إذا كنت في مستوى منشط والمستوى التالي هو منشط مبتدئ وتحتاج إلى 6250 نقطة. نقاطك من الشهر السابق هي 2300 نقطة + نقاط هذا الشهر 2100 نقطة = 4400 نقطة، لن تنتقل إلى المستوى التالي. ولكن إذا كانت نقاطك من الشهر السابق 4900 نقطة + نقاط هذا الشهر 1400 نقطة = 6300 نقطة، سوف تنتقل إلى المستوى التالي.</p>
               </div>
             </div>
           </div>
         </section>
-
-        {/* Explanatory Video Section */}
+  
+        {/* قسم الفديو التوضيحي */}
         <section className="doc-section">
           <div className="section-header">
             <i className="bi bi-youtube"></i>
-            <h2>Explanatory Video</h2>
+            <h2>الفديو التوضيحي</h2>
           </div>
           <div className="plan-grid">
             <iframe
@@ -226,26 +227,26 @@ const Documentation = () => {
             ></iframe>
           </div>
         </section>
-
-        {/* FAQs Section */}
+  
+        {/* قسم الأسئلة الشائعة */}
         <section className="doc-section">
           <div className="section-header">
             <i className="bi bi-question-circle"></i>
-            <h2>Frequently Asked Questions</h2>
+            <h2>الأسئلة الشائعة</h2>
           </div>
           <div className="faq-list">
             {[
               {
-                question: "How do I get started?",
-                answer: "First of all, you need someone's ID to 'sign up', after that you can go to the store section and choose the product you want to work on. Copy the product title and total price and share it on social media and when you get an order, go back to Men's Rich and go to your product and add the customer information and click 'buy'. If the order is delivered, you will get your commission that you earned from that product."
+                question: "كيف أبدأ؟",
+                answer: "أولاً، تحتاج إلى معرف شخص ما 'للتسجيل'، بعد ذلك يمكنك الذهاب إلى قسم المتجر واختيار المنتج الذي ترغب في العمل عليه. انسخ عنوان المنتج والسعر الإجمالي وشاركه على وسائل التواصل الاجتماعي وعندما تحصل على طلب، عد إلى Men's Rich واذهب إلى منتجك وأضف معلومات العميل وانقر على 'شراء'. إذا تم تسليم الطلب، ستحصل على العمولة التي ربحتها من ذلك المنتج."
               },
               {
-                question: "What payment methods do you accept?",
-                answer: "We accept Algerie Poste and Baridimob only"
+                question: "ما هي طرق الدفع التي تقبلونها؟",
+                answer: "نقبل فقط Algerie Poste و Baridimob"
               },
               {
-                question: "How can I contact support?",
-                answer: "Our support team is available 24/7 via email: contact@mensrich.com or helpdesk section."
+                question: "كيف يمكنني الاتصال بالدعم؟",
+                answer: "فريق الدعم لدينا متاح 24/7 عبر البريد الإلكتروني: contact@mensrich.com أو قسم helpdesk."
               }
             ].map((faq, index) => (
               <div key={index} className="faq-item">

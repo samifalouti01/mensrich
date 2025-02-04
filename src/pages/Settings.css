@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Noto+Naskh+Arabic:wght@400..700&display=swap" rel="stylesheet');
 
 .settings-page {
   min-height: 100vh;
   background-color: #f5f5f5;
-  font-family: 'Quicksand', sans-serif;
+  font-family: 'Noto Kufi Arabic', sans-serif;
 }
 
 .settings-container {

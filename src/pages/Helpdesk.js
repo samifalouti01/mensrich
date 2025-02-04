@@ -101,7 +101,7 @@ const Helpdesk = () => {
       <div className="helpdesk-container">
         <div className="helpdesk-card">
           <div className="helpdesk-header">
-            <h2 className="helpdesk-title">Contact Support</h2>
+            <h2 className="helpdesk-title">اتصل بالدعم</h2>
           </div>
           <div className="helpdesk-content">
             {message && (
@@ -111,30 +111,30 @@ const Helpdesk = () => {
             )}
             <form onSubmit={handleSubmit}>
               <HelpField
-                label="Name"
+                label="الاسم"
                 icon={User}
                 value={formData.name}
                 onChange={(e) => handleInputChange({ target: { name: 'name', value: e.target.value } })}
-                placeholder="Enter your name"
+                placeholder="أدخل اسمك"
               />
               <HelpField
-                label="Email"
+                label="البريد الإلكتروني"
                 icon={Mail}
                 value={formData.email}
                 onChange={(e) => handleInputChange({ target: { name: 'email', value: e.target.value } })}
                 type="email"
-                placeholder="Enter your email"
+                placeholder="أدخل بريدك الإلكتروني"
               />
               <HelpField
-                label="Message"
+                label="الرسالة"
                 icon={MessageCircle}
                 value={formData.message}
                 onChange={(e) => handleInputChange({ target: { name: 'message', value: e.target.value } })}
                 type="textarea"
-                placeholder="How can we help you?"
+                placeholder="كيف يمكننا مساعدتك؟"
               />
               <button type="submit" className="submit-button">
-                Submit Request
+                إرسال الطلب
               </button>
             </form>
           </div>

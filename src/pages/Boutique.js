@@ -33,7 +33,7 @@ const Boutique = () => {
         if (error) throw error;
         setProducts(data);
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("خطأ في إحضار المنتجات:", error);
       } finally {
         setIsLoading(false);
       }
@@ -78,7 +78,7 @@ const Boutique = () => {
             <Search className="search-icon" />
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder="ابحث عن المنتجات..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"
@@ -109,7 +109,7 @@ const Boutique = () => {
                 onClick={() => handleProductClick(product.id)}
               >
                  <div className={`product-status ${product.product_status ? product.product_status.toLowerCase() : ''}`}>
-                    {product.product_status || "Unknown"}
+                    {product.product_status || "غير معروف"}
                   </div>
                 <div className="product-image-container">
                   <img

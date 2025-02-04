@@ -20,36 +20,40 @@ const LeftNavBar = forwardRef((props, ref) => {
     <div className="left-navbar" ref={ref}>
       <nav className="nav-menu">
         <button className="nav-item" onClick={() => navigate("/dashboard")}>
-          <i class="bi bi-bar-chart-steps" style={{ marginRight: "8px" }}></i>
-          Dashboard
+          <i class="bi bi-bar-chart-steps" style={{ marginLeft: "8px" }}></i>
+          لوحة المعلومات
+        </button>
+        <button className="nav-item" onClick={() => navigate("/boutique")}>
+          <i class="bi bi-shop" style={{ marginLeft: "8px" }}></i>
+          المتجر
         </button>
         <button className="nav-item" onClick={() => navigate("/mon-equipe")}>
-          <i class="bi bi-people" style={{ marginRight: "8px" }}></i>
-          My Team
+          <i class="bi bi-people" style={{ marginLeft: "8px" }}></i>
+          فريقي
         </button>
         <button className="nav-item" onClick={() => navigate("/historique")}>
-          <i class="bi bi-clock-history" style={{ marginRight: "8px" }}></i>
-          Order History
+          <i class="bi bi-clock-history" style={{ marginLeft: "8px" }}></i>
+          سجل الطلبيات
         </button>
         <button className="nav-item" onClick={() => navigate("/payments")}>
-          <i class="bi bi-wallet2" style={{ marginRight: "8px" }}></i>
-          Paiment
+          <i class="bi bi-wallet2" style={{ marginLeft: "8px" }}></i>
+          الراتب
         </button>
         <button className="nav-item" onClick={() => navigate("/docs")}>
-          <i class="bi bi-map" style={{ marginRight: "8px" }}></i>
-          Documentation
+          <i class="bi bi-map" style={{ marginLeft: "8px" }}></i>
+          المستند
         </button>
         <button className="nav-item" onClick={() => navigate("/settings")}>
-          <i class="bi bi-sliders" style={{ marginRight: "8px" }}></i>
-          Settings
+          <i class="bi bi-sliders" style={{ marginLeft: "8px" }}></i>
+          الإعدادات
         </button>
         <button className="nav-item" onClick={() => navigate("/helpdesk")}>
-          <i class="bi bi-patch-question" style={{ marginRight: "8px" }}></i>
-          Helpdesk
+          <i class="bi bi-patch-question" style={{ marginLeft: "8px" }}></i>
+           المساعدة
         </button>
         <button className="nav-item" onClick={() => navigate("/media")}>
-          <i class="bi bi-images" style={{ marginRight: "8px" }}></i>
-          Media
+          <i class="bi bi-images" style={{ marginLeft: "8px" }}></i>
+          المنشورات
         </button>
       </nav>
       <button
@@ -61,8 +65,8 @@ const LeftNavBar = forwardRef((props, ref) => {
           <div className="spinner"></div>
         ) : (
           <>
-            <FiLogOut className="logout-icon" />
-            <span>Logout</span>
+            <FiLogOut className="logout-icon" style={{ marginLeft: "8px" }}/>
+            <span>تسجيل الخروج</span>
           </>
         )}
       </button>

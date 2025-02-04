@@ -175,10 +175,26 @@ const Parrain = React.forwardRef((props, ref) => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        props.onClose(); // Call the onClose function passed as a prop
+      }
+    };
+  
+    // Add event listener when the component mounts
+    document.addEventListener("mousedown", handleClickOutside);
+  
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref, props.onClose]);
+
   return (
     <div className="parrain" ref={ref}>
       <div className="parrain-header">
-        <h2 className="parrain-title">Register</h2>
+        <h2 className="parrain-title">تسجيل</h2>
         <button className="close-button" onClick={props.onClose}>
           <FaTimes size={24} />
         </button>
@@ -193,7 +209,7 @@ const Parrain = React.forwardRef((props, ref) => {
           />
           <input
             type="text"
-            placeholder="Full name"
+            placeholder="الاسم الكامل"
             name="name"
             className="parrain-input"
             value={formData.name}
@@ -202,7 +218,7 @@ const Parrain = React.forwardRef((props, ref) => {
           />
           <input
             type="text"
-            placeholder="Username"
+            placeholder="اسم المستخدم"
             name="identifier"
             className="parrain-input"
             value={formData.identifier}
@@ -212,20 +228,20 @@ const Parrain = React.forwardRef((props, ref) => {
           <div className="password-input-container">
             <input
               type={isPasswordVisible ? "text" : "password"}
-              placeholder="Password"
+              placeholder="كلمة المرور"
               name="password"
               className="parrain-input"
               value={formData.password}
               onChange={handleChange}
               required
             />
-            <span className="toggle-password" onClick={togglePasswordVisibility}>
+            <span onClick={togglePasswordVisibility}>
               {isPasswordVisible ? <FaEyeSlash style={{ color: "#333" }} /> : <FaEye style={{ color: "#333" }} />}
             </span>
           </div>
           <input
             type="text"
-            placeholder="Phone"
+            placeholder="الهاتف"
             name="phone"
             className="parrain-input"
             value={formData.phone}
@@ -234,7 +250,7 @@ const Parrain = React.forwardRef((props, ref) => {
           />
           <input
             type="email"
-            placeholder="Email"
+            placeholder="البريد الإلكتروني"
             name="email"
             className="parrain-input"
             value={formData.email}
@@ -242,12 +258,12 @@ const Parrain = React.forwardRef((props, ref) => {
             required
           />
           <button className="parrain-button" type="submit" disabled={loading}>
-            {loading ? "En cours..." : "Register"}
+            {loading ? "جاري التحميل..." : "تسجيل"}
           </button>
         </form>
       ) : (
         <p className="disabled-message">
-          You cannot register users yet even when you reach Animateur level.
+          لا يمكنك تسجيل المستخدمين حتى بعد وصولك إلى مستوى المُحفز.
         </p>
       )}
       {error && <p className="error-message">{error}</p>}
@@ -255,11 +271,11 @@ const Parrain = React.forwardRef((props, ref) => {
       {showPopup && (
         <div className="popup">
           <div className="popup-content">
-            <h3 style={{ color: "#000" }}>Credentials</h3>
-            <p style={{ color: "#000" }}>ID: {formData.identifier}</p>
-            <p style={{ color: "#000" }}>Password: {formData.password}</p>
-            <button onClick={handleCopy}>Copy</button>
-            <button onClick={() => setShowPopup(false)}>Close</button>
+            <h3 style={{ color: "#000" }}>بيانات الاعتماد</h3>
+            <p style={{ color: "#000" }}>اسم المستخدم: {formData.identifier}</p>
+            <p style={{ color: "#000" }}>كلمة المرور: {formData.password}</p>
+            <button onClick={handleCopy}>نسخ</button>
+            <button onClick={() => setShowPopup(false)}>إغلاق</button>
           </div>
         </div>
       )}

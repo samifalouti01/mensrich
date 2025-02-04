@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Noto+Naskh+Arabic:wght@400..700&display=swap" rel="stylesheet');
 
 .login-container {
     display: flex;
@@ -8,7 +8,7 @@
     min-height: 100vh;
     background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
     color: #fff;
-    font-family: 'Quicksand', sans-serif;
+    font-family: 'Noto Kufi Arabic', sans-serif;
     padding: 50px 20px 20px 20px;
     gap: 40px;
 }
@@ -138,20 +138,17 @@
     width: 100%;
 }
 
-.toggle-password {
-    position: fixed;
-    top: 43%;
-    right: 50px;
-    transform: translateY(-50%);
-    color: rgba(255, 255, 255, 0.6);
-    cursor: pointer;
-    transition: color 0.3s ease;
-    padding: 4px;
-}
-
 .toggle-password:hover {
     color: rgba(255, 255, 255, 0.9);
 }
+  
+  .toggle-password {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
 
 .switch-mode {
     text-align: center;
@@ -231,7 +228,7 @@
   .form-control2 label {
     position: absolute;
     top: 15px;
-    left: 15px;
+    right: 15px;
     pointer-events: none;
   }
   
@@ -246,5 +243,5 @@
   .form-control2 input:focus+label span,
   .form-control2 input:valid+label span {
     color: #888AFF;
-    transform: translateY(-30px);
+    transform: translateY(-40px);
   }
