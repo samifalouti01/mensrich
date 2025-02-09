@@ -17,6 +17,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import Documentation from "./pages/Documentation";
 import Media from "./pages/Media";
+import Welcome from "./pages/LandingPage/LandingPage"
 
 function App() {
   return (
@@ -25,7 +26,8 @@ function App() {
         <Router>
           <div className="App">
             <Routes>
-              <Route path="/" element={<Login />} />
+            <Route path="/" element={<Welcome />} />
+              <Route path="/login" element={<Login />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="/dashboard" element={<Dashboard />} />

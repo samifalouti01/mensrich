@@ -25,7 +25,7 @@ const AdminPanel = () => {
         setLoading(true);
         try {
             await new Promise((resolve) => setTimeout(resolve, 2000));
-            navigate("/");
+            navigate("/login");
         } catch (error) {
             console.error("Logout failed", error);
         } finally {

@@ -12,7 +12,7 @@ const LeftNavBar = forwardRef((props, ref) => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      navigate("/");
+      navigate("/login");
     }, 2000);
   };
 
