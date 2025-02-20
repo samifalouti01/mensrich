@@ -237,3 +237,35 @@
   .doc-section {
     animation: fadeIn 0.5s ease-out;
   }
+
+  .incomes-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .incomes-item ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+
+  .incomes-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+
+  .levels-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0;
+  }

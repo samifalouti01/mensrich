@@ -8,18 +8,39 @@
 .containerw {
   padding: 15px 0;
   position: fixed;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   top: 0;
+  right: 0;
   z-index: 1000;
   backdrop-filter: blur(10px);
 }
 
-.containerw .logo img {
-  position: relative;
-  top: 20px;
-  left: -20px;
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 98%;
+  padding: 20px;
+  margin: 0;
   height: 50px;
+}
+
+.logo img {
+  height: 50px;
+  width: auto;
   transition: height 0.3s ease;
+  padding: 20px;
+  border-radius: 50px;
+  background-color: #5700B450;
+}
+
+.logo .btn {
+  background-color: white;
+  border: 1px solid #45008a;
 }
 
 .burger-menu {
@@ -47,13 +68,17 @@
 
 /* Hero Section */
 .hero {
-  height: 80vh;
+  height: 40vh;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: white;
-  background: linear-gradient(135deg, #5700B4, #8a2be2);
+  background-image: url('/public/bgL.svg');
+  background-repeat: no-repeat;
+  background-size: 80%;
+  background-blend-mode: multiply;
+  background-color: #5700B4;
   animation: gradientAnimation 10s ease infinite;
   padding: 60px 0;
 }
@@ -309,19 +334,33 @@
   .containerw {
     padding: 15px 0;
     position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 40px;
     top: 0;
+    right: 0;
     z-index: 1000;
-    backdrop-filter: blur(10px); 
+    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
 
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 98%;
+    padding: 20px;
+    margin: 0;
+    height: 30px;
+  }
+
   .logo img {
-    position: relative;
-    top: 10px;
-    left: -10px;
-    height: 40px;
+    height: 30px;
+    padding: 10px;
+    border-radius: 50px;
+    background-color: #5700B450;
   }
 
   .containerz nav ul {
@@ -356,4 +395,21 @@
   .reasons-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.users {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  margin: 50px 0;
+}
+
+.users h1 {
+  color: #5700B4;
+}
+
+.counter {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #5700B4;
+  transition: transform 0.3s ease-in-out;
 }

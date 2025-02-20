@@ -168,8 +168,8 @@ const Presentation = () => {
           </div>
         </section>
   
-        {/* قسم المستويات والنقاط */}
-        <section className="doc-section">
+                {/* قسم المستويات والنقاط */}
+                <section className="doc-section">
           <div className="section-header">
             <i className="bi bi-graph-up"></i>
             <h2>المستويات والنقاط</h2>
@@ -177,7 +177,7 @@ const Presentation = () => {
           <div className="section-content">
             <p>يعتمد راتبك الشهري على جهود فريقك والنقاط التي تتراكم لديك.</p>
             <div className="levels-list">
-              <div className="level-item">
+              <div className="income-item">
                 <h3>المستويات</h3>
                 <ul>
                   <li>Distributeur</li>
@@ -189,7 +189,7 @@ const Presentation = () => {
                   <li>Manager Senior</li>
                 </ul>
               </div>
-              <div className="level-item">
+              <div className="income-item">
                 <h3>الانتقال إلى المستوى التالي</h3>
                 <ul>
                   <li>النقاط من الشهر السابق</li>
@@ -197,6 +197,62 @@ const Presentation = () => {
                   <li>النقاط التي تحتاجها للانتقال إلى المستوى التالي</li>
                 </ul>
                 <p>مثال: إذا كنت في مستوى منشط والمستوى التالي هو منشط مبتدئ وتحتاج إلى 6250 نقطة. نقاطك من الشهر السابق هي 2300 نقطة + نقاط هذا الشهر 2100 نقطة = 4400 نقطة، لن تنتقل إلى المستوى التالي. ولكن إذا كانت نقاطك من الشهر السابق 4900 نقطة + نقاط هذا الشهر 1400 نقطة = 6300 نقطة، سوف تنتقل إلى المستوى التالي.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* قسم المستويات ونسبة الربح */}
+        <section className="doc-section">
+          <div className="section-header">
+            <i className="bi bi-coin"></i>
+            <h2>المستويات ونسبة الربح</h2>
+          </div>
+          <div className="section-content">
+            <p>هذه النسب هي للعمولة وأرباح الفريق</p>
+            <div className="levels-list">
+              <div className="income-item">
+                <h3>نسبة الربح من المبيعات</h3>
+                <ul>
+                  <li>Distributeur 11%</li>
+                  <li>Animateur 13%</li>
+                  <li>Animateur Junior 16%</li>
+                  <li>Animateur Senior 18%</li>
+                  <li>Manager 20%</li>
+                  <li>Manager Junior 23%</li>
+                  <li>Manager Senior 25%</li>
+                </ul>
+              </div>
+              <div className="incomes-item">
+                <h3>نسبة الربح من الفريق</h3>
+                <ul>
+                  <img src="/prc.jpg" alt="نسبة الربح من الفريق" />
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* قسم نقاط المستويات */}
+        <section className="doc-section">
+          <div className="section-header">
+            <i className="bi bi-mortarboard"></i>
+            <h2>نقاط المستويات</h2>
+          </div>
+          <div className="section-content">
+            <p>هذه هي النقاط المطلوبة للارتقاء إلى المستوى الأعلى</p>
+            <div className="levels-list">
+              <div className="income-item">
+                <h3>نقاط المستويات</h3>
+                <ul>
+                  <li>Distributeur نقطة 0</li>
+                  <li>Animateur نقطة 100</li>
+                  <li>Animateur Junior نقطة 6250</li>
+                  <li>Animateur Senior نقطة 12500</li>
+                  <li>Manager نقطة 18700</li>
+                  <li>Manager Junior نقطة 30000</li>
+                  <li>Manager Senior نقطة 50000</li>
+                </ul>
               </div>
             </div>
           </div>

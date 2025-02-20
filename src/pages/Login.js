@@ -31,6 +31,12 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         setError("");
+
+        if (identifier.includes(" ")) {
+            setError("لا يمكن أن يحتوي اسم المستخدم على مسافات.");
+            return;
+        }
+
         setLoading(true);
 
         const { data, error } = await supabase
@@ -42,11 +48,11 @@ const Login = () => {
         setLoading(false);
 
         if (error || data.length === 0) {
-            setError("Invalid username or password");
+            setError("اسم المستخدم أو كلمة المرور غير صالحة");
         } else {
             const user = data[0];
             if (user.blocked === "blocked") {
-                setError("Your account has been blocked");
+                setError("لقد تم حظر حسابك. يرجى التواصل مع الادارة.");
             } else {
                 localStorage.setItem("user", JSON.stringify(user));
                 identifier.includes("company.mensrich") ? navigate("/admin-panel") : navigate("/dashboard");
@@ -56,25 +62,32 @@ const Login = () => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        setLoading(true);
         setError("");
+
+        if (registerData.identifier.includes(" ")) {
+            setError("لا يمكن أن يحتوي اسم المستخدم على مسافات.");
+            return;
+        }
+
+        setLoading(true);
     
         try {
-
+            // تحقق من الـ referral ID إذا كان موجود
             if (registerData.referralId) {
                 const { data: referringUser, error: referringUserError } = await supabase
                     .from("user_data")
                     .select("id")
                     .eq("id", registerData.referralId)
                     .single();
-
+    
                 if (referringUserError || !referringUser) {
-                    setError("This referral ID doesn't exist");
+                    setError("معرف الإحالة هذا غير موجود");
                     setLoading(false);
                     return;
                 }
             }
-
+    
+            // تحقق من إذا كان الـ identifier موجود بالفعل
             const { data: existingUser, error: checkError } = await supabase
                 .from("user_data")
                 .select("id")
@@ -82,42 +95,35 @@ const Login = () => {
                 .single();
     
             if (checkError && checkError.code !== "PGRST116") {
-                throw new Error("Error checking identifier.");
+                throw new Error("خطأ في التحقق من المعرف.");
             }
     
             if (existingUser) {
-                setError("Username already exists.");
+                setError("اسم المستخدم موجود مسبقاً.");
                 setLoading(false);
                 return;
             }
     
-            let combinedParrainId = registerData.referralId || null; 
+            let combinedParrainId = registerData.referralId || null;
     
+            // إدارة parrain_id وتحديث عدد الإحالات إذا كان فيه referral
             if (registerData.referralId) {
-                const { data: referringUser, error: referringUserError } = await supabase
+                const { data: referringUser } = await supabase
                     .from("user_data")
                     .select("parrain_id, parainage_users")
                     .eq("id", registerData.referralId)
                     .single();
     
-                if (referringUserError) {
-                    throw new Error("Invalid referral ID.");
-                }
-    
                 if (referringUser.parrain_id) {
                     combinedParrainId = `${registerData.referralId},${referringUser.parrain_id}`;
                 }
     
-                const updatedParainageUsers = (parseInt(referringUser.parainage_users || "0", 10) + 1);
+                const updatedParainageUsers = parseInt(referringUser.parainage_users || "0", 10) + 1;
     
-                const { error: updateReferralError } = await supabase
+                await supabase
                     .from("user_data")
                     .update({ parainage_users: updatedParainageUsers })
                     .eq("id", registerData.referralId);
-    
-                if (updateReferralError) {
-                    throw new Error("Failed to update referring user's referral count.");
-                }
             }
     
             const newUser = {
@@ -127,14 +133,14 @@ const Login = () => {
                 parrain_id: combinedParrainId,
                 perso: 0,
                 parainage_points: 0,
-                parainage_users: 0, 
+                parainage_users: 0,
                 ppcg: 0,
                 email: registerData.email,
                 phone: registerData.phone,
                 validate: registerData.validate,
             };
     
-            // Insert the new user and get their ID
+            // إضافة المستخدم الجديد وجلب الـ ID
             const { data: insertedUser, error: insertError } = await supabase
                 .from("user_data")
                 .insert([newUser])
@@ -143,37 +149,32 @@ const Login = () => {
     
             if (insertError) throw insertError;
     
-            // Create history_data record
-            const { error: historyError } = await supabase
-                .from("history_data")
-                .insert([{
-                    id: insertedUser.id,
-                    perso: 0,
-                    parainage_points: 0,
-                    parainage_users: 0,
-                    ppcg: 0
-                }]);
+            // إنشاء history_data
+            await supabase.from("history_data").insert([{
+                id: insertedUser.id,
+                perso: 0,
+                parainage_points: 0,
+                parainage_users: 0,
+                ppcg: 0
+            }]);
     
-            if (historyError) throw new Error("Failed to create history record");
+            // إنشاء first_month record
+            await supabase.from("first_month").insert([{
+                id: insertedUser.id,
+                ppcg: 0,
+                perso: 0
+            }]);
     
-            // Create first_month record
-            const { error: firstMonthError } = await supabase
-                .from("first_month")
-                .insert([{
-                    id: insertedUser.id,
-                    ppcg: 0,
-                    perso: 0
-                }]);
+            // تسجيل المستخدم في `localStorage` وتحويله مباشرة إلى `/dashboard`
+            localStorage.setItem("user", JSON.stringify(insertedUser));
+            navigate("/dashboard");
     
-            if (firstMonthError) throw new Error("Failed to create first month record");
-    
-            setShowPopup(true);
         } catch (err) {
             setError(`Failed to register: ${err.message}`);
         } finally {
             setLoading(false);
         }
-    };
+    };    
     
     return (
         <div className="login-container">
@@ -186,7 +187,7 @@ const Login = () => {
                             type="text"
                             required
                             value={identifier}
-                            onChange={(e) => setIdentifier(e.target.value)} 
+                            onChange={(e) => setIdentifier(e.target.value.replace(/\s/g, ""))} 
                         />
                         <label>
                             <span style={{ transitionDelay: '0ms' }}>ا</span>
@@ -266,7 +267,7 @@ const Login = () => {
                             type="text"
                             required
                             value={registerData.identifier}
-                            onChange={(e) => setRegisterData({ ...registerData, identifier: e.target.value })}
+                            onChange={(e) => setRegisterData({ ...registerData, identifier: e.target.value.replace(/\s/g, "") })}
                         />
                         <label>
                             <span style={{ transitionDelay: '0ms' }}>ا</span>
@@ -385,9 +386,9 @@ const Login = () => {
                 </form>
             )}
     
-            <p style={{ color: 'gray' }}>اطلع على <span  onClick={() => navigate("/privacy-policy")} className="switch-mode">سياسة الخصوصية</span> أو <span onClick={() => navigate("/terms-and-conditions")} className="switch-mode">شروط الاستخدام</span></p>
+            <button style={{ backgroundColor: "#5700B430", color: "white", border: "1px solid rgb(80, 6, 217)", fontSize: "22px", width: "100%" }} onClick={() => navigate("/documentation")}>المستند</button>
     
-            <button style={{ backgroundColor: "#d9770630", color: "#d97706", border: "1px solid #d97706", fontSize: "22px", width: "100%" }} onClick={() => navigate("/documentation")}>المستند</button>
+            <p style={{ color: 'gray' }}>اطلع على <span  onClick={() => navigate("/privacy-policy")} className="switch-mode">سياسة الخصوصية</span> أو <span onClick={() => navigate("/terms-and-conditions")} className="switch-mode">شروط الاستخدام</span></p>
     
             {showPopup && (
                 <div className="popup">

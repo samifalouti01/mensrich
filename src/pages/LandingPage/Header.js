@@ -1,12 +1,15 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 import './LandingPage.css';
 
 const Header = () => {
+  const navigate = useNavigate();
 
   return (
     <div className="containerw">
         <div className="logo">
-            <img src="https://res.cloudinary.com/dgqpkdeld/image/upload/v1737169367/Mencedes_pvufio.svg" alt="Mensrich Logo" />
+            <img src="/Mencedes.svg" alt="Mensrich Logo" />
+            <button onClick={() => navigate("/login")} className="btn">تسجيل الدخول</button>
         </div>
     </div>
   );
