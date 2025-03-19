@@ -8,21 +8,41 @@ const ParrainagePayment = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const { data, error } = await supabase
+        // Fetch orders with validated status
+        const { data: orderData, error: orderError } = await supabase
           .from("order")
-          .select("user_id, name, total_price, paid")
-          .gte("total_price", 0);
+          .select("user_id, total_price, paid, order_status")
+          .gte("total_price", 0)
+          .eq("order_status", "validated");
 
-        if (error) throw error;
+        if (orderError) throw orderError;
 
-        const groupedOrders = data.reduce((acc, order) => {
+        // Get unique user IDs
+        const userIds = [...new Set(orderData.map(order => order.user_id))];
+
+        // Fetch user names from user_data
+        const { data: userData, error: userError } = await supabase
+          .from("user_data")
+          .select("id, name")
+          .in("id", userIds);
+
+        if (userError) throw userError;
+
+        // Create a map of user_id to name
+        const userMap = userData.reduce((acc, user) => {
+          acc[user.id] = user.name || "Unknown User";
+          return acc;
+        }, {});
+
+        // Group and process orders
+        const groupedOrders = orderData.reduce((acc, order) => {
           const userId = order.user_id;
 
           if (!acc[userId]) {
             acc[userId] = {
               user_id: userId,
+              name: userMap[userId], // Add name from user_data
               total_price: 0,
-              name: order.name || "Unknown User",
               paid: order.paid,
             };
           }
@@ -33,7 +53,6 @@ const ParrainagePayment = () => {
         }, {});
 
         const totalOrders = Object.values(groupedOrders);
-
         const filteredOrders = totalOrders.filter(order => order.total_price <= 120);
 
         setOrders(filteredOrders);
@@ -49,8 +68,8 @@ const ParrainagePayment = () => {
     try {
       const { data: userData, error: userError } = await supabase
         .from("user_data")
-        .select("parrain_id")
-        .eq("id", user_id)
+        .select("parrain_id, name")
+        .eq("id", user_id) // Changed from eq("name") to eq("id")
         .single();
 
       if (userError) throw userError;
@@ -70,26 +89,61 @@ const ParrainagePayment = () => {
         const { error: updateError } = await supabase
           .from("order")
           .update({ paid: "paid" })
-          .eq("user_id", user_id);
+          .eq("user_id", user_id)
+          .eq("order_status", "validated");
 
         if (updateError) throw updateError;
 
         setMessage("Payment processed, parrain_id added to pa_list, and order marked as paid.");
 
-        const { data, error } = await supabase
+        // Refresh data after payment
+        const { data: orderData, error: orderError } = await supabase
           .from("order")
-          .select("user_id, name, total_price, paid")
-          .gte("total_price", 0);
+          .select("user_id, total_price, paid, order_status")
+          .gte("total_price", 0)
+          .eq("order_status", "validated");
 
-        if (error) throw error;
+        if (orderError) throw orderError;
 
-        setOrders(data);
+        const userIds = [...new Set(orderData.map(order => order.user_id))];
+        const { data: userDataRefresh, error: userError } = await supabase
+          .from("user_data")
+          .select("id, name")
+          .in("id", userIds);
+
+        if (userError) throw userError;
+
+        const userMap = userDataRefresh.reduce((acc, user) => {
+          acc[user.id] = user.name || "Unknown User";
+          return acc;
+        }, {});
+
+        const groupedOrders = orderData.reduce((acc, order) => {
+          const userId = order.user_id;
+
+          if (!acc[userId]) {
+            acc[userId] = {
+              user_id: userId,
+              name: userMap[userId],
+              total_price: 0,
+              paid: order.paid,
+            };
+          }
+
+          acc[userId].total_price += parseFloat(order.total_price);
+
+          return acc;
+        }, {});
+
+        const totalOrders = Object.values(groupedOrders);
+        const filteredOrders = totalOrders.filter(order => order.total_price <= 120);
+        setOrders(filteredOrders);
       } else {
-        setMessage("No parrain_id found for this user."); 
+        setMessage("No parrain_id found for this user.");
       }
     } catch (error) {
-      console.error("Error processing payment:", error); 
-      setMessage(`Error processing payment. Please try again. Error: ${error.message}`); 
+      console.error("Error processing payment:", error);
+      setMessage(`Error processing payment. Please try again. Error: ${error.message}`);
     }
   };
 
@@ -100,7 +154,7 @@ const ParrainagePayment = () => {
       <table>
         <thead>
           <tr>
-            <th>User Name</th>
+            <th>Name</th>
             <th>Total Price</th>
             <th>Action</th>
           </tr>
@@ -108,11 +162,11 @@ const ParrainagePayment = () => {
         <tbody>
           {orders.map((order) => (
             <tr key={order.user_id}>
-              <td>{order.name}</td>
+              <td>{order.name}</td> {/* Changed from user_id.name to order.name */}
               <td>
                 {isNaN(order.total_price)
-                  ? "N/A" 
-                  : parseFloat(order.total_price).toFixed(2)} 
+                  ? "N/A"
+                  : parseFloat(order.total_price).toFixed(2)}
               </td>
               <td>
                 {order.paid !== "paid" ? (

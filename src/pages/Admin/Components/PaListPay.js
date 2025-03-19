@@ -87,7 +87,7 @@ const PaListPay = () => {
                 <td>{item.parrain_id?.split(",")[0]}</td>
                 <td>{item.name}</td>
                 <td>{item.rip}</td>
-                <td>1500 DA</td>
+                <td>1000 DA</td>
                 <td>{new Date(item.created_at).toLocaleString()}</td> 
                 <td>
                   <button

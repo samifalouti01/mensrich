@@ -34,6 +34,7 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [monthlyPpcg, setMonthlyPpcg] = useState(0);
   const [historyPpcg, setHistoryPpcg] = useState(0);
+  const [challengeData, setChallengeData] = useState(null);
   
   // Calculate total progress
   const totalProgress = Number(monthlyPpcg) + Number(ppcg);
@@ -148,7 +149,7 @@ const Dashboard = () => {
       try {
         const { data, error } = await supabase
           .from('challenge')
-          .select('start, end')
+          .select('start, end, image')
           .single();
   
         if (error) {
@@ -157,6 +158,7 @@ const Dashboard = () => {
         }
   
         if (data && data.end) {
+          setChallengeData(data);
           const endDate = new Date(data.end);
   
           const calculateTimeLeft = () => {
@@ -174,7 +176,7 @@ const Dashboard = () => {
   
             return `${days} يوم ${hours}سا ${minutes}د ${seconds}ثانية`;
           };
-  
+
           const updateCountdown = () => {
             setTimeLeft(calculateTimeLeft());
           };
@@ -336,11 +338,11 @@ const Dashboard = () => {
               <div className="feature-list">
                 <div className="feature-item">
                   <i className="bi bi-check2-circle"></i>
-                  <p>10 مستخدمين محالين نشطين</p>
+                  <p>5 مستخدمين محالين نشطين</p>
                 </div>
                 <div className="feature-item">
                   <i className="bi bi-check2-circle"></i>
-                  <p>100 نقطة بيع</p>
+                  <p>250 نقطة بيع</p>
                 </div>
                 <div className="feature-item">
                   <i class="bi bi-stopwatch" style={{ color: "red" }}></i>
@@ -348,7 +350,7 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-            <img src="https://yyqugjxhmvdjsdlzuvlb.supabase.co/storage/v1/object/public/creative/Challenge.gif?t=2025-01-06T22%3A57%3A01.362Z" alt="challenge" className="challenge" />
+            <img src={challengeData?.image || "Loading..."} alt="challenge" className="challenge" />
           </div>
         </section>
 

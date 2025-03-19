@@ -175,7 +175,7 @@ const Dashboard = () => {
                 <div className="card card-users">
                     <h3>Total Users</h3>
                     <br />
-                    <p>{data.totalUsers}</p>
+                    <p>{data.totalUsers - 1}</p>
                 </div>
                 <div className="card card-active">
                     <h3>Active Users</h3>

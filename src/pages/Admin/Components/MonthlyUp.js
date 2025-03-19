@@ -3,10 +3,12 @@ import { supabase } from "../../../supabaseClient";
 
 const determineLevel = (ppcg) => {
   if (!ppcg || isNaN(ppcg)) return "Distributeur";
-  if (ppcg >= 30000) return "Manager";
-  if (ppcg >= 18700) return "Manager Adjoint";
-  if (ppcg >= 6250) return "Animateur";
-  if (ppcg >= 100) return "Animateur Adjoint";
+  if (ppcg >= 50000) return "Manager Senior";
+  if (ppcg >= 30000) return "Manager Junior";
+  if (ppcg >= 18700) return "Manager";
+  if (ppcg >= 12500) return "Animateur Senior";
+  if (ppcg >= 6250) return "Animateur Junior";
+  if (ppcg >= 100) return "Animateur";
   return "Distributeur";
 };
 
@@ -19,7 +21,11 @@ const MonthlyUp = () => {
   const [passcode, setPasscode] = useState("");
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [filterLevel, setFilterLevel] = useState("");
-  const [filterId, setFilterId] = useState("");
+  const [sortName, setSortName] = useState(""); // "asc" or "desc"
+  const [sortId, setSortId] = useState(""); // "asc" or "desc"
+  const [filterM1, setFilterM1] = useState("");
+  const [filterM2, setFilterM2] = useState("");
+  const [filterTotal, setFilterTotal] = useState("");
 
   const fetchAllData = async () => {
     setLoading(true);
@@ -49,7 +55,7 @@ const MonthlyUp = () => {
   };
 
   const handlePasscodeSubmit = () => {
-    const correctPasscode = "06Sami06";
+    const correctPasscode = "1234";
     if (passcode === correctPasscode) {
       setIsAuthorized(true);
     } else {
@@ -142,31 +148,66 @@ const MonthlyUp = () => {
   }, []);
 
   const getFilteredUsers = () => {
-    return historyData
-      .filter((history) => {
-        const level = determineLevel(Number(history.ppcg || 0));
-        const matchesLevel = filterLevel
-          ? level.toLowerCase().includes(filterLevel.toLowerCase())
-          : true;
-        const matchesId = filterId
-          ? history.id.toString().includes(filterId)
-          : true;
-  
-        return matchesLevel && matchesId;
-      })
-      .map((history) => {
-        const firstMonth = firstMonthData.find((item) => item.id === history.id) || { ppcg: 0 };
-        const user = userData.find((item) => item.id === history.id) || { ppcg: 0 };
-        
-        return {
-          id: history.id,
-          level: determineLevel(Number(history.ppcg || 0)), // Using history.ppcg for level determination
-          firstMonthPpcg: Number(firstMonth.ppcg || 0),
-          userPpcg: Number(user.ppcg || 0),
-          totalPcg: Number(firstMonth.ppcg || 0) + Number(user.ppcg || 0)
-        };
-      });
+    let filtered = historyData.map((history) => {
+      const firstMonth = firstMonthData.find((item) => item.id === history.id) || { ppcg: 0 };
+      const user = userData.find((item) => item.id === history.id) || { ppcg: 0, name: "Unknown" };
+      return {
+        id: history.id,
+        name: user.name,
+        level: determineLevel(Number(history.ppcg || 0)), // Explicitly using history.ppcg
+        firstMonthPpcg: Number(firstMonth.ppcg || 0),
+        userPpcg: Number(user.ppcg || 0),
+        totalPcg: Number(firstMonth.ppcg || 0) + Number(user.ppcg || 0)
+      };
+    });
+
+    // Filter by Level
+    if (filterLevel) {
+      filtered = filtered.filter(user => 
+        user.level.toLowerCase().includes(filterLevel.toLowerCase())
+      );
+    }
+
+    // Filter by M1
+    if (filterM1) {
+      filtered = filtered.filter(user => user.firstMonthPpcg >= Number(filterM1));
+    }
+
+    // Filter by M2
+    if (filterM2) {
+      filtered = filtered.filter(user => user.userPpcg >= Number(filterM2));
+    }
+
+    // Filter by Total PCG
+    if (filterTotal) {
+      filtered = filtered.filter(user => user.totalPcg >= Number(filterTotal));
+    }
+
+    // Sort by Name
+    if (sortName) {
+      filtered.sort((a, b) => 
+        sortName === "asc" 
+          ? a.name.localeCompare(b.name) 
+          : b.name.localeCompare(a.name)
+      );
+    }
+
+    // Sort by ID
+    if (sortId) {
+      filtered.sort((a, b) => 
+        sortId === "asc" ? a.id - b.id : b.id - a.id
+      );
+    }
+
+    return filtered;
   };
+
+  const levelOptions = [
+    "Distributeur", "Animateur", "Animateur Junior", "Animateur Senior",
+    "Manager", "Manager Junior", "Manager Senior"
+  ];
+
+  const numericOptions = [50, 100, 6250, 12500, 18700, 30000, 50000];
 
   return (
     <div>
@@ -185,6 +226,82 @@ const MonthlyUp = () => {
       ) : (
         <>
           <h1 style={{ color: "black" }}>Monthly Up</h1>
+          
+          {/* Filter Buttons */}
+          <div style={{ marginBottom: "20px" }}>
+            {/* Level Filter */}
+            <div style={{ marginBottom: "10px" }}>
+              <label>Level: </label>
+              <select 
+                value={filterLevel} 
+                onChange={(e) => setFilterLevel(e.target.value)}
+              >
+                <option value="">All Levels</option>
+                {levelOptions.map(level => (
+                  <option key={level} value={level}>{level}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Name Sort */}
+            <div style={{ marginBottom: "10px" }}>
+              <label>Name: </label>
+              <button onClick={() => setSortName("asc")}>A-Z</button>
+              <button onClick={() => setSortName("desc")}>Z-A</button>
+              <button onClick={() => setSortName("")}>Reset</button>
+            </div>
+
+            {/* ID Sort */}
+            <div style={{ marginBottom: "10px" }}>
+              <label>ID: </label>
+              <button onClick={() => setSortId("asc")}>Low-High</button>
+              <button onClick={() => setSortId("desc")}>High-Low</button>
+              <button onClick={() => setSortId("")}>Reset</button>
+            </div>
+
+            {/* M1 Filter */}
+            <div style={{ marginBottom: "10px" }}>
+              <label>M1: </label>
+              <select 
+                value={filterM1} 
+                onChange={(e) => setFilterM1(e.target.value)}
+              >
+                <option value="">All</option>
+                {numericOptions.map(value => (
+                  <option key={value} value={value}>{value}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* M2 Filter */}
+            <div style={{ marginBottom: "10px" }}>
+              <label>M2: </label>
+              <select 
+                value={filterM2} 
+                onChange={(e) => setFilterM2(e.target.value)}
+              >
+                <option value="">All</option>
+                {numericOptions.map(value => (
+                  <option key={value} value={value}>{value}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Total PCG Filter */}
+            <div style={{ marginBottom: "10px" }}>
+              <label>Total PCG: </label>
+              <select 
+                value={filterTotal} 
+                onChange={(e) => setFilterTotal(e.target.value)}
+              >
+                <option value="">All</option>
+                {numericOptions.map(value => (
+                  <option key={value} value={value}>{value}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           {loading ? (
             <p>Loading...</p>
           ) : (
@@ -194,6 +311,7 @@ const MonthlyUp = () => {
                 <thead>
                   <tr>
                     <th>ID</th>
+                    <th>Name</th>
                     <th>Level</th>
                     <th>M1</th>
                     <th>M2</th>
@@ -205,6 +323,7 @@ const MonthlyUp = () => {
                   {getFilteredUsers().map((user) => (
                     <tr key={user.id}>
                       <td>{user.id}</td>
+                      <td>{user.name}</td>
                       <td>{user.level}</td>
                       <td>{user.firstMonthPpcg}</td>
                       <td>{user.userPpcg}</td>

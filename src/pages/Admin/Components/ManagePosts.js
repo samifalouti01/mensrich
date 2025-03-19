@@ -19,7 +19,7 @@ const ManagePosts = () => {
     setLoading(true); 
     const { data, error } = await supabase
       .from("store")
-      .select("id, product_image, title, description, price");
+      .select("id, product_image, title, description, price, product_status");
 
     setLoading(false); 
     if (error) {
@@ -77,11 +77,11 @@ const ManagePosts = () => {
   };
 
   const handleSaveEdit = async () => {
-    const { id, title, price, description } = editingProduct;
+    const { id, title, price, description, product_status } = editingProduct;
 
     const { error } = await supabase
       .from("store")
-      .update({ title, price, description })
+      .update({ title, price, description, product_status })
       .eq("id", id);
 
     if (error) {
@@ -179,6 +179,13 @@ const ManagePosts = () => {
               type="number"
               name="price"
               value={editingProduct.price}
+              onChange={handleInputChange}
+            />
+            <label>Status:</label>
+            <input
+              type="text"
+              name="product_status"
+              value={editingProduct.product_status}
               onChange={handleInputChange}
             />
             <button onClick={handleSaveEdit}>Save</button>

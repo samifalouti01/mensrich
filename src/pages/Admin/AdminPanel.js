@@ -79,13 +79,13 @@ const AdminPanel = () => {
                         className={`nav-button ${activeSection === "user-payments" ? "active" : ""}`}
                         onClick={() => setActiveSection("user-payments")}
                     >
-                        <FaMoneyCheck /> <span>User Payments</span>
+                        <FaMoneyCheck /> <span>User Payments </span><strong style={{ color: "purple" }}>●</strong>
                     </button>
                     <button
                         className={`nav-button ${activeSection === "order" ? "active" : ""}`}
                         onClick={() => setActiveSection("order")}
                     >
-                        <FaTasks /> <span>Orders</span>
+                        <FaTasks /> <span>Orders </span><strong style={{ color: "red" }}>●</strong>
                     </button>
                     <button
                         className={`nav-button ${activeSection === "parrainage" ? "active" : ""}`}
@@ -121,13 +121,13 @@ const AdminPanel = () => {
                         className={`nav-button ${activeSection === "up" ? "active" : ""}`}
                         onClick={() => setActiveSection("up")}
                     >
-                        <FaArrowAltCircleUp /> <span>UP</span>
+                        <FaArrowAltCircleUp /> <span>UP </span><strong style={{ color: "purple" }}>●</strong>
                     </button>
                     <button
                         className={`nav-button ${activeSection === "pa-payment" ? "active" : ""}`}
                         onClick={() => setActiveSection("pa-payment")}
                     >
-                        <FaMoneyCheckAlt /> <span>PA-Payment</span>
+                        <FaMoneyCheckAlt /> <span>PA-Payment </span><strong style={{ color: "red" }}>●</strong>
                     </button>
                     <button
                         className={`nav-button ${activeSection === "pa-list-pay" ? "active" : ""}`}
