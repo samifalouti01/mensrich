@@ -200,7 +200,7 @@ const Pay = () => {
     <div>
       <div>
         <div>
-          <p style={{ padding: "0px", color:"#000", margin: "0"}}>{income * 100} DA</p>
+          <p style={{ padding: "0px", color:"#000", margin: "0"}}>{income * 100} DZD</p>
         </div>
       </div>
     </div>

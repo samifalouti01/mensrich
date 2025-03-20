@@ -43,7 +43,7 @@ const CommissionFetcher = ({ userId }) => {
     return <p>Error: {error}</p>;
   }
 
-  return <p>{(commission).toFixed(2)} DA</p>;
+  return <p>{(commission * 100).toFixed(2)} DZD</p>;
 };
 
 export default CommissionFetcher;
