@@ -97,3 +97,22 @@
         transition: opacity 0.3s;
     }
 }
+
+@keyframes pulse {
+    0% {
+      box-shadow: 0 0 10px rgba(191, 0, 225, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 20px rgb(117, 4, 146);
+    }
+    100% {
+      box-shadow: 0 0 10px rgba(144, 0, 255, 0.7);
+    }
+  }
+  
+  .pulse-animation {
+    animation: pulse 1s infinite;
+    border-radius: 5px;
+  }
+  
+  

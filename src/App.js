@@ -17,6 +17,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import Documentation from "./pages/Documentation";
 import Media from "./pages/Media";
+import DeliveryPrices from "./pages/DeliveryPrices";
 import Welcome from "./pages/LandingPage/LandingPage"
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
               <Route path="/settings" element={<Settings />} />
               <Route path="/docs" element={<Presentation />} />
               <Route path="/documentation" element={<Documentation />} />
+              <Route path="/delivery-prices" element={<DeliveryPrices />} />
               <Route path="/productpage/:productId" element={<ProductPage />} />
               <Route path="/media" element={<Media />} />
             </Routes>
